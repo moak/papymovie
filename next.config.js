@@ -8,7 +8,7 @@ module.exports = {
     localeSubpaths,
   },
   env: {
-    NEXTAUTH_URL: 'http://localhost:3000',
+    NEXTAUTH_URL: 'goldmovies.vercel.app',
     GITHUB_ID: 'Iv1.0dde917e3f3812e9',
     GITHUB_SECRET: 'd2e37f1cffff1111c3a8e53eca03a8427e6a1d22',
     MONGO_URI:
