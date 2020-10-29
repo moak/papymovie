@@ -113,6 +113,9 @@
 .logo {
   height: 1em;
 }
+.stars {
+  height: 3em;
+}
 
 @media (max-width: 600px) {
   .grid {

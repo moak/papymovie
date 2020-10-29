@@ -5,11 +5,41 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "prettier": "prettier",
+    "lint": "eslint --fix ."
   },
   "dependencies": {
+    "eslint-config-prettier": "^6.14.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-react": "^7.21.5",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "mongodb": "^3.6.2",
+    "mongoose": "^5.10.9",
     "next": "9.5.5",
+    "next-auth": "^3.1.0",
+    "next-i18next": "^6.0.3",
+    "prettier": "^2.1.2",
+    "prop-types": "^15.7.2",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
-  }
+    "react-dom": "17.0.1",
+    "react-rating-stars-component": "^2.2.0",
+    "react-spring": "^8.0.27",
+    "react-stars": "^2.2.5",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.0",
+    "styled-components": "^5.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.11.0",
+    "undefined": "^0.1.0"
+  },
+  "peerOptionalDependencies": {
+    "mongodb": "^3.6.0"
+  },
+  "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
+  "main": ".eslintrc.js",
+  "author": "",
+  "license": "ISC"
 }
