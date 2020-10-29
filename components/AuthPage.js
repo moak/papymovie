@@ -5,7 +5,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useSession, getSession } from 'next-auth/client';
 
-import NavbarNew from './NavbarNew';
+import NavBarNew from './NavBarNew';
 
 import { i18n, Link, withTranslation } from '../i18n';
 
@@ -34,7 +34,7 @@ const AuthPage = ({ children, title }) => {
         </Head>
       )}
       {/* <Navbar /> */}
-      <NavbarNew navbarState={isNavBarOpen} handleNavbar={handleNavbar} />
+      <NavBarNew navbarState={isNavBarOpen} handleNavbar={handleNavbar} />
       {children}
     </>
   );

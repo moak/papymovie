@@ -100,7 +100,7 @@ const SearchContainer = styled.div`
   }
 `;
 
-const Navbar = (props) => {
+const NavBarNew = (props) => {
   const [session, loading] = useSession();
 
   const barAnimation = useSpring({
@@ -200,4 +200,4 @@ const Navbar = (props) => {
   );
 };
 
-export default Navbar;
+export default NavBarNew;

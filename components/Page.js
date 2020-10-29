@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import Head from 'next/head';
-import NavbarNew from './NavbarNew';
+import NavBarNew from './NavBarNew';
 
 import { withTranslation } from '../i18n';
 
@@ -21,7 +21,7 @@ const Page = ({ children, title }) => {
         </Head>
       )}
       {/* <Navbar /> */}
-      <NavbarNew navbarState={isNavBarOpen} handleNavbar={handleNavbar} />
+      <NavBarNew navbarState={isNavBarOpen} handleNavbar={handleNavbar} />
       {children}
     </>
   );
