@@ -36,7 +36,7 @@ const EditMovie = (props) => {
 
   const updateMovie = async () => {
     try {
-      await fetch(`http://localhost:3000/api/movies/${router.query.movieId}`, {
+      await fetch(`${process.env.API_URL}/api/movies/${router.query.movieId}`, {
         method: 'PUT',
         headers: {
           Accept: 'application/json',
@@ -143,7 +143,7 @@ const EditMovie = (props) => {
 };
 
 EditMovie.getInitialProps = async ({ query: { movieId } }) => {
-  const res = await fetch(`http://localhost:3000/api/movies/${movieId}`);
+  const res = await fetch(`${process.env.API_URL}/api/movies/${movieId}`);
   const { data } = await res.json();
 
   return { movie: data, namespacesRequired: ['common'] };

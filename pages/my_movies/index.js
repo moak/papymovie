@@ -62,7 +62,7 @@ const Movies = (props) => {
 
   const deleteNote = async () => {
     try {
-      await fetch(`http://localhost:3000/api/movies/${movieId}`, {
+      await fetch(`${process.env.API_URL}/api/movies/${movieId}`, {
         method: 'Delete',
       });
 
@@ -85,55 +85,56 @@ const Movies = (props) => {
         </Text>
 
         <List>
-          {movies.map((movie) => {
-            const { _id, rating, themoviedbId, title, description, image } = movie;
+          {movies &&
+            movies.map((movie) => {
+              const { _id, rating, themoviedbId, title, description, image } = movie;
 
-            return (
-              <CardContainer key={themoviedbId}>
-                <Card>
-                  <Card.Content>
-                    <Card.Header>
-                      <div>{title}</div>
-                      <Image width="100%" src={`https://image.tmdb.org/t/p/w500/${image}`} />
-                    </Card.Header>
-                  </Card.Content>
+              return (
+                <CardContainer key={themoviedbId}>
+                  <Card>
+                    <Card.Content>
+                      <Card.Header>
+                        <div>{title}</div>
+                        <Image width="100%" src={`https://image.tmdb.org/t/p/w500/${image}`} />
+                      </Card.Header>
+                    </Card.Content>
 
-                  <Card.Content extra>
-                    <Box alignItems="center">
-                      <ReactStars
-                        count={5}
-                        size={24}
-                        color2={'#ffd700'}
-                        color1={'#d3d3d3'}
-                        value={rating}
-                        style={{ marginBottom: 10 }}
-                        isHalf
-                        edit={false}
-                        className={styles.stars}
-                      />
-                    </Box>
-                    <div style={{ marginBottom: 10 }}>{description}</div>
-                    <Link href={`/movies/${themoviedbId}`}>
-                      <Button primary>View</Button>
-                    </Link>
-                    <Link href={`/my_movies/${_id}/edit`}>
-                      <Button primary>Edit</Button>
-                    </Link>
-                    <Button
-                      primary
-                      onClick={(e) => {
-                        e.preventDefault;
+                    <Card.Content extra>
+                      <Box alignItems="center">
+                        <ReactStars
+                          count={5}
+                          size={24}
+                          color2={'#ffd700'}
+                          color1={'#d3d3d3'}
+                          value={rating}
+                          style={{ marginBottom: 10 }}
+                          isHalf
+                          edit={false}
+                          className={styles.stars}
+                        />
+                      </Box>
+                      <div style={{ marginBottom: 10 }}>{description}</div>
+                      <Link href={`/movies/${themoviedbId}`}>
+                        <Button primary>View</Button>
+                      </Link>
+                      <Link href={`/my_movies/${_id}/edit`}>
+                        <Button primary>Edit</Button>
+                      </Link>
+                      <Button
+                        primary
+                        onClick={(e) => {
+                          e.preventDefault;
 
-                        return open(_id);
-                      }}
-                    >
-                      Delete
-                    </Button>
-                  </Card.Content>
-                </Card>
-              </CardContainer>
-            );
-          })}
+                          return open(_id);
+                        }}
+                      >
+                        Delete
+                      </Button>
+                    </Card.Content>
+                  </Card>
+                </CardContainer>
+              );
+            })}
         </List>
         <Confirm open={confirm} onCancel={close} onConfirm={handleDelete} />
       </PageContainer>
@@ -143,7 +144,9 @@ const Movies = (props) => {
 
 Movies.getInitialProps = async (ctx) => {
   console.log('ctx', ctx);
-  const res = await fetch('http://localhost:3000/api/movies');
+  console.log('process.env', process.env);
+
+  const res = await fetch(`${process.env.API_URL}/api/movies`);
 
   console.log('res', res);
   const { data } = await res.json();

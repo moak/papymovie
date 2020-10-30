@@ -120,7 +120,7 @@ const View = (props) => {
 
   const createMovie = async () => {
     try {
-      await fetch('http://localhost:3000/api/movies', {
+      await fetch(`${process.env.API_URL}/api/movies`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
