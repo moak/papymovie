@@ -7,6 +7,7 @@ import moment from 'moment';
 import { Pagination } from 'semantic-ui-react';
 
 import useIsMobile from '../hooks/useIsMobile';
+import useIsTablet from '../hooks/useIsTablet';
 
 import Page from '../components/Page';
 import Card from '../components/Card';
@@ -45,6 +46,7 @@ const New = () => {
   const [activePage, setActivePage] = useState(1);
 
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
 
   useEffect(async () => {
     if (router.query.search) {
@@ -83,7 +85,7 @@ const New = () => {
 
                   console.log('movie', movie);
                   return (
-                    <CardContainer key={id} percent={isMobile ? 100 : 25}>
+                    <CardContainer key={id} percent={isMobile ? 100 : isTablet ? 50 : 25}>
                       <Card
                         title={title}
                         subtitle={moment(release_date).format('MMM, YYYY')}

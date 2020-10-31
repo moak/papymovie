@@ -4,7 +4,7 @@ const PageContainer = styled.div`
   padding: 120px 24px 32px 24px;
   height: 100%;
   margin: 0 auto;
-  max-width: 1180px;
+  max-width: ${(p) => p.maxWidth || 1180}px;
 
   @media (max-width: 480px) {
     padding: 88px 16px 32px 16px;

@@ -26,6 +26,10 @@ export const ContentContainer = styled.div`
   background-size: cover;
   background-repeat: no-repeat;
   background-image: url(${(p) => p.imageUrl});
+
+  @media (max-width: 769px) {
+    height: 100%;
+  }
 `;
 
 export const SubContainer = styled.div`
@@ -37,6 +41,10 @@ export const SubContainer = styled.div`
 
   display: flex;
   height: 100%;
+
+  @media (max-width: 769px) {
+    flex-direction: column;
+  }
 `;
 export const Left = styled.div`
   display: flex;
@@ -47,6 +55,10 @@ export const Left = styled.div`
 export const Right = styled.div`
   padding: 32px 0px;
   padding-left: 40px;
+
+  @media (max-width: 769px) {
+    padding: 8px 16px;
+  }
 `;
 
 export const Title = styled.div`
