@@ -115,7 +115,14 @@ const Movies = (props) => {
         )}
 
         {movies && movies.length === 0 ? (
-          <EmptyState>You don't have any movies yet.</EmptyState>
+          <EmptyState>
+            <Text fontSize={16} marginBottom={16}>
+              You don't have any movies yet.
+            </Text>
+            <Button primary onClick={() => router.push('/discover')}>
+              Start adding movies
+            </Button>
+          </EmptyState>
         ) : (
           <List>
             {movies &&

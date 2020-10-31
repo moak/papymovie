@@ -65,22 +65,33 @@ const User = (props) => {
             <Text marginBottom={24} fontSize={32}>
               His movies {movies.length > 0 ? `(${movies.length})` : null}
             </Text>
-            <List>
-              {movies.map((movie) => {
-                const { _id, themoviedbId, title, image, vote_count, rating } = movie;
 
-                return (
-                  <CardContainer key={_id} percent={isMobile ? 100 : isTablet ? 50 : 25}>
-                    <CardMovie
-                      title={title}
-                      imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
-                      href={`/movies/${themoviedbId}`}
-                      amountVotes={vote_count}
-                      userRating={rating}
-                    />
-                  </CardContainer>
-                );
-              })}
+            {movies && movies.length === 0 && (
+              <EmptyState>
+                <Text fontSize={16} marginBottom={16}>
+                  {name} has not added movies yet.
+                </Text>
+              </EmptyState>
+            )}
+
+            <List>
+              {movies &&
+                movies.length > 0 &&
+                movies.map((movie) => {
+                  const { _id, themoviedbId, title, image, vote_count, rating } = movie;
+
+                  return (
+                    <CardContainer key={_id} percent={isMobile ? 100 : isTablet ? 50 : 25}>
+                      <CardMovie
+                        title={title}
+                        imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
+                        href={`/movies/${themoviedbId}`}
+                        amountVotes={vote_count}
+                        userRating={rating}
+                      />
+                    </CardContainer>
+                  );
+                })}
             </List>
           </Col>
         </Row>

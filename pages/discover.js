@@ -7,6 +7,7 @@ import Page from '../components/Page';
 import PageContainer from '../components/PageContainer';
 import Text from '../components/Text';
 import CardMovie from '../components/CardMovie';
+import RoundedLabel from '../components/RoundedLabel';
 
 import useIsMobile from '../hooks/useIsMobile';
 import useIsTablet from '../hooks/useIsTablet';
@@ -216,6 +217,33 @@ const Discover = (props) => {
                     />
                   </div>
                 </Row>
+              )}
+
+              {!isMobile && (
+                <>
+                  <hr />
+
+                  <Text isBold fontSize={16} marginBottom={16} marginTop={16}>
+                    Notes
+                  </Text>
+                  <div style={{ display: 'flex', marginBottom: 16 }}>
+                    <RoundedLabel borderWith={2} rounded color="#21ba45 ">
+                      {6}
+                    </RoundedLabel>
+                    <Text marginLeft={8}>
+                      Global rating on <a href="www.themoviedb.org">themoviedb</a>.
+                    </Text>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <RoundedLabel width="50px" height="26px" color="#333333">
+                      {345}
+                    </RoundedLabel>
+                    <Text marginLeft={8}>
+                      Amount of votes on <a href="www.themoviedb.org">themoviedb</a>.
+                    </Text>
+                  </div>
+                </>
               )}
             </RightColumn>
           )}
