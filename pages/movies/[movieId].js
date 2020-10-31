@@ -3,18 +3,24 @@ import { Breadcrumb, Label, Form, Button } from 'semantic-ui-react';
 import ReactStars from 'react-stars';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import moment from 'moment';
+import { useSession, getSession } from 'next-auth/client';
 
 import styles from '../../styles/Home.module.css';
 import Page from '../../components/Page';
 import PageContainer from '../../components/PageContainer';
 import Text from '../../components/Text';
 import Box from '../../components/Box';
+import Card from '../../components/Card';
+import RoundedLabel from '../../components/RoundedLabel';
 
 import getColorFromMark from '../../utils/getColorFromMark';
 import getHourMinutesFromMinutes from '../../utils/getHourMinutesFromMinutes';
 
+import useIsMobile from '../../hooks/useIsMobile';
+
 export const ContentContainer = styled.div`
-  height: 600px;
+  height: 650px;
   border-bottom: 1px solid rgba(8.24%, 31.96%, 31.57%, 1);
   background-position: right -200px top;
   background-size: cover;
@@ -56,8 +62,26 @@ export const Infos = styled.div`
   color: #ffffff;
 `;
 
+const List = styled.div`
+  margin: 0 auto;
+  justify-content: space-between;
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+}`;
+
+const CardContainer = styled.div`
+  height: 350px;
+  width: ${(p) => p.percent}%;
+  display: flex;
+  padding: 0 8px;
+  background-color: #fff;
+  margin-bottom: 16px;
+}`;
+
 const View = (props) => {
   const {
+    similarMovies,
     isFound,
     movie: {
       backdrop_path,
@@ -74,6 +98,8 @@ const View = (props) => {
   const router = useRouter();
 
   const { movieId } = router.query;
+  const isMobile = useIsMobile();
+  const [session, loading] = useSession();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -99,6 +125,11 @@ const View = (props) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    if (!session) {
+      return router.push('/login');
+    }
+
     let errs = validate();
     setErrors(errs);
     setIsSubmitting(true);
@@ -162,7 +193,7 @@ const View = (props) => {
               }}
               link
             >
-              back
+              BACK
             </Breadcrumb.Section>
           </Breadcrumb>
         )}
@@ -187,14 +218,11 @@ const View = (props) => {
                     ({release_date.substring(0, 4)})
                   </Text>
                 )}
-
-                <Label
-                  style={{ float: 'right', marginTop: 8 }}
-                  circular
-                  color={getColorFromMark(vote_average)}
-                >
-                  {vote_average}
-                </Label>
+                <div style={{ float: 'right' }}>
+                  <RoundedLabel borderWith={2} rounded color={getColorFromMark(vote_average)}>
+                    {vote_average}
+                  </RoundedLabel>
+                </div>
               </Box>
 
               <Text marginBottom={16} textColor="#ffffff">
@@ -245,6 +273,31 @@ const View = (props) => {
             </Right>
           </SubContainer>
         </ContentContainer>
+
+        {similarMovies && similarMovies.length > 0 && (
+          <>
+            <Text marginTop={36} marginBottom={36} fontSize={32}>
+              Similar movies
+            </Text>
+            <List>
+              {similarMovies.slice(0, 5).map((movie) => {
+                const { id, title, poster_path, vote_average, release_date } = movie;
+
+                return (
+                  <CardContainer key={id} percent={isMobile ? 100 : 20}>
+                    <Card
+                      title={title}
+                      subtitle={moment(release_date).format('MMM, YYYY')}
+                      imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                      href={`/movies/${id}`}
+                      grade={vote_average}
+                    />
+                  </CardContainer>
+                );
+              })}
+            </List>
+          </>
+        )}
       </PageContainer>
     </Page>
   );
@@ -253,16 +306,23 @@ const View = (props) => {
 View.getInitialProps = async (context) => {
   const { query: { movieId } = {} } = context;
 
-  const res = await fetch(
+  const movieRequest = await fetch(
     `https://api.themoviedb.org/3/movie/${movieId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
   );
+  const movie = await movieRequest.json();
 
-  const data = await res.json();
+  const similarMovieRequest = await fetch(
+    `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
+  );
+  console.log('similarMovieRequest', similarMovieRequest);
 
-  console.log('data', data);
+  const similarMovies = await similarMovieRequest.json();
+
+  console.log('similarMovies', similarMovies);
   return {
-    movie: data,
-    isFound: data.success !== false,
+    movie,
+    similarMovies: similarMovies.results,
+    isFound: movie.success !== false,
     namespacesRequired: ['common'],
   };
 };

@@ -13,6 +13,7 @@ import PageContainer from '../../components/PageContainer';
 import AuthPage from '../../components/AuthPage';
 import Box from '../../components/Box';
 import Text from '../../components/Text';
+import EmptyState from '../../components/EmptyState';
 
 import styles from '../../styles/Home.module.css';
 
@@ -77,6 +78,7 @@ const Movies = (props) => {
     close();
   };
 
+  console.log('movies', movies);
   return (
     <AuthPage title="Movies">
       <PageContainer>
@@ -84,58 +86,65 @@ const Movies = (props) => {
           My movies
         </Text>
 
-        <List>
-          {movies &&
-            movies.map((movie) => {
-              const { _id, rating, themoviedbId, title, description, image } = movie;
+        {!movies && <EmptyState>Register and start saving your movies!</EmptyState>}
 
-              return (
-                <CardContainer key={themoviedbId}>
-                  <Card>
-                    <Card.Content>
-                      <Card.Header>
-                        <div>{title}</div>
-                        <Image width="100%" src={`https://image.tmdb.org/t/p/w500/${image}`} />
-                      </Card.Header>
-                    </Card.Content>
+        {movies && movies.length === 0 ? (
+          <EmptyState>You don't have any movies yet.</EmptyState>
+        ) : (
+          <List>
+            {movies &&
+              movies.map((movie) => {
+                const { _id, rating, themoviedbId, title, description, image } = movie;
 
-                    <Card.Content extra>
-                      <Box alignItems="center">
-                        <ReactStars
-                          count={5}
-                          size={24}
-                          color2={'#ffd700'}
-                          color1={'#d3d3d3'}
-                          value={rating}
-                          style={{ marginBottom: 10 }}
-                          isHalf
-                          edit={false}
-                          className={styles.stars}
-                        />
-                      </Box>
-                      <div style={{ marginBottom: 10 }}>{description}</div>
-                      <Link href={`/movies/${themoviedbId}`}>
-                        <Button primary>View</Button>
-                      </Link>
-                      <Link href={`/my_movies/${_id}/edit`}>
-                        <Button primary>Edit</Button>
-                      </Link>
-                      <Button
-                        primary
-                        onClick={(e) => {
-                          e.preventDefault;
+                return (
+                  <CardContainer key={themoviedbId}>
+                    <Card>
+                      <Card.Content>
+                        <Card.Header>
+                          <div>{title}</div>
+                          <Image width="100%" src={`https://image.tmdb.org/t/p/w500/${image}`} />
+                        </Card.Header>
+                      </Card.Content>
 
-                          return open(_id);
-                        }}
-                      >
-                        Delete
-                      </Button>
-                    </Card.Content>
-                  </Card>
-                </CardContainer>
-              );
-            })}
-        </List>
+                      <Card.Content extra>
+                        <Box alignItems="center">
+                          <ReactStars
+                            count={5}
+                            size={24}
+                            color2={'#ffd700'}
+                            color1={'#d3d3d3'}
+                            value={rating}
+                            style={{ marginBottom: 10 }}
+                            isHalf
+                            edit={false}
+                            className={styles.stars}
+                          />
+                        </Box>
+                        <div style={{ marginBottom: 10 }}>{description}</div>
+                        <Link href={`/movies/${themoviedbId}`}>
+                          <Button primary>View</Button>
+                        </Link>
+                        <Link href={`/my_movies/${_id}/edit`}>
+                          <Button primary>Edit</Button>
+                        </Link>
+                        <Button
+                          primary
+                          onClick={(e) => {
+                            e.preventDefault;
+
+                            return open(_id);
+                          }}
+                        >
+                          Delete
+                        </Button>
+                      </Card.Content>
+                    </Card>
+                  </CardContainer>
+                );
+              })}
+          </List>
+        )}
+
         <Confirm open={confirm} onCancel={close} onConfirm={handleDelete} />
       </PageContainer>
     </AuthPage>

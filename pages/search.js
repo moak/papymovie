@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 
-import Link from 'next/link';
-// import fetch from "isomorphic-unfetch";
 import styled from 'styled-components';
-import ReactStars from 'react-rating-stars-component';
 import { useRouter } from 'next/router';
+import moment from 'moment';
 
-import { Pagination, Label, Card, Grid, Button, Form, Loader } from 'semantic-ui-react';
+import { Pagination } from 'semantic-ui-react';
 
 import useIsMobile from '../hooks/useIsMobile';
 
 import Page from '../components/Page';
+import Card from '../components/Card';
 import PageContainer from '../components/PageContainer';
+import EmptyState from '../components/EmptyState';
 import Text from '../components/Text';
-import getColorFromMark from '../utils/getColorFromMark';
 
 const List = styled.div`
   margin: 0 auto;
@@ -24,19 +23,14 @@ const List = styled.div`
 }`;
 
 const CardContainer = styled.div`
-  height: 400px;
+  height: 450px;
   width: ${(p) => p.percent}%;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   padding: 0 8px;
   background-color: #fff;
   margin-bottom: 16px;
 }`;
 
-const Image = styled.img`
-  height: 300px;
-}`;
 const PaginationContainer = styled.div`
   margin: 32px 0;
   display: flex;
@@ -71,59 +65,49 @@ const New = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [activePage]);
+
   return (
     <Page title="Search a movie">
       <PageContainer>
-        {movies && (
-          <List>
-            {movies.map((movie) => {
-              const { id, title, description, poster_path, vote_average } = movie;
+        <Text marginBottom={24} fontSize={32}>
+          Results for: {router.query.search}
+        </Text>
+        {movies && movies.length === 0 ? (
+          <EmptyState>No results found</EmptyState>
+        ) : (
+          <>
+            {movies && (
+              <List>
+                {movies.map((movie) => {
+                  const { id, title, poster_path, release_date, vote_average } = movie;
 
-              return (
-                <CardContainer key={id} percent={isMobile ? 100 : 25}>
-                  <Card
-                    style={{ width: '100%' }}
-                    onClick={(e) => {
-                      e.preventDefault;
-                      router.push(`/movies/${id}`);
-                    }}
-                  >
-                    <Card.Content>
-                      <Card.Header>
-                        <div>
-                          <Text isBold fontSize={16}>
-                            {title}
-                            <Label
-                              style={{ marginLeft: 8, float: 'right' }}
-                              circular
-                              color={getColorFromMark(vote_average)}
-                            >
-                              {vote_average}
-                            </Label>
-                          </Text>
-                        </div>
-                      </Card.Header>
-                    </Card.Content>
-                    <Card.Content extra>
-                      <div style={{ marginBottom: 10 }}>{description}</div>
-                      <Image width="100%" src={`https://image.tmdb.org/t/p/w500/${poster_path}`} />
-                    </Card.Content>
-                  </Card>
-                </CardContainer>
-              );
-            })}
-          </List>
-        )}
+                  console.log('movie', movie);
+                  return (
+                    <CardContainer key={id} percent={isMobile ? 100 : 25}>
+                      <Card
+                        title={title}
+                        subtitle={moment(release_date).format('MMM, YYYY')}
+                        imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                        href={`/movies/${id}`}
+                        grade={vote_average}
+                      />
+                    </CardContainer>
+                  );
+                })}
+              </List>
+            )}
 
-        {totalPages > 0 && (
-          <PaginationContainer>
-            <Pagination
-              activePage={activePage}
-              onPageChange={handlePaginationChange}
-              totalPages={totalPages}
-              ellipsisItem={null}
-            />
-          </PaginationContainer>
+            {totalPages > 0 && (
+              <PaginationContainer>
+                <Pagination
+                  activePage={activePage}
+                  onPageChange={handlePaginationChange}
+                  totalPages={totalPages}
+                  ellipsisItem={null}
+                />
+              </PaginationContainer>
+            )}
+          </>
         )}
       </PageContainer>
     </Page>

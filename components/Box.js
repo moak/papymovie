@@ -11,11 +11,7 @@ const Box = styled.div`
   margin-left: ${(p) => p.marginLeft || 0}px;
   margin-right: ${(p) => p.marginRight || 0}px;
 
-  // height: ${(p) => (p.height ? `${p.height}` : 'auto')};
 
-  // width: ${(p) => (p.width ? `${p.width}` : '100%')};
-
-  // border: 1px solid red;
 }`;
 
 export default Box;

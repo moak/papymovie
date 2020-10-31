@@ -16,9 +16,7 @@ export default async (req, res) => {
         console.log('session', session);
         // const user = await User.findById(session.id);
 
-        // console.log('user', user);
-        // const movies = await Movie.find({ user: session.id });
-        const movies = await Movie.find({});
+        const movies = await Movie.find({ user: session.id });
         // console.log('movies', movies);
         // // console.log('session', session);
 
@@ -31,7 +29,7 @@ export default async (req, res) => {
       break;
     case 'POST':
       try {
-        const movie = await Movie.create({ ...req.body });
+        const movie = await Movie.create({ ...req.body, user: session.id });
 
         res.status(201).json({ success: true, data: movie });
       } catch (error) {

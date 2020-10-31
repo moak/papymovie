@@ -8,11 +8,9 @@ function getSize(type) {
   if (type === 'width') {
     return window.innerWidth;
   }
-
-  return 0;
 }
 
-function useWindowSize(type) {
+function useWindowSize(type = 'width') {
   const [windowSize, setWindowSize] = useState();
 
   const handleResize = useCallback(() => {
@@ -27,8 +25,6 @@ function useWindowSize(type) {
     if (type === 'width') {
       setWindowSize(window.innerWidth);
     }
-
-    setWindowSize(0);
   }, [handleResize]);
 
   useEffect(() => {
