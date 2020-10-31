@@ -11,6 +11,8 @@ import BurgerMenu from './BurgerMenu';
 import CollapseMenu from './CollapseMenu';
 import { i18n, withTranslation } from '../i18n';
 
+import useIsMobile from '../hooks/useIsMobile';
+
 const NavBar = styled(animated.nav)`
   position: fixed;
   width: 100%;
@@ -96,12 +98,13 @@ const SearchContainer = styled.div`
   margin: auto 0;
 
   @media (max-width: 768px) {
-    display: none;
+    width: 300px;
   }
 `;
 
 const NavBarNew = (props) => {
   const [session, loading] = useSession();
+  const isMobile = useIsMobile();
 
   const barAnimation = useSpring({
     // from: { transform: 'translate3d(0, -10rem, 0)' },
@@ -131,18 +134,22 @@ const NavBarNew = (props) => {
     <>
       <NavBar style={barAnimation}>
         <FlexContainer>
-          <Brand />
-          <SearchContainer>
-            <form onSubmit={submitSearch}>
-              <Input
-                onChange={handleChangeSearch}
-                fluid
-                icon="search"
-                placeholder="Search..."
-                value={search || ''}
-              />
-            </form>
-          </SearchContainer>
+          {(!session || !isMobile) && <Brand />}
+          {(!isMobile || (isMobile && session)) && (
+            <SearchContainer>
+              <form onSubmit={submitSearch}>
+                <Input
+                  style={{ fontSize: 16 }}
+                  onChange={handleChangeSearch}
+                  fluid
+                  icon="search"
+                  placeholder="Search..."
+                  value={search || ''}
+                />
+              </form>
+            </SearchContainer>
+          )}
+
           <NavLinks style={linkAnimation}>
             <Link href="/my_movies">My movies</Link>
             <Link href="/discover">Discover</Link>
@@ -167,25 +174,39 @@ const NavBarNew = (props) => {
                 EN
               </span>
             </a>
-            {session ? (
-              <Button style={{ marginRight: 16 }} circular onClick={signOut}>
-                Signout
-              </Button>
-            ) : (
-              <>
-                <Button style={{ marginRight: 16 }} circular href="/login">
-                  Login
-                </Button>
 
-                <Button
-                  circular
-                  primary
-                  style={{
-                    marginRight: '1.1rem',
-                  }}
-                  href="/register"
-                  content={'register'}
-                />
+            {!isMobile && (
+              <>
+                {session ? (
+                  <Button style={{ marginRight: 16 }} circular onClick={signOut}>
+                    Signout
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      style={{ marginRight: 16 }}
+                      circular
+                      onClick={() => {
+                        router.push('/login');
+                      }}
+                    >
+                      Login
+                    </Button>
+
+                    <Button
+                      circular
+                      primary
+                      style={{
+                        marginRight: '1.1rem',
+                      }}
+                      onClick={() => {
+                        router.push('/login');
+                      }}
+                    >
+                      Register
+                    </Button>
+                  </>
+                )}
               </>
             )}
           </NavLinks>

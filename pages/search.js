@@ -103,7 +103,8 @@ const New = () => {
                   activePage={activePage}
                   onPageChange={handlePaginationChange}
                   totalPages={totalPages}
-                  ellipsisItem={null}
+                  ellipsisItem={!isMobile ? undefined : null}
+                  size="mini"
                 />
               </PaginationContainer>
             )}

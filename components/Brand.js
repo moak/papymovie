@@ -12,10 +12,6 @@ const Logo = styled.a`
   font-weight: 500;
   cursor: pointer;
   position: relative;
-
-  ${media.phone`
-    font-size: 1.5rem;
-  `}
 `;
 
 const Brand = () => {

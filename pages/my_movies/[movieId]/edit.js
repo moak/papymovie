@@ -74,9 +74,9 @@ const EditMovie = (props) => {
   const validate = () => {
     let err = {};
 
-    if (!form.description) {
-      err.description = 'Description is required';
-    }
+    // if (!form.description) {
+    //   err.description = 'Description is required';
+    // }
 
     return err;
   };

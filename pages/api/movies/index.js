@@ -20,7 +20,7 @@ export default async (req, res) => {
         // console.log('movies', movies);
         // // console.log('session', session);
 
-        res.status(200).json({ success: true, data: movies });
+        res.status(200).json({ success: true, data: movies.reverse() });
       } catch (error) {
         console.log('error', error);
 

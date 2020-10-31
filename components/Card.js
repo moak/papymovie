@@ -65,18 +65,17 @@ const Card = (props) => {
               e.target.src =
                 'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png';
             }}
-            // onError={(error) => {
-            //   console.log('error', error);
-            // }}
             width="100%"
             height="100%"
             src={imageUrl}
           />
-          <VotesContainer>
-            <RoundedLabel width="50px" height="26px" color="#333333">
-              {amountVotes}
-            </RoundedLabel>
-          </VotesContainer>
+          {amountVotes && (
+            <VotesContainer>
+              <RoundedLabel width="50px" height="26px" color="#333333">
+                {amountVotes}
+              </RoundedLabel>
+            </VotesContainer>
+          )}
         </ImageContainer>
         <ContentContainer>
           <GradeContainer>

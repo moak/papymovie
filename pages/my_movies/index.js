@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import ReactStars from 'react-rating-stars-component';
+import Link from 'next/link';
 
 import Head from 'next/head';
-import Link from 'next/link';
 import { useSession, getSession } from 'next-auth/client';
 import styled from 'styled-components';
 
 import { Confirm, Card, Grid, Button } from 'semantic-ui-react';
+
+import useIsMobile from '../../hooks/useIsMobile';
 
 import PageContainer from '../../components/PageContainer';
 import AuthPage from '../../components/AuthPage';
@@ -19,21 +21,28 @@ import styles from '../../styles/Home.module.css';
 
 const List = styled.div`
   margin: 0 auto;
-  justify-content: space-between;
   display: flex;
   flex: 1;
   flex-wrap: wrap;
 }`;
 
 const CardContainer = styled.div`
-  height: 400px;
-  width: 25%;
+  // height: 450px;
+  width: ${(p) => p.percent}%;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
   padding: 0 8px;
   background-color: #fff;
   margin-bottom: 16px;
+}`;
+
+const Description = styled.div`
+  height: 30px;
+  margin-bottom: 8px;
+  margin-top: 16px;
+  cursor: ${(p) => p.cursor};
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }`;
 
 const Image = styled.img`
@@ -47,6 +56,7 @@ const Movies = (props) => {
   const [confirm, setConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const router = useRouter();
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     if (isDeleting) {
@@ -57,6 +67,13 @@ const Movies = (props) => {
   const open = (movieId) => {
     setMovieId(movieId);
     setConfirm(true);
+  };
+
+  const handleClickDescription = ({ movieId, description }) => {
+    if (description) {
+      return null;
+    }
+    router.push(`/movies/${movieId}`);
   };
 
   const close = () => setConfirm(false);
@@ -83,10 +100,19 @@ const Movies = (props) => {
     <AuthPage title="Movies">
       <PageContainer>
         <Text marginBottom={24} fontSize={32}>
-          My movies
+          My movies {movies && movies.length > 0 && `(${movies.length})`}
         </Text>
 
-        {!movies && <EmptyState>Register and start saving your movies!</EmptyState>}
+        {!movies && (
+          <EmptyState>
+            <Text fontSize={16} marginBottom={16}>
+              Register and start saving your movies!
+            </Text>
+            <Button primary onClick={() => router.push('/login')}>
+              Register
+            </Button>
+          </EmptyState>
+        )}
 
         {movies && movies.length === 0 ? (
           <EmptyState>You don't have any movies yet.</EmptyState>
@@ -97,11 +123,13 @@ const Movies = (props) => {
                 const { _id, rating, themoviedbId, title, description, image } = movie;
 
                 return (
-                  <CardContainer key={themoviedbId}>
+                  <CardContainer key={themoviedbId} percent={isMobile ? 100 : 25}>
                     <Card>
                       <Card.Content>
                         <Card.Header>
-                          <div>{title}</div>
+                          <Text isBold marginBottom={8} textAlign="center">
+                            {title}
+                          </Text>
                           <Image width="100%" src={`https://image.tmdb.org/t/p/w500/${image}`} />
                         </Card.Header>
                       </Card.Content>
@@ -120,7 +148,14 @@ const Movies = (props) => {
                             className={styles.stars}
                           />
                         </Box>
-                        <div style={{ marginBottom: 10 }}>{description}</div>
+                        <Description
+                          cursor={description ? 'auto' : 'pointer'}
+                          onClick={() =>
+                            handleClickDescription({ movieId: themoviedbId, description })
+                          }
+                        >
+                          {description || 'Write a description...'}
+                        </Description>
                         <Link href={`/movies/${themoviedbId}`}>
                           <Button primary>View</Button>
                         </Link>

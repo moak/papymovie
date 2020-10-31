@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Head from 'next/head';
 import NavBarNew from './NavBarNew';
@@ -18,6 +18,11 @@ const Page = ({ children, title }) => {
         <Head>
           <title>{title}</title>
           <link rel="icon" href="/favicon.ico" />
+          <meta
+            name="viewport"
+            content="width=device-width,minimum-scale=1,initial-scale=1"
+            className="next-head"
+          />
         </Head>
       )}
       {/* <Navbar /> */}

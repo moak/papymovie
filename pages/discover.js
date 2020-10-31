@@ -1,13 +1,7 @@
 import React, { useState, useEffect } from 'react';
-
-import Link from 'next/link';
-// import fetch from "isomorphic-unfetch";
 import styled from 'styled-components';
-import ReactStars from 'react-rating-stars-component';
-import { useRouter } from 'next/router';
 import moment from 'moment';
-
-import { Select, Pagination, Label, Grid, Button, Form, Loader } from 'semantic-ui-react';
+import { Select, Pagination } from 'semantic-ui-react';
 
 import Page from '../components/Page';
 import PageContainer from '../components/PageContainer';
@@ -46,7 +40,6 @@ const PaginationContainer = styled.div`
 
 const Discover = (props) => {
   // const { movies } = props;
-  const router = useRouter();
 
   const [movies, setMovies] = useState(null);
   const [totalPages, setTotalPages] = useState(null);
@@ -188,6 +181,8 @@ const Discover = (props) => {
           <PaginationContainer>
             <Pagination
               activePage={activePage}
+              ellipsisItem={!isMobile ? undefined : null}
+              size="mini"
               onPageChange={handlePaginationChange}
               totalPages={totalPages}
             />

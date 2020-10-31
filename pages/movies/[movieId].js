@@ -266,7 +266,7 @@ const View = (props) => {
                   style={{ width: 600 }}
                 />
 
-                <Button color="green" style={{ marginTop: 10 }}>
+                <Button loading={!!isSubmitting} color="green" style={{ marginTop: 10 }}>
                   Ajouter
                 </Button>
               </Form>
