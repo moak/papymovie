@@ -1,6 +1,6 @@
 import useWindowSize from './useWindowSize';
 
-const DEFAULT_BREAKPOINT_MIN = 728;
+const DEFAULT_BREAKPOINT_MIN = 800;
 const DEFAULT_BREAKPOINT_MAX = 1024;
 
 const useIsMobile = (min, max) => {

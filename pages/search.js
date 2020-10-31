@@ -10,7 +10,7 @@ import useIsMobile from '../hooks/useIsMobile';
 import useIsTablet from '../hooks/useIsTablet';
 
 import Page from '../components/Page';
-import Card from '../components/Card';
+import CardMovie from '../components/CardMovie';
 import PageContainer from '../components/PageContainer';
 import EmptyState from '../components/EmptyState';
 import Text from '../components/Text';
@@ -83,10 +83,9 @@ const New = () => {
                 {movies.map((movie) => {
                   const { id, title, poster_path, release_date, vote_average } = movie;
 
-                  console.log('movie', movie);
                   return (
                     <CardContainer key={id} percent={isMobile ? 100 : isTablet ? 50 : 25}>
-                      <Card
+                      <CardMovie
                         title={title}
                         subtitle={moment(release_date).format('MMM, YYYY')}
                         imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}

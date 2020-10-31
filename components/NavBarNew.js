@@ -12,6 +12,7 @@ import CollapseMenu from './CollapseMenu';
 import { i18n, withTranslation } from '../i18n';
 
 import useIsMobile from '../hooks/useIsMobile';
+import useIsTablet from '../hooks/useIsTablet';
 
 const NavBar = styled(animated.nav)`
   position: fixed;
@@ -53,48 +54,22 @@ const NavLinks = styled(animated.ul)`
       border-bottom: 1px solid #fdcb6e;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 800px) {
       display: none;
     }
   }
 `;
 
-const LinkButton = styled.a`
-  display: flex;
-  align-items: center;
-  height: 100%;
-  height: 100%;
-
-  &:hover {
-    text-decoration: none;
-  }
-
-  &.active {
-    text-decoration: none;
-  }
-`;
-
-const MenuText = styled.div`
-  font-size: 14px;
-  margin-left: 4px;
-`;
 const BurgerWrapper = styled.div`
   margin: auto 0;
 
-  @media (min-width: 769px) {
+  @media (min-width: 969px) {
     display: none;
   }
 `;
 
-const LinkButtonContainer = styled.div`
-  margin-right: 48px;
-  height: 70px;
-`;
-
 const SearchContainer = styled.div`
-  width: 500px;
-  justify-self: end;
-  list-style-type: none;
+  width: 350px;
   margin: auto 0;
 
   @media (max-width: 768px) {
@@ -105,6 +80,7 @@ const SearchContainer = styled.div`
 const NavBarNew = (props) => {
   const [session, loading] = useSession();
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
 
   const barAnimation = useSpring({
     // from: { transform: 'translate3d(0, -10rem, 0)' },
@@ -134,7 +110,7 @@ const NavBarNew = (props) => {
     <>
       <NavBar style={barAnimation}>
         <FlexContainer>
-          {(!session || !isMobile) && <Brand />}
+          {(!session || (!isMobile && !isTablet)) && <Brand />}
           {(!isMobile || (isMobile && session)) && (
             <SearchContainer>
               <form onSubmit={submitSearch}>
@@ -151,8 +127,14 @@ const NavBarNew = (props) => {
           )}
 
           <NavLinks style={linkAnimation}>
-            <Link href="/my_movies">My movies</Link>
-            <Link href="/discover">Discover</Link>
+            {!isMobile && !isTablet && (
+              <>
+                <Link href="/users">Users</Link>
+                <Link href="/feed">Feed</Link>
+                <Link href="/my_movies">My movies</Link>
+                <Link href="/discover">Discover</Link>
+              </>
+            )}
             <a>
               <span
                 onClick={(e) => {
@@ -175,7 +157,7 @@ const NavBarNew = (props) => {
               </span>
             </a>
 
-            {!isMobile && (
+            {!isMobile && !isTablet && (
               <>
                 {session ? (
                   <Button style={{ marginRight: 16 }} circular onClick={signOut}>

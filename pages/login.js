@@ -27,8 +27,6 @@ const Login = () => {
   const [password, setPassword] = useState(null);
   const [session, loading] = useSession();
 
-  console.log('session', session);
-
   if (typeof window !== 'undefined' && loading) return null;
 
   if (session) {

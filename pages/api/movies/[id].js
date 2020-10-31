@@ -1,5 +1,9 @@
+import { getSession } from 'next-auth/client';
+
 import dbConnect from '../../../utils/dbConnect';
 import Movie from '../../../models/Movie';
+import Feed from '../../../models/Feed';
+import User from '../../../models/User';
 
 dbConnect();
 
@@ -8,6 +12,8 @@ export default async (req, res) => {
     query: { id },
     method,
   } = req;
+
+  const session = await getSession({ req });
 
   switch (method) {
     case 'GET':
@@ -30,6 +36,8 @@ export default async (req, res) => {
           runValidators: true,
         });
 
+        await Feed.create({ action: 'edit', movie, user: movie.user });
+
         if (!movie) {
           return res.status(400).json({ success: false });
         }
@@ -41,13 +49,18 @@ export default async (req, res) => {
       break;
     case 'DELETE':
       try {
-        const deletedNote = await Movie.deleteOne({ _id: id });
+        const deletedMovie = await Movie.deleteOne({ _id: id });
 
-        if (!deletedNote) {
+        if (!deletedMovie) {
           return res.status(400).json({ success: false });
         }
 
-        res.status(200).json({ success: true, data: {} });
+        User.findOneAndUpdate(
+          { _id: session.id },
+          { $pull: { movies: deletedMovie } },
+          { new: true },
+        ).exec(),
+          res.status(200).json({ success: true, data: {} });
       } catch (error) {
         res.status(400).json({ success: false });
       }

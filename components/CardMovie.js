@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import ReactStars from 'react-rating-stars-component';
 
 import styled from 'styled-components';
 
 import Text from '../components/Text';
 import RoundedLabel from '../components/RoundedLabel';
 import getColorFromMark from '../utils/getColorFromMark';
+
+import styles from '../styles/Home.module.css';
 
 const Container = styled.div`
   display: flex;
@@ -33,7 +36,6 @@ const ContentContainer = styled.div`
   flex-direction: column;
   padding: 12px;
   border-top: 1px solid #cecece;
-
 }`;
 
 const GradeContainer = styled.div`
@@ -52,8 +54,8 @@ const Image = styled.img`
 
 }`;
 
-const Card = (props) => {
-  const { title, subtitle, imageUrl, href, grade, amountVotes } = props;
+const CardMovie = (props) => {
+  const { title, subtitle, imageUrl, href, grade, amountVotes, userRating } = props;
 
   return (
     <Link href={href}>
@@ -78,19 +80,34 @@ const Card = (props) => {
           )}
         </ImageContainer>
         <ContentContainer>
-          <GradeContainer>
-            <RoundedLabel borderWith={2} rounded color={getColorFromMark(grade)}>
-              {grade}
-            </RoundedLabel>
-          </GradeContainer>
-          <Text isBold fontSize={16} marginTop={8} marginBottom={8}>
+          {grade && (
+            <GradeContainer>
+              <RoundedLabel borderWith={2} rounded color={getColorFromMark(grade)}>
+                {grade}
+              </RoundedLabel>
+            </GradeContainer>
+          )}
+          <Text isBold fontSize={16} marginTop={grade ? 8 : 0} marginBottom={8}>
             {title}
           </Text>
-          <Text>{subtitle}</Text>
+          {subtitle && <Text>{subtitle}</Text>}
+          {userRating && (
+            <ReactStars
+              count={5}
+              size={24}
+              color2={'#ffd700'}
+              color1={'#d3d3d3'}
+              value={userRating}
+              style={{ marginBottom: 10 }}
+              isHalf
+              edit={false}
+              className={styles.stars}
+            />
+          )}
         </ContentContainer>
       </Container>
     </Link>
   );
 };
 
-export default Card;
+export default CardMovie;

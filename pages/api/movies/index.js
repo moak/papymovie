@@ -2,7 +2,8 @@ import { getSession } from 'next-auth/client';
 
 import dbConnect from '../../../utils/dbConnect';
 import Movie from '../../../models/Movie';
-// import User from '../../../models/User';
+import Feed from '../../../models/Feed';
+import User from '../../../models/User';
 
 dbConnect();
 
@@ -30,6 +31,18 @@ export default async (req, res) => {
     case 'POST':
       try {
         const movie = await Movie.create({ ...req.body, user: session.id });
+
+        await Feed.create({ action: 'add', movie, user: session.id });
+
+        console.log('ushhhh');
+        console.log('session.id', session.id);
+        console.log('movie._id ', movie._id);
+
+        await User.findByIdAndUpdate(
+          { _id: session.id },
+          { $push: { movies: movie._id } },
+          { new: true },
+        );
 
         res.status(201).json({ success: true, data: movie });
       } catch (error) {

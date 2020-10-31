@@ -6,7 +6,7 @@ import { Button, Select, Pagination } from 'semantic-ui-react';
 import Page from '../components/Page';
 import PageContainer from '../components/PageContainer';
 import Text from '../components/Text';
-import Card from '../components/Card';
+import CardMovie from '../components/CardMovie';
 
 import useIsMobile from '../hooks/useIsMobile';
 import useIsTablet from '../hooks/useIsTablet';
@@ -67,8 +67,6 @@ export const Row = styled.div`
 `;
 
 const Discover = (props) => {
-  // const { movies } = props;
-
   const [movies, setMovies] = useState(null);
   const [totalPages, setTotalPages] = useState(null);
   const [activePage, setActivePage] = useState(1);
@@ -108,7 +106,6 @@ const Discover = (props) => {
       language: 'fr',
     };
 
-    const test = console.log('test', test);
     if (filter === 'top_rated') {
       endPoint = 'movie/top_rated';
     }
@@ -230,7 +227,7 @@ const Discover = (props) => {
 
                   return (
                     <CardContainer key={id} percent={isMobile ? 100 : isTablet ? 50 : 25}>
-                      <Card
+                      <CardMovie
                         title={title}
                         subtitle={moment(release_date).format('MMM, YYYY')}
                         imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}
@@ -263,16 +260,7 @@ const Discover = (props) => {
 };
 
 Discover.getInitialProps = async () => {
-  const res = await fetch(
-    `https://api.themoviedb.org/3/discover/movie?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
-  );
-
-  const data = await res.json();
-
-  console.log('data', data);
   return {
-    movie: data,
-    isFound: data.success !== false,
     namespacesRequired: ['common'],
   };
 };

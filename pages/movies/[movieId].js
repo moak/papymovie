@@ -11,7 +11,7 @@ import Page from '../../components/Page';
 import PageContainer from '../../components/PageContainer';
 import Text from '../../components/Text';
 import Box from '../../components/Box';
-import Card from '../../components/Card';
+import CardMovie from '../../components/CardMovie';
 import RoundedLabel from '../../components/RoundedLabel';
 
 import getColorFromMark from '../../utils/getColorFromMark';
@@ -297,7 +297,7 @@ const View = (props) => {
 
                 return (
                   <CardContainer key={id} percent={isMobile ? 100 : 20}>
-                    <Card
+                    <CardMovie
                       title={title}
                       subtitle={moment(release_date).format('MMM, YYYY')}
                       imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}
