@@ -23,6 +23,4 @@ const options = {
   },
 };
 
-console.log('options', options);
-
 export default (req, res) => NextAuth(req, res, options);

@@ -23,6 +23,11 @@ const Page = ({ children, title }) => {
             content="width=device-width,minimum-scale=1,initial-scale=1"
             className="next-head"
           />
+          <script
+            data-ad-client="ca-pub-8592736460427517"
+            async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+          ></script>
         </Head>
       )}
       {/* <Navbar /> */}
