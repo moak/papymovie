@@ -129,10 +129,10 @@ const NavBarNew = (props) => {
           <NavLinks style={linkAnimation}>
             {!isMobile && !isTablet && (
               <>
+                <Link href="/movies">Movies</Link>
+                {/* <Link href="/feed">Feed</Link> */}
                 <Link href="/users">Users</Link>
-                <Link href="/feed">Feed</Link>
-                <Link href="/my_movies">My movies</Link>
-                <Link href="/discover">Discover</Link>
+                <Link href={`/users/${session && session.id}`}>My profile</Link>
               </>
             )}
             <a>

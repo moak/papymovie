@@ -30,7 +30,7 @@ const Home = () => {
                   <p>Share the best movies with your friends</p>
                 </div>
               </Link> */}
-              <Link href="/discover">
+              <Link href="/movies">
                 <div className={styles.card}>
                   <h3>Discover &rarr;</h3>
                   <p>Discover the trends and best movies of all time. </p>

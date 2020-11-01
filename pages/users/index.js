@@ -43,7 +43,7 @@ const Movies = (props) => {
     <AuthPage title="Users">
       <PageContainer>
         <Text marginBottom={24} fontSize={32}>
-          Users {users && users.length > 0 && `(${users.length})`}
+          Users
         </Text>
 
         {!users || (users && users.length === 0) ? (

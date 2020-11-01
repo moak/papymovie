@@ -16,17 +16,15 @@ const MovieSchema = new mongoose.Schema({
   title: {
     type: String,
     required: [true, 'Please add a title'],
-    // maxlength: [40, 'Title cannot be more than 40 characters'],
   },
   description: {
     type: String,
     required: false,
-    maxlength: [300, 'Description cannot be more than 200 characters'],
+    maxlength: [300, 'Description cannot be more than 300 characters'],
   },
   image: {
     type: String,
     required: true,
-    // maxlength: [200, 'Description cannot be more than 200 characters'],
   },
   rating: {
     type: Number,

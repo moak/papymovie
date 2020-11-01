@@ -17,7 +17,6 @@ import Text from '../components/Text';
 
 const List = styled.div`
   margin: 0 auto;
-  justify-content: space-between;
   display: flex;
   flex: 1;
   flex-wrap: wrap;
@@ -42,40 +41,53 @@ const New = () => {
   const router = useRouter();
 
   const [movies, setMovies] = useState(null);
-  const [totalPages, setTotalPages] = useState(null);
-  const [activePage, setActivePage] = useState(1);
+  const [totalPagesMovies, setTotalPagesMovies] = useState(0);
+  const [activePageMovies, setActivePageMovies] = useState(1);
+
+  const [series, setSeries] = useState(null);
+  const [totalPagesSeries, setTotalPagesSeries] = useState(0);
+  const [activePageSeries, setActivePageSeries] = useState(1);
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 
   useEffect(async () => {
     if (router.query.search) {
-      const res = await fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&query=${router.query.search}&page=${activePage}&language=fr`,
+      const moviesQuery = await fetch(
+        `https://api.themoviedb.org/3/search/movie?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&query=${router.query.search}&page=${activePageMovies}&language=fr`,
       );
 
-      const { results, total_pages } = await res.json();
-      setMovies(results);
-      setTotalPages(total_pages);
+      const { results: moviesResults, total_pages: moviesTotalPage } = await moviesQuery.json();
+
+      const seriesQuery = await fetch(
+        `https://api.themoviedb.org/3/search/tv?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&query=${router.query.search}&page=${activePageSeries}&language=fr`,
+      );
+
+      const { results: seriesResults, total_pages: seriesTotalPage } = await seriesQuery.json();
+
+      setMovies(moviesResults);
+      setSeries(seriesResults);
+      setTotalPagesMovies(moviesTotalPage);
+      setTotalPagesSeries(seriesTotalPage);
     }
-  }, [router, activePage]);
+  }, [router, activePageMovies]);
 
-  const handlePaginationChange = (e, { activePage }) => {
-    setActivePage(activePage);
+  const handlePaginationChangeMovies = (e, { activePage }) => {
+    setActivePageMovies(activePage);
   };
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [activePage]);
+  const handlePaginationChangeSeries = (e, { activePage }) => {
+    setActivePageSeries(activePage);
+  };
 
   return (
     <Page title="Search a movie">
       <PageContainer>
-        <Text marginBottom={24} fontSize={32}>
-          Results for: {router.query.search}
+        <Text marginTop={24} marginBottom={24} fontSize={32}>
+          Movies:
         </Text>
-        {movies && movies.length === 0 ? (
-          <EmptyState>No results found</EmptyState>
+
+        {movies && movies.length === 0 && series && series.length === 0 ? (
+          <EmptyState>No results found for {router.query.search}.</EmptyState>
         ) : (
           <>
             {movies && (
@@ -98,12 +110,54 @@ const New = () => {
               </List>
             )}
 
-            {totalPages > 0 && (
+            {totalPagesMovies > 1 && (
               <PaginationContainer>
                 <Pagination
-                  activePage={activePage}
-                  onPageChange={handlePaginationChange}
-                  totalPages={totalPages}
+                  activePage={activePageMovies}
+                  onPageChange={handlePaginationChangeMovies}
+                  totalPages={totalPagesMovies}
+                  ellipsisItem={!isMobile ? undefined : null}
+                  size="mini"
+                />
+              </PaginationContainer>
+            )}
+          </>
+        )}
+        <Text marginTop={24} marginBottom={24} fontSize={32}>
+          Series:
+        </Text>
+
+        {series && series.length === 0 ? (
+          <EmptyState>No results found for {router.query.search}.</EmptyState>
+        ) : (
+          <>
+            {series && (
+              <List>
+                {series.map((serie) => {
+                  console.log('serie', serie);
+                  const { id, name, poster_path, first_air_date, vote_average } = serie;
+
+                  return (
+                    <CardContainer key={id} percent={isMobile ? 100 : isTablet ? 50 : 25}>
+                      <CardMovie
+                        title={name}
+                        subtitle={moment(first_air_date).format('MMM, YYYY')}
+                        imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                        href={null}
+                        grade={vote_average}
+                      />
+                    </CardContainer>
+                  );
+                })}
+              </List>
+            )}
+
+            {totalPagesSeries > 1 && (
+              <PaginationContainer>
+                <Pagination
+                  activePage={activePageSeries}
+                  onPageChange={handlePaginationChangeSeries}
+                  totalPages={totalPagesSeries}
                   ellipsisItem={!isMobile ? undefined : null}
                   size="mini"
                 />

@@ -34,10 +34,6 @@ export default async (req, res) => {
 
         await Feed.create({ action: 'add', movie, user: session.id });
 
-        console.log('ushhhh');
-        console.log('session.id', session.id);
-        console.log('movie._id ', movie._id);
-
         await User.findByIdAndUpdate(
           { _id: session.id },
           { $push: { movies: movie._id } },

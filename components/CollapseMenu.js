@@ -28,10 +28,10 @@ const CollapseMenu = (props) => {
             <Link href="/">Home</Link>
           </li>
           <li>
-            <Link href="/discover">Discover</Link>
+            <Link href="/movies">Discover</Link>
           </li>
           <li>
-            <Link href="/my_movies">My movies</Link>
+            <Link href={`/users/${session.id}`}>My profile</Link>
           </li>
           {session ? (
             <li>

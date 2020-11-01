@@ -1,14 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import ReactStars from 'react-rating-stars-component';
-
 import styled from 'styled-components';
 
 import Text from '../components/Text';
 import RoundedLabel from '../components/RoundedLabel';
 import getColorFromMark from '../utils/getColorFromMark';
-
-import styles from '../styles/Home.module.css';
 
 const Container = styled.div`
   display: flex;
@@ -26,7 +22,7 @@ const Container = styled.div`
 }`;
 
 const ImageContainer = styled.div`
-  height: 80%;
+  height: ${(p) => p.imageHeight || 75}%;
   position: relative;
 }`;
 
@@ -55,59 +51,70 @@ const Image = styled.img`
 }`;
 
 const CardMovie = (props) => {
-  const { title, subtitle, imageUrl, href, grade, amountVotes, userRating } = props;
+  const {
+    children,
+    _id,
+    title,
+    themoviedbId,
+    subtitle,
+    imageUrl,
+    href,
+    grade,
+    amountVotes,
+    userRating,
+    centered,
+    imageHeight,
+  } = props;
 
-  return (
-    <Link href={href}>
-      <Container>
-        <ImageContainer>
-          <Image
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src =
-                'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png';
-            }}
-            width="100%"
-            height="100%"
-            src={imageUrl}
-          />
-          {amountVotes && (
-            <VotesContainer>
-              <RoundedLabel width="50px" height="26px" color="#333333">
-                {amountVotes}
-              </RoundedLabel>
-            </VotesContainer>
-          )}
-        </ImageContainer>
-        <ContentContainer>
-          {grade && (
-            <GradeContainer>
-              <RoundedLabel borderWith={2} rounded color={getColorFromMark(grade)}>
-                {grade}
-              </RoundedLabel>
-            </GradeContainer>
-          )}
-          <Text isBold fontSize={16} marginTop={grade ? 8 : 0} marginBottom={8}>
-            {title}
-          </Text>
-          {subtitle && <Text>{subtitle}</Text>}
-          {userRating && (
-            <ReactStars
-              count={5}
-              size={24}
-              color2={'#ffd700'}
-              color1={'#d3d3d3'}
-              value={userRating}
-              style={{ marginBottom: 10 }}
-              isHalf
-              edit={false}
-              className={styles.stars}
-            />
-          )}
-        </ContentContainer>
-      </Container>
-    </Link>
+  const component = (
+    <Container>
+      <ImageContainer imageHeight={imageHeight}>
+        <Image
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = 'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png';
+          }}
+          width="100%"
+          height="100%"
+          src={imageUrl}
+        />
+        {amountVotes && (
+          <VotesContainer>
+            <RoundedLabel width="50px" height="26px" color="#333333">
+              {amountVotes}
+            </RoundedLabel>
+          </VotesContainer>
+        )}
+      </ImageContainer>
+      <ContentContainer>
+        {grade ? (
+          <GradeContainer>
+            <RoundedLabel borderWith={2} rounded color={getColorFromMark(grade)}>
+              {grade}
+            </RoundedLabel>
+          </GradeContainer>
+        ) : null}
+        <Text
+          isBold
+          textAlign={centered ? 'center' : 'left'}
+          fontSize={16}
+          marginTop={grade ? 8 : 0}
+          marginBottom={8}
+          dotdotdot
+        >
+          {title}
+        </Text>
+        {subtitle && <Text>{subtitle}</Text>}
+      </ContentContainer>
+      {children}
+    </Container>
   );
+
+  if (href) {
+    return <Link href={href}>{component}</Link>;
+  }
+
+  return component;
 };
 
 export default CardMovie;

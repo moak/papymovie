@@ -1,19 +1,21 @@
 import React from 'react';
 import ReactStars from 'react-stars';
+import { useSession, getSession } from 'next-auth/client';
 
 import { useState, useEffect } from 'react';
 import { Breadcrumb, Button, Form, Loader } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-import Page from '../../../components/Page';
-import PageContainer from '../../../components/PageContainer';
-import Text from '../../../components/Text';
+import Page from '../../../../../components/Page';
+import PageContainer from '../../../../../components/PageContainer';
+import Text from '../../../../../components/Text';
 
-import styles from '../../../styles/Home.module.css';
+import styles from '../../../../../styles/Home.module.css';
 
 const EditMovie = (props) => {
   const { movie } = props;
+  const [session, loading] = useSession();
 
   console.log('movie', movie);
   const [form, setForm] = useState({
@@ -44,7 +46,7 @@ const EditMovie = (props) => {
         },
         body: JSON.stringify(form),
       });
-      router.push('/my_movies');
+      router.push(`/users/${session.id}`);
     } catch (error) {
       console.log(error);
     }
@@ -85,11 +87,11 @@ const EditMovie = (props) => {
   return (
     <Page title="Edit movie">
       <PageContainer>
-        <Link href="/my_movies">Movies</Link>
+        <Link href={`/users/${session && session.id}`}>Movies</Link>
         <div>Edit movie</div>
 
         <Breadcrumb style={{ marginBottom: 24 }} size={'huge'}>
-          <Breadcrumb.Section href={'/my_movies'} link>
+          <Breadcrumb.Section href={`/users/${session && session.id}`} link>
             Movies
           </Breadcrumb.Section>
           <Breadcrumb.Divider icon="right chevron" />

@@ -6,7 +6,7 @@ import { Feed, Button, Select, Pagination } from 'semantic-ui-react';
 import Page from '../components/Page';
 import PageContainer from '../components/PageContainer';
 import Text from '../components/Text';
-import CardMovie from '../components/CardMovie';
+import FeedItem from '../components/FeedItem';
 
 import useIsMobile from '../hooks/useIsMobile';
 import useIsTablet from '../hooks/useIsTablet';
@@ -74,6 +74,7 @@ const Discover = (props) => {
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 
+  console.log('feed', feed);
   return (
     <Page title="login">
       <PageContainer>
@@ -86,6 +87,7 @@ const Discover = (props) => {
           return (
             <div style={{ marginBottom: 8 }} key={feedItem._id}>
               {JSON.stringify(feedItem)}
+              <FeedItem />
             </div>
           );
         })}

@@ -113,6 +113,8 @@ const View = (props) => {
   const isMobile = useIsMobile();
   const [session, loading] = useSession();
 
+  const hasRated = false;
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [form, setForm] = useState({
@@ -128,19 +130,15 @@ const View = (props) => {
   const validate = () => {
     let err = {};
 
-    // if (!form.description) {
-    //   err.description = "Description is required";
-    // }
+    if (!form.rating) {
+      err.rating = 'Rating is required';
+    }
 
     return err;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (!session) {
-      return router.push('/login');
-    }
 
     let errs = validate();
     setErrors(errs);
@@ -171,7 +169,8 @@ const View = (props) => {
         },
         body: JSON.stringify(form),
       });
-      router.push('/my_movies');
+
+      router.push(`/users/${session.id}`);
     } catch (error) {
       console.log(error);
     }
@@ -253,8 +252,12 @@ const View = (props) => {
 
               <hr />
 
-              <Text isBold marginTop={84} marginBottom={16} fontSize={22} textColor="#ffffff">
-                Save it in your list
+              <Text isBold marginTop={24} marginBottom={16} fontSize={24} textColor="#ffffff">
+                Save this movie:
+              </Text>
+
+              <Text isBold marginTop={44} marginBottom={8} fontSize={14} textColor="#ffffff">
+                {hasRated ? 'Your rating' : 'Rate this movie'}
               </Text>
 
               <ReactStars
@@ -269,7 +272,15 @@ const View = (props) => {
                 className={styles.stars}
               />
 
-              <Form onSubmit={handleSubmit}>
+              <Form
+                onSubmit={
+                  session
+                    ? handleSubmit
+                    : () => {
+                        router.push('/login');
+                      }
+                }
+              >
                 <Form.TextArea
                   placeholder="Write a personnal note for this movie"
                   name="description"
@@ -281,6 +292,11 @@ const View = (props) => {
                 <Button loading={!!isSubmitting} color="green" style={{ marginTop: 10 }}>
                   Ajouter
                 </Button>
+                {errors.rating && (
+                  <Text isBold textColor="#ffffff" marginBottom={8} marginTop={8} fontSize={14}>
+                    * Rating is required
+                  </Text>
+                )}
               </Form>
             </Right>
           </SubContainer>
@@ -326,11 +342,8 @@ View.getInitialProps = async (context) => {
   const similarMovieRequest = await fetch(
     `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
   );
-  console.log('similarMovieRequest', similarMovieRequest);
-
   const similarMovies = await similarMovieRequest.json();
 
-  console.log('similarMovies', similarMovies);
   return {
     movie,
     similarMovies: similarMovies.results,

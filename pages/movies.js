@@ -23,7 +23,7 @@ const List = styled.div`
 }`;
 
 const CardContainer = styled.div`
-  height: 450px;
+  height: 420px;
   width: ${(p) => p.percent}%;
   display: flex;
   padding: 0 8px;
@@ -67,7 +67,7 @@ export const Row = styled.div`
   justify-content: ${(p) => p.justifyContent || 'flex-start'};
 `;
 
-const Discover = (props) => {
+const Movies = (props) => {
   const [movies, setMovies] = useState(null);
   const [totalPages, setTotalPages] = useState(null);
   const [activePage, setActivePage] = useState(1);
@@ -162,7 +162,7 @@ const Discover = (props) => {
       <PageContainer maxWidth="1300">
         <Row justifyContent="space-between">
           <Text marginBottom={24} fontSize={32}>
-            Discover
+            Movies
           </Text>
           {isMobile && (
             <Button
@@ -287,10 +287,10 @@ const Discover = (props) => {
   );
 };
 
-Discover.getInitialProps = async () => {
+Movies.getInitialProps = async () => {
   return {
     namespacesRequired: ['common'],
   };
 };
 
-export default Discover;
+export default Movies;
