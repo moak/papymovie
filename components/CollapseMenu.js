@@ -25,13 +25,13 @@ const CollapseMenu = (props) => {
       >
         <NavLinks>
           <li>
-            <Link href="/">Home</Link>
+            <Link href="/movies">Movies</Link>
           </li>
           <li>
-            <Link href="/movies">Discover</Link>
+            <Link href="/users">Users</Link>
           </li>
           <li>
-            <Link href={`/users/${session.id}`}>My profile</Link>
+            <Link href={`/users/${session && session.id}`}>My profile</Link>
           </li>
           {session ? (
             <li>

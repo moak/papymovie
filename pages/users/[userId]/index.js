@@ -3,10 +3,8 @@ import { useRouter } from 'next/router';
 import { Col, Row } from 'react-styled-flexboxgrid';
 import ReactStars from 'react-rating-stars-component';
 import { useSession } from 'next-auth/client';
-
 import styled from 'styled-components';
-
-import { Confirm, Button } from 'semantic-ui-react';
+import { Confirm, Button, Icon } from 'semantic-ui-react';
 
 import styles from 'styles/Home.module.css';
 import useIsMobile from 'hooks/useIsMobile';
@@ -200,18 +198,18 @@ const User = (props) => {
                             {isMyProfile ? (
                               <>
                                 <Button
-                                  size="tiny"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    router.push(`/users/${_id}/movies/${_id}/edit`);
+                                    router.push(`/movies/${themoviedbId}`);
                                   }}
                                   primary
+                                  icon
                                 >
-                                  Edit
+                                  <Icon name="pencil" />
                                 </Button>
+
                                 <Button
-                                  size="tiny"
-                                  primary
+                                  color="red"
                                   onClick={(e) => {
                                     console.log('heyyy');
                                     e.preventDefault();
@@ -242,7 +240,13 @@ const User = (props) => {
             </List>
           </Col>
         </Row>
-        <Confirm open={confirm} onCancel={close} onConfirm={handleDelete} />
+        <Confirm
+          open={confirm}
+          onCancel={close}
+          onConfirm={handleDelete}
+          header="Delete movie"
+          content="Are you sure you want to delete this movie ?"
+        />
       </PageContainer>
     </AuthPage>
   );

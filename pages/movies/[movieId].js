@@ -78,6 +78,12 @@ export const Infos = styled.div`
 
 const View = (props) => {
   const {
+    userMovie,
+    userMovie: {
+      _id: userMovieId,
+      rating: userMovieRating,
+      description: userMovieDescription,
+    } = {},
     similarMovies,
     isFound,
     movie: {
@@ -105,8 +111,8 @@ const View = (props) => {
   const [form, setForm] = useState({
     themoviedbId: movieId,
     title: title,
-    description: null,
-    rating: null,
+    description: userMovieDescription,
+    rating: userMovieRating,
     image: poster_path,
   });
 
@@ -161,10 +167,31 @@ const View = (props) => {
     }
   };
 
+  const editMovie = async () => {
+    try {
+      await fetch(`${process.env.API_URL}/api/users/${session.id}/movies/${userMovieId}`, {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      router.push(`/users/${session.id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   useEffect(() => {
     if (isSubmitting) {
       if (Object.keys(errors).length === 0) {
-        createMovie();
+        if (userMovie) {
+          editMovie();
+        } else {
+          createMovie();
+        }
       } else {
         setIsSubmitting(false);
       }
@@ -200,6 +227,7 @@ const View = (props) => {
           <SubContainer>
             <Left>
               <img
+                alt="paster_path"
                 style={{ borderRadius: 16 }}
                 src={`//image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
               />
@@ -238,11 +266,11 @@ const View = (props) => {
               <hr />
 
               <Text isBold marginTop={24} marginBottom={16} fontSize={24} textColor="#ffffff">
-                Save this movie:
+                {userMovie ? 'You have saved this movie' : 'Save this movie:'}
               </Text>
 
               <Text isBold marginTop={44} marginBottom={8} fontSize={14} textColor="#ffffff">
-                {hasRated ? 'Your rating' : 'Rate this movie'}
+                {userMovie ? 'Your rating' : 'Rate this movie'}
               </Text>
 
               <ReactStars
@@ -275,7 +303,7 @@ const View = (props) => {
                 />
 
                 <Button loading={!!isSubmitting} color="green" style={{ marginTop: 10 }}>
-                  Ajouter
+                  {userMovie ? 'Edit' : 'Ajouter'}
                 </Button>
                 {errors.rating && (
                   <Text isBold textColor="#ffffff" marginBottom={8} marginTop={8} fontSize={14}>
@@ -317,6 +345,10 @@ const View = (props) => {
 };
 
 View.getInitialProps = async (context) => {
+  const session = await getSession(context);
+  console.log('session', session);
+
+  let userMovie = null;
   const { query: { movieId } = {} } = context;
 
   const movieRequest = await fetch(
@@ -329,9 +361,23 @@ View.getInitialProps = async (context) => {
   );
   const similarMovies = await similarMovieRequest.json();
 
+  if (session) {
+    const userMovieRequest = await fetch(
+      `${process.env.API_URL}/api/users/${session.id}/movies/${movieId}`,
+    );
+    const { data: userMovieData } = await userMovieRequest.json();
+    userMovie = userMovieData;
+  }
+
+  // const userMovieRequest = await fetch(
+  //   `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
+  // );
+  // const similarMovies = await similarMovieRequest.json();
+
   return {
     movie,
     similarMovies: similarMovies.results,
+    userMovie,
     isFound: movie.success !== false,
     namespacesRequired: ['common'],
   };

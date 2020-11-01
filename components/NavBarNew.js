@@ -130,7 +130,6 @@ const NavBarNew = (props) => {
             {!isMobile && !isTablet && (
               <>
                 <Link href="/movies">Movies</Link>
-                {/* <Link href="/feed">Feed</Link> */}
                 <Link href="/users">Users</Link>
                 <Link href={`/users/${session && session.id}`}>My profile</Link>
               </>
