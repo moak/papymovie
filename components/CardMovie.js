@@ -42,7 +42,7 @@ const GradeContainer = styled.div`
 
 const VotesContainer = styled.div`
   position: absolute;
-  top: 8px;
+  top: -14px;
   right: 12px;
 }`;
 
@@ -78,6 +78,8 @@ const CardMovie = (props) => {
           height="100%"
           src={imageUrl}
         />
+      </ImageContainer>
+      <ContentContainer>
         {amountVotes && (
           <VotesContainer>
             <RoundedLabel width="50px" height="26px" color="#333333">
@@ -85,11 +87,9 @@ const CardMovie = (props) => {
             </RoundedLabel>
           </VotesContainer>
         )}
-      </ImageContainer>
-      <ContentContainer>
         {grade ? (
           <GradeContainer>
-            <RoundedLabel borderWith={2} rounded color={getColorFromMark(grade)}>
+            <RoundedLabel borderWith={3} rounded color={getColorFromMark(grade)}>
               {grade}
             </RoundedLabel>
           </GradeContainer>

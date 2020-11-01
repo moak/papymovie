@@ -10,7 +10,7 @@ const Grade = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  border: ${(p) => `${p.borderWith || 0}px solid #dedede`};
+  border: ${(p) => `${p.borderWith || 0}px solid #333333`};
   font-size: 12px;
   font-weight: 700;
 }`;

@@ -227,7 +227,7 @@ const Movies = (props) => {
                     Notes
                   </Text>
                   <div style={{ display: 'flex', marginBottom: 16 }}>
-                    <RoundedLabel borderWith={2} rounded color="#21ba45 ">
+                    <RoundedLabel borderWith={3} rounded color="#21ba45 ">
                       {6}
                     </RoundedLabel>
                     <Text marginLeft={8}>

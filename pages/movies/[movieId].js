@@ -230,7 +230,7 @@ const View = (props) => {
                   </Text>
                 )}
                 <div style={{ float: 'right' }}>
-                  <RoundedLabel borderWith={2} rounded color={getColorFromMark(vote_average)}>
+                  <RoundedLabel borderWith={3} rounded color={getColorFromMark(vote_average)}>
                     {vote_average}
                   </RoundedLabel>
                 </div>
