@@ -9,10 +9,10 @@ import Link from 'next/link';
 import Brand from './Brand';
 import BurgerMenu from './BurgerMenu';
 import CollapseMenu from './CollapseMenu';
-import { i18n, withTranslation } from '../i18n';
+import { i18n, withTranslation } from 'i18n';
 
-import useIsMobile from '../hooks/useIsMobile';
-import useIsTablet from '../hooks/useIsTablet';
+import useIsMobile from 'hooks/useIsMobile';
+import useIsTablet from 'hooks/useIsTablet';
 
 const NavBar = styled(animated.nav)`
   position: fixed;

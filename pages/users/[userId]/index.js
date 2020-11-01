@@ -1,34 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Grid, Col, Row } from 'react-styled-flexboxgrid';
-import moment from 'moment';
-import Link from 'next/link';
+import { Col, Row } from 'react-styled-flexboxgrid';
 import ReactStars from 'react-rating-stars-component';
-import { useSession, getSession } from 'next-auth/client';
+import { useSession } from 'next-auth/client';
 
-import Head from 'next/head';
 import styled from 'styled-components';
 
-import { Confirm, Card, Button } from 'semantic-ui-react';
+import { Confirm, Button } from 'semantic-ui-react';
 
-import styles from '../../../styles/Home.module.css';
-import useIsMobile from '../../../hooks/useIsMobile';
-import useIsTablet from '../../../hooks/useIsTablet';
+import styles from 'styles/Home.module.css';
+import useIsMobile from 'hooks/useIsMobile';
+import useIsTablet from 'hooks/useIsTablet';
 
-import PageContainer from '../../../components/PageContainer';
-import AuthPage from '../../../components/AuthPage';
-import Box from '../../../components/Box';
-import Text from '../../../components/Text';
-import EmptyState from '../../../components/EmptyState';
-import CardMovie from '../../../components/CardMovie';
-import CardUser from '../../../components/CardUser';
-
-const List = styled.div`
-  margin: 0 auto;
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-}`;
+import PageContainer from 'components/PageContainer';
+import AuthPage from 'components/AuthPage';
+import Box from 'components/Box';
+import Text from 'components/Text';
+import EmptyState from 'components/EmptyState';
+import CardMovie from 'components/CardMovie';
+import CardUser from 'components/CardUser';
+import CardContainer from 'components/CardContainer';
+import List from 'components/List';
 
 const ActionsContainer = styled.div`
   display: flex;
@@ -47,26 +39,20 @@ const CardUserContainer = styled.div`
   height: 370px;
   width: ${(p) => p.percent}%;
   display: flex;
-  padding: 0 8px;
-  background-color: #fff;
-  margin-bottom: 16px;
-}`;
-
-const CardContainer = styled.div`
-  height: 400px;
-  width: ${(p) => p.percent}%;
-  display: flex;
-  padding: 0 8px;
   background-color: #fff;
   margin-bottom: 16px;
 }`;
 
 const User = (props) => {
-  console.log('props', props);
   const { user: { _id, name, image, movies, followers, followings } = {}, userIdParam } = props;
   const [session, loading] = useSession();
+  const [followersState, setFollowersState] = useState(followers);
+  const [isFollowRequestLoading, setIsFollowRequestLoading] = useState(false);
 
   const isMyProfile = userIdParam === (session && session.id);
+  const isFollowing = isMyProfile
+    ? false
+    : !!followersState.find((follower) => follower === (session && session.id));
 
   const router = useRouter();
   const isMobile = useIsMobile();
@@ -87,13 +73,6 @@ const User = (props) => {
     }
   }, [isDeleting]);
 
-  const handleClickDescription = ({ movieId, description }) => {
-    if (description) {
-      return null;
-    }
-    router.push(`/movies/${movieId}`);
-  };
-
   const close = () => setConfirm(false);
 
   const deleteNote = async () => {
@@ -101,6 +80,23 @@ const User = (props) => {
       await fetch(`${process.env.API_URL}/api/movies/${movieId}`, {
         method: 'Delete',
       });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleClickFollow = async () => {
+    try {
+      setIsFollowRequestLoading(true);
+
+      const request = await fetch(`${process.env.API_URL}/api/users/${_id}/follow`, {
+        method: 'Post',
+      });
+
+      const { data } = await request.json();
+
+      setFollowersState(data);
+      setIsFollowRequestLoading(false);
     } catch (error) {
       console.log(error);
     }
@@ -120,14 +116,24 @@ const User = (props) => {
               <CardUser
                 name={name}
                 imageUrl={image}
-                href={`/users/${_id}`}
                 infos={[
                   { amount: movies.length, title: 'Movies' },
-                  { amount: followers.length, title: 'Followers' },
+                  { amount: followersState.length, title: 'Followers' },
                   { amount: followings.length, title: 'Following' },
                 ]}
               />
             </CardUserContainer>
+
+            {!isMyProfile && (
+              <Button
+                loading={isFollowRequestLoading}
+                color={isFollowing ? 'red' : 'blue'}
+                fluid
+                onClick={handleClickFollow}
+              >
+                {isFollowing ? 'Unfollow' : 'Follow'}
+              </Button>
+            )}
           </Col>
           <Col xs={12} md={9}>
             <Text marginBottom={24} fontSize={32}>
@@ -161,7 +167,11 @@ const User = (props) => {
                   } = movie;
 
                   return (
-                    <CardContainer key={_id} percent={isMobile ? 100 : isTablet ? 50 : 25}>
+                    <CardContainer
+                      key={_id}
+                      height={400}
+                      percent={isMobile ? 100 : isTablet ? 50 : 25}
+                    >
                       <CardMovie
                         title={title}
                         imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
@@ -185,28 +195,44 @@ const User = (props) => {
                             />
                           )}
                           <Description>{description || 'Add a description...'}</Description>
+
                           <ActionsContainer>
-                            <Button
-                              size="tiny"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                router.push(`/users/${_id}/movies/${_id}/edit`);
-                              }}
-                              primary
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              size="tiny"
-                              primary
-                              onClick={(e) => {
-                                console.log('heyyy');
-                                e.preventDefault();
-                                return open(_id);
-                              }}
-                            >
-                              Delete
-                            </Button>
+                            {isMyProfile ? (
+                              <>
+                                <Button
+                                  size="tiny"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    router.push(`/users/${_id}/movies/${_id}/edit`);
+                                  }}
+                                  primary
+                                >
+                                  Edit
+                                </Button>
+                                <Button
+                                  size="tiny"
+                                  primary
+                                  onClick={(e) => {
+                                    console.log('heyyy');
+                                    e.preventDefault();
+                                    return open(_id);
+                                  }}
+                                >
+                                  Delete
+                                </Button>
+                              </>
+                            ) : (
+                              <Button
+                                size="tiny"
+                                primary
+                                onClick={(e) => {
+                                  console.log('heyyy');
+                                  e.preventDefault();
+                                }}
+                              >
+                                View
+                              </Button>
+                            )}
                           </ActionsContainer>
                         </Box>
                       </CardMovie>

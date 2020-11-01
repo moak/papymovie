@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import NavBarNew from './NavBarNew';
 
-import { withTranslation } from '../i18n';
+import { withTranslation } from 'i18n';
 
 const Page = ({ children, title }) => {
   const [isNavBarOpen, setIsNavBarOpen] = useState(false);

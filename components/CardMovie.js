@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 
-import Text from '../components/Text';
-import RoundedLabel from '../components/RoundedLabel';
-import getColorFromMark from '../utils/getColorFromMark';
+import Text from 'components/Text';
+import RoundedLabel from 'components/RoundedLabel';
+import getColorFromMark from 'utils/getColorFromMark';
 
 const Container = styled.div`
   display: flex;
@@ -14,10 +14,15 @@ const Container = styled.div`
   overflow: hidden;
   width: 100%;
 
-  &:hover {
-    box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.4);
-    cursor: pointer;
-  }
+  cursor: ${(p) => (p.isClickable ? 'pointer' : 'default')};
+
+  ${(p) =>
+    p.isClickable &&
+    `
+    &:hover{
+      box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.4);
+    }
+  `}
 
 }`;
 
@@ -66,8 +71,9 @@ const CardMovie = (props) => {
     imageHeight,
   } = props;
 
+  console.log('!!href', !!href);
   const component = (
-    <Container>
+    <Container isClickable={!!href}>
       <ImageContainer imageHeight={imageHeight}>
         <Image
           onError={(e) => {

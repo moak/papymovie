@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import Link from 'next/link';
 
-import styles from '../styles/Home.module.css';
+import styles from 'styles/Home.module.css';
 
-import Page from '../components/Page';
-import PageContainer from '../components/PageContainer';
+import Page from 'components/Page';
+import PageContainer from 'components/PageContainer';
 
-import { i18n, withTranslation } from '../i18n';
+import { withTranslation } from 'i18n';
 
 const Home = () => {
   return (

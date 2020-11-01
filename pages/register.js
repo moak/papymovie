@@ -1,13 +1,13 @@
-import React, { Component, useState } from 'react';
-import { Form, Button, Message } from 'semantic-ui-react';
+import React, { useState } from 'react';
+import { Form, Button } from 'semantic-ui-react';
 
 import styled from 'styled-components';
-import media from '../utils/media';
+import media from 'utils/media';
 
-import Page from '../components/Page';
-import PageContainer from '../components/PageContainer';
-import FormWrapper from '../components/FormWrapper';
-import Label from '../components/Label';
+import Page from 'components/Page';
+import PageContainer from 'components/PageContainer';
+import FormWrapper from 'components/FormWrapper';
+import Label from 'components/Label';
 
 export const FormTitle = styled.div`
   font-size: 20px;

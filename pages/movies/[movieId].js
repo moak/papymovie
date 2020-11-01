@@ -6,18 +6,20 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { useSession, getSession } from 'next-auth/client';
 
-import styles from '../../styles/Home.module.css';
-import Page from '../../components/Page';
-import PageContainer from '../../components/PageContainer';
-import Text from '../../components/Text';
-import Box from '../../components/Box';
-import CardMovie from '../../components/CardMovie';
-import RoundedLabel from '../../components/RoundedLabel';
+import styles from 'styles/Home.module.css';
+import Page from 'components/Page';
+import PageContainer from 'components/PageContainer';
+import Text from 'components/Text';
+import Box from 'components/Box';
+import CardMovie from 'components/CardMovie';
+import RoundedLabel from 'components/RoundedLabel';
+import CardContainer from 'components/CardContainer';
+import List from 'components/List';
 
-import getColorFromMark from '../../utils/getColorFromMark';
-import getHourMinutesFromMinutes from '../../utils/getHourMinutesFromMinutes';
+import getColorFromMark from 'utils/getColorFromMark';
+import getHourMinutesFromMinutes from 'utils/getHourMinutesFromMinutes';
 
-import useIsMobile from '../../hooks/useIsMobile';
+import useIsMobile from 'hooks/useIsMobile';
 
 export const ContentContainer = styled.div`
   height: 650px;
@@ -73,23 +75,6 @@ export const Title = styled.div`
 export const Infos = styled.div`
   color: #ffffff;
 `;
-
-const List = styled.div`
-  margin: 0 auto;
-  justify-content: space-between;
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-}`;
-
-const CardContainer = styled.div`
-  height: 350px;
-  width: ${(p) => p.percent}%;
-  display: flex;
-  padding: 0 8px;
-  background-color: #fff;
-  margin-bottom: 16px;
-}`;
 
 const View = (props) => {
   const {
@@ -312,7 +297,7 @@ const View = (props) => {
                 const { id, title, poster_path, vote_average, release_date } = movie;
 
                 return (
-                  <CardContainer key={id} percent={isMobile ? 100 : 20}>
+                  <CardContainer key={id} height={350} percent={isMobile ? 100 : 20}>
                     <CardMovie
                       title={title}
                       subtitle={moment(release_date).format('MMM, YYYY')}

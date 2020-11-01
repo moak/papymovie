@@ -1,19 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
-import styled from 'styled-components';
-
-const List = styled.div`
-  margin: 0 auto;
-  justify-content: space-between;
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-}`;
-
-const FeedItem = (props) => {
+const FeedItem = () => {
   return (
     <>
-      <List>sdf</List>
+      <div>FEED ITEM</div>
     </>
   );
 };

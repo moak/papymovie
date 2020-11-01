@@ -1,35 +1,19 @@
 import React, { useState, useEffect } from 'react';
-
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import moment from 'moment';
-
 import { Pagination } from 'semantic-ui-react';
 
-import useIsMobile from '../hooks/useIsMobile';
-import useIsTablet from '../hooks/useIsTablet';
+import useIsMobile from 'hooks/useIsMobile';
+import useIsTablet from 'hooks/useIsTablet';
 
-import Page from '../components/Page';
-import CardMovie from '../components/CardMovie';
-import PageContainer from '../components/PageContainer';
-import EmptyState from '../components/EmptyState';
-import Text from '../components/Text';
-
-const List = styled.div`
-  margin: 0 auto;
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-}`;
-
-const CardContainer = styled.div`
-  height: 450px;
-  width: ${(p) => p.percent}%;
-  display: flex;
-  padding: 0 8px;
-  background-color: #fff;
-  margin-bottom: 16px;
-}`;
+import Page from 'components/Page';
+import CardMovie from 'components/CardMovie';
+import PageContainer from 'components/PageContainer';
+import EmptyState from 'components/EmptyState';
+import Text from 'components/Text';
+import CardContainer from 'components/CardContainer';
+import List from 'components/List';
 
 const PaginationContainer = styled.div`
   margin: 32px 0;
@@ -96,7 +80,11 @@ const New = () => {
                   const { id, title, poster_path, release_date, vote_average } = movie;
 
                   return (
-                    <CardContainer key={id} percent={isMobile ? 100 : isTablet ? 50 : 25}>
+                    <CardContainer
+                      key={id}
+                      height={450}
+                      percent={isMobile ? 100 : isTablet ? 50 : 25}
+                    >
                       <CardMovie
                         title={title}
                         subtitle={moment(release_date).format('MMM, YYYY')}

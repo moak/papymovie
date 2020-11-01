@@ -1,7 +1,7 @@
-import dbConnect from '../../../utils/dbConnect';
-import Feed from '../../../models/Feed';
-import User from '../../../models/User';
-import Movie from '../../../models/Movie';
+import dbConnect from 'utils/dbConnect';
+import Feed from 'models/Feed';
+import User from 'models/User';
+import Movie from 'models/Movie';
 
 dbConnect();
 

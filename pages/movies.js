@@ -3,37 +3,19 @@ import styled from 'styled-components';
 import moment from 'moment';
 import { Button, Select, Pagination } from 'semantic-ui-react';
 
-import Page from '../components/Page';
-import PageContainer from '../components/PageContainer';
-import Text from '../components/Text';
-import CardMovie from '../components/CardMovie';
-import RoundedLabel from '../components/RoundedLabel';
+import Page from 'components/Page';
+import PageContainer from 'components/PageContainer';
+import Text from 'components/Text';
+import CardMovie from 'components/CardMovie';
+import RoundedLabel from 'components/RoundedLabel';
+import CardContainer from 'components/CardContainer';
+import List from 'components/List';
 
-import useIsMobile from '../hooks/useIsMobile';
-import useIsTablet from '../hooks/useIsTablet';
+import useIsMobile from 'hooks/useIsMobile';
+import useIsTablet from 'hooks/useIsTablet';
 
-import { objectToQueryString } from '../utils/queryString';
+import { objectToQueryString } from 'utils/queryString';
 
-const List = styled.div`
-  margin: 0 auto;
-  justify-content: space-between;
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-}`;
-
-const CardContainer = styled.div`
-  height: 420px;
-  width: ${(p) => p.percent}%;
-  display: flex;
-  padding: 0 8px;
-  background-color: #fff;
-  margin-bottom: 16px;
-}`;
-
-const Image = styled.img`
-  height: 300px;
-}`;
 const PaginationContainer = styled.div`
   margin: 32px 0;
   display: flex;
@@ -153,10 +135,6 @@ const Movies = (props) => {
     setIsFiltersVisible(!isFiltersVisible);
   };
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [activePage]);
-
   return (
     <Page title="login">
       <PageContainer maxWidth="1300">
@@ -254,7 +232,11 @@ const Movies = (props) => {
                   const { id, title, poster_path, vote_average, vote_count, release_date } = movie;
 
                   return (
-                    <CardContainer key={id} percent={isMobile ? 100 : isTablet ? 50 : 25}>
+                    <CardContainer
+                      key={id}
+                      height={400}
+                      percent={isMobile ? 100 : isTablet ? 50 : 25}
+                    >
                       <CardMovie
                         title={title}
                         subtitle={moment(release_date).format('MMM, YYYY')}

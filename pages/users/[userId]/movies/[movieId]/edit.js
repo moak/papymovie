@@ -7,17 +7,16 @@ import { Breadcrumb, Button, Form, Loader } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
-import Page from '../../../../../components/Page';
-import PageContainer from '../../../../../components/PageContainer';
-import Text from '../../../../../components/Text';
+import Page from 'components/Page';
+import PageContainer from 'components/PageContainer';
+import Text from 'components/Text';
 
-import styles from '../../../../../styles/Home.module.css';
+import styles from 'styles/Home.module.css';
 
 const EditMovie = (props) => {
   const { movie } = props;
   const [session, loading] = useSession();
 
-  console.log('movie', movie);
   const [form, setForm] = useState({
     description: movie.description,
     rating: movie.rating,
@@ -83,7 +82,6 @@ const EditMovie = (props) => {
     return err;
   };
 
-  console.log('form', form);
   return (
     <Page title="Edit movie">
       <PageContainer>

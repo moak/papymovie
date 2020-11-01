@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Link from 'next/link';
-
 import styled from 'styled-components';
 
 import Text from './Text';
-import RoundedLabel from './RoundedLabel';
-import getColorFromMark from '../utils/getColorFromMark';
 
 const Container = styled.div`
   display: flex;
@@ -14,16 +11,15 @@ const Container = styled.div`
   border-radius: 10px;
   overflow: hidden;
   width: 100%;
-  cursor: pointer;
+  cursor: ${(p) => (p.isClickable ? 'pointer' : 'default')};
 
-  &:hover{
-    box-shadow: 0px 0px 5px rgba(0,0,0,0.2);
-    background-color: white;
-    .ico{
-      color: #FFAE00;
+  ${(p) =>
+    p.isClickable &&
+    `
+    &:hover{
+      box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.4);
     }
-  }
-
+  `}
 }`;
 
 const UserContainer = styled.div`
@@ -77,50 +73,56 @@ const NameContainer = styled.div`
   bottom: 10%;
   left: 50%;
   transform: translate(-50%, -10%);
+  width: 100%;
 }`;
 
 const CardUser = (props) => {
   const { href, name, imageUrl, infos } = props;
 
-  return (
-    <Link href={href}>
-      <Container>
-        <UserContainer>
-          <BackgroundImage backgroundUrl="https://picsum.photos/200/300" />
+  const component = (
+    <Container isClickable={!!href}>
+      <UserContainer>
+        <BackgroundImage
+          backgroundUrl={`https://picsum.photos/265/200?random=${Math.random(0, 1)}`}
+        />
 
-          <Image
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src =
-                'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png';
-            }}
-            width="100px"
-            height="100px"
-            src={imageUrl}
-          />
-          <NameContainer>
-            <Text isBold fontSize={16}>
-              {name}
-            </Text>
-          </NameContainer>
-        </UserContainer>
-        <InfosContainer>
-          {infos.map((info) => {
-            const { amount, title } = info;
+        <Image
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = 'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png';
+          }}
+          width="100px"
+          height="100px"
+          src={imageUrl}
+        />
+        <NameContainer>
+          <Text textAlign="center" isBold fontSize={16}>
+            {name}
+          </Text>
+        </NameContainer>
+      </UserContainer>
+      <InfosContainer>
+        {infos.map((info) => {
+          const { amount, title } = info;
 
-            return (
-              <InfoContainer key={title}>
-                <Text fontSize={16} isBold marginBottom={4}>
-                  {amount}
-                </Text>
-                <Text>{title}</Text>
-              </InfoContainer>
-            );
-          })}
-        </InfosContainer>
-      </Container>
-    </Link>
+          return (
+            <InfoContainer key={title}>
+              <Text fontSize={16} isBold marginBottom={4}>
+                {amount}
+              </Text>
+              <Text>{title}</Text>
+            </InfoContainer>
+          );
+        })}
+      </InfosContainer>
+    </Container>
   );
+
+  if (href) {
+    return <Link href={href}>{component}</Link>;
+  }
+
+  return component;
 };
 
 export default CardUser;

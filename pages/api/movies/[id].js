@@ -1,9 +1,9 @@
 import { getSession } from 'next-auth/client';
 
-import dbConnect from '../../../utils/dbConnect';
-import Movie from '../../../models/Movie';
-import Feed from '../../../models/Feed';
-import User from '../../../models/User';
+import dbConnect from 'utils/dbConnect';
+import Movie from 'models/Movie';
+import Feed from 'models/Feed';
+import User from 'models/User';
 
 dbConnect();
 
