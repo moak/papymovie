@@ -12,9 +12,17 @@ const Text = styled.div`
   margin-right: ${(p) => p.marginRight || 0}px;
 
   line-height: ${(p) => p.lineHeight || 'normal'};
-  width: ${(p) => (p.width ? `${p.width}%` : 'auto')};
+  width: ${(p) => (p.width ? `${p.width}` : 'auto')};
   text-align: ${(p) => p.textAlign || 'left'};
   text-transform: ${(p) => p.textTransform || 'none'};
+
+  ${(p) =>
+    p.dotdotdot &&
+    `
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+  `}
 `;
 
 export default Text;

@@ -8,11 +8,11 @@ module.exports = {
     localeSubpaths,
   },
   env: {
-    API_URL: 'http://localhost:3000',
-    NEXTAUTH_URL: 'https://goldmovies.vercel.app',
-    GITHUB_ID: 'Iv1.89eb014e156ae93b',
-    GITHUB_SECRET: '0bd2f7d2bc627458093e523e96f63b81553b0309',
-    MONGO_URI:
-      'mongodb+srv://seyaa:P1kRkq42BREDrgwB@cluster0.yxsov.mongodb.net/<dbname>?retryWrites=true&w=majority',
+    API_URL: process.env.API_URL,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    GITHUB_ID: process.env.GITHUB_ID,
+    GITHUB_SECRET: process.env.GITHUB_SECRET,
+    THEMOVIEDB_API_KEY: process.env.THEMOVIEDB_API_KEY,
+    MONGO_URI: process.env.MONGO_URI,
   },
 };

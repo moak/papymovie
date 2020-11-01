@@ -7,7 +7,7 @@ import { useSession, getSession } from 'next-auth/client';
 
 import NavBarNew from './NavBarNew';
 
-import { i18n, Link, withTranslation } from '../i18n';
+import { i18n, Link, withTranslation } from 'i18n';
 
 const AuthPage = ({ children, title }) => {
   const router = useRouter();

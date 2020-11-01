@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import media from '../utils/media';
+import media from 'utils/media';
 
 const Logo = styled.a`
   list-style-type: none;
@@ -12,10 +12,6 @@ const Logo = styled.a`
   font-weight: 500;
   cursor: pointer;
   position: relative;
-
-  ${media.phone`
-    font-size: 1.5rem;
-  `}
 `;
 
 const Brand = () => {

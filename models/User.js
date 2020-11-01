@@ -27,6 +27,24 @@ const userSchema = new Schema(
     lang: { type: String },
     country: { type: String },
     admin: Boolean,
+    movies: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Movie',
+      },
+    ],
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    followings: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     usePushEach: true,

@@ -1,25 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { Breadcrumb, Label, Form, Button } from 'semantic-ui-react';
+import { Breadcrumb, Form, Button, Icon } from 'semantic-ui-react';
 import ReactStars from 'react-stars';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
+import moment from 'moment';
+import { useSession, getSession } from 'next-auth/client';
 
-import styles from '../../styles/Home.module.css';
-import Page from '../../components/Page';
-import PageContainer from '../../components/PageContainer';
-import Text from '../../components/Text';
-import Box from '../../components/Box';
+import Page from 'components/Page';
+import PageContainer from 'components/PageContainer';
+import Text from 'components/Text';
+import Box from 'components/Box';
+import CardMovie from 'components/CardMovie';
+import CardContainer from 'components/CardContainer';
+import List from 'components/List';
 
-import getColorFromMark from '../../utils/getColorFromMark';
-import getHourMinutesFromMinutes from '../../utils/getHourMinutesFromMinutes';
+import getHourMinutesFromMinutes from 'utils/getHourMinutesFromMinutes';
+
+import useIsMobile from 'hooks/useIsMobile';
 
 export const ContentContainer = styled.div`
-  height: 600px;
+  height: 650px;
   border-bottom: 1px solid rgba(8.24%, 31.96%, 31.57%, 1);
   background-position: right -200px top;
   background-size: cover;
   background-repeat: no-repeat;
   background-image: url(${(p) => p.imageUrl});
+
+  @media (max-width: 769px) {
+    height: 100%;
+  }
 `;
 
 export const SubContainer = styled.div`
@@ -31,16 +40,27 @@ export const SubContainer = styled.div`
 
   display: flex;
   height: 100%;
+
+  @media (max-width: 769px) {
+    flex-direction: column;
+  }
 `;
+
 export const Left = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 24px;
+  justify-content: center;
+  margin-left: ${(p) => (p.isMobile ? 0 : 24)}px;
+  width: ${(p) => p.width}px;
 `;
 
 export const Right = styled.div`
   padding: 32px 0px;
   padding-left: 40px;
+
+  @media (max-width: 769px) {
+    padding: 8px 16px;
+  }
 `;
 
 export const Title = styled.div`
@@ -58,47 +78,55 @@ export const Infos = styled.div`
 
 const View = (props) => {
   const {
-    isFound,
-    movie: {
-      backdrop_path,
-      poster_path,
-      runtime,
-      vote_average,
-      title,
-      overview,
-      release_date,
-      genres,
+    userMovie,
+    userMovie: {
+      _id: userMovieId,
+      rating: userMovieRating,
+      description: userMovieDescription,
     } = {},
+    similarMovies,
+    isFound,
+    movie,
+    movie: { backdrop_path, poster_path, runtime, title, overview, release_date, genres } = {},
   } = props;
 
+  console.log('userMovie', userMovie);
+  console.log('movie', movie.title);
   const router = useRouter();
 
   const { movieId } = router.query;
+  const isMobile = useIsMobile();
+  const [session, loading] = useSession();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [form, setForm] = useState({
     themoviedbId: movieId,
     title: title,
-    description: null,
-    rating: null,
+    description: userMovieDescription,
+    rating: userMovieRating,
     image: poster_path,
   });
+
+  useEffect(() => {
+    setForm({ ...form, description: userMovieDescription, rating: userMovieRating });
+  }, [userMovie]);
 
   const [errors, setErrors] = useState({});
 
   const validate = () => {
     let err = {};
 
-    // if (!form.description) {
-    //   err.description = "Description is required";
-    // }
+    if (!form.rating) {
+      err.rating = 'Rating is required';
+    }
 
     return err;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
     let errs = validate();
     setErrors(errs);
     setIsSubmitting(true);
@@ -128,7 +156,25 @@ const View = (props) => {
         },
         body: JSON.stringify(form),
       });
-      router.push('/my_movies');
+
+      router.push(`/users/${session.id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const editMovie = async () => {
+    try {
+      await fetch(`${process.env.API_URL}/api/users/${session.id}/movies/${userMovieId}`, {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      router.push(`/users/${session.id}`);
     } catch (error) {
       console.log(error);
     }
@@ -137,7 +183,11 @@ const View = (props) => {
   useEffect(() => {
     if (isSubmitting) {
       if (Object.keys(errors).length === 0) {
-        createMovie();
+        if (userMovie) {
+          editMovie();
+        } else {
+          createMovie();
+        }
       } else {
         setIsSubmitting(false);
       }
@@ -151,7 +201,7 @@ const View = (props) => {
   return (
     <Page title="login">
       <PageContainer>
-        {router.back && (
+        {/* {router.back && (
           <Breadcrumb style={{ marginBottom: 24 }} size={'huge'}>
             <Breadcrumb.Divider icon="left chevron" />
             <Breadcrumb.Section
@@ -162,18 +212,21 @@ const View = (props) => {
               }}
               link
             >
-              back
+              BACK
             </Breadcrumb.Section>
           </Breadcrumb>
-        )}
+        )} */}
 
         <ContentContainer
           imageUrl={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${backdrop_path}`}
         >
           <SubContainer>
-            <Left>
+            <Left isMobile={isMobile} width={isMobile ? window.screen.width - 32 : 600}>
               <img
-                style={{ borderRadius: 16 }}
+                width="100%"
+                // height="100%"
+                alt="paster_path"
+                style={{ borderRadius: isMobile ? 0 : 16 }}
                 src={`//image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
               />
             </Left>
@@ -187,14 +240,6 @@ const View = (props) => {
                     ({release_date.substring(0, 4)})
                   </Text>
                 )}
-
-                <Label
-                  style={{ float: 'right', marginTop: 8 }}
-                  circular
-                  color={getColorFromMark(vote_average)}
-                >
-                  {vote_average}
-                </Label>
               </Box>
 
               <Text marginBottom={16} textColor="#ffffff">
@@ -213,8 +258,19 @@ const View = (props) => {
 
               <hr />
 
-              <Text isBold marginTop={84} marginBottom={16} fontSize={22} textColor="#ffffff">
-                Save it in your list
+              <Text isBold marginTop={24} marginBottom={16} fontSize={24} textColor="#ffffff">
+                {userMovie ? (
+                  <div>
+                    <span>You have saved this movie</span>
+                    <Icon color="green" name="check" style={{ marginLeft: 4 }} />
+                  </div>
+                ) : (
+                  'Save this movie'
+                )}
+              </Text>
+
+              <Text isBold marginTop={44} marginBottom={8} fontSize={14} textColor="#ffffff">
+                {userMovie ? 'Your rating:' : 'Rate this movie:'}
               </Text>
 
               <ReactStars
@@ -224,45 +280,101 @@ const View = (props) => {
                 color2={'#ffd700'}
                 color1={'#d3d3d3'}
                 value={form.rating}
-                style={{ marginBottom: 10 }}
                 half
-                className={styles.stars}
               />
 
-              <Form onSubmit={handleSubmit}>
+              <Form
+                onSubmit={
+                  session
+                    ? handleSubmit
+                    : () => {
+                        router.push('/login');
+                      }
+                }
+              >
+                <Text isBold marginTop={16} marginBottom={8} fontSize={14} textColor="#ffffff">
+                  {userMovie ? 'Your description:' : 'Add a description'}
+                </Text>
+
                 <Form.TextArea
                   placeholder="Write a personnal note for this movie"
                   name="description"
                   value={form.description || ''}
                   onChange={handleChangeDescription}
-                  style={{ width: 600 }}
+                  style={{ width: isMobile ? null : 600 }}
                 />
-
-                <Button color="green" style={{ marginTop: 10 }}>
-                  Ajouter
+                <Button loading={!!isSubmitting} color="green" style={{ marginTop: 10 }}>
+                  {userMovie ? 'Edit' : 'Ajouter'}
                 </Button>
+                {errors.rating && (
+                  <Text isBold textColor="#ffffff" marginBottom={8} marginTop={8} fontSize={14}>
+                    * Rating is required
+                  </Text>
+                )}
               </Form>
             </Right>
           </SubContainer>
         </ContentContainer>
+
+        {similarMovies && similarMovies.length > 0 && (
+          <>
+            <Text marginTop={36} marginBottom={36} fontSize={32}>
+              Similar movies
+            </Text>
+            <List>
+              {similarMovies.slice(0, 5).map((movie) => {
+                const { id, title, poster_path, vote_average, release_date } = movie;
+
+                return (
+                  <CardContainer key={id} height={350} percent={isMobile ? 100 : 20}>
+                    <CardMovie
+                      title={title}
+                      subtitle={moment(release_date).format('MMM, YYYY')}
+                      imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                      href={`/movies/${id}`}
+                      grade={vote_average}
+                    />
+                  </CardContainer>
+                );
+              })}
+            </List>
+          </>
+        )}
       </PageContainer>
     </Page>
   );
 };
 
 View.getInitialProps = async (context) => {
+  let userMovie = undefined;
   const { query: { movieId } = {} } = context;
 
-  const res = await fetch(
+  console.log('movieId', movieId);
+  const movieRequest = await fetch(
     `https://api.themoviedb.org/3/movie/${movieId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
   );
+  const movie = await movieRequest.json();
 
-  const data = await res.json();
+  const similarMovieRequest = await fetch(
+    `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
+  );
+  const similarMovies = await similarMovieRequest.json();
 
-  console.log('data', data);
+  const session = await getSession(context);
+
+  if (session) {
+    const userMovieRequest = await fetch(
+      `${process.env.API_URL}/api/users/${session.id}/movies/${movieId}`,
+    );
+    const { data: userMovieData } = await userMovieRequest.json();
+    userMovie = userMovieData;
+  }
+
   return {
-    movie: data,
-    isFound: data.success !== false,
+    movie,
+    similarMovies: similarMovies.results,
+    userMovie,
+    isFound: movie.success !== false,
     namespacesRequired: ['common'],
   };
 };

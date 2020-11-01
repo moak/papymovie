@@ -9,7 +9,10 @@ import Link from 'next/link';
 import Brand from './Brand';
 import BurgerMenu from './BurgerMenu';
 import CollapseMenu from './CollapseMenu';
-import { i18n, withTranslation } from '../i18n';
+import { i18n, withTranslation } from 'i18n';
+
+import useIsMobile from 'hooks/useIsMobile';
+import useIsTablet from 'hooks/useIsTablet';
 
 const NavBar = styled(animated.nav)`
   position: fixed;
@@ -51,57 +54,33 @@ const NavLinks = styled(animated.ul)`
       border-bottom: 1px solid #fdcb6e;
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 800px) {
       display: none;
     }
   }
 `;
 
-const LinkButton = styled.a`
-  display: flex;
-  align-items: center;
-  height: 100%;
-  height: 100%;
-
-  &:hover {
-    text-decoration: none;
-  }
-
-  &.active {
-    text-decoration: none;
-  }
-`;
-
-const MenuText = styled.div`
-  font-size: 14px;
-  margin-left: 4px;
-`;
 const BurgerWrapper = styled.div`
   margin: auto 0;
 
-  @media (min-width: 769px) {
+  @media (min-width: 1100px) {
     display: none;
   }
 `;
 
-const LinkButtonContainer = styled.div`
-  margin-right: 48px;
-  height: 70px;
-`;
-
 const SearchContainer = styled.div`
-  width: 500px;
-  justify-self: end;
-  list-style-type: none;
+  width: 350px;
   margin: auto 0;
 
   @media (max-width: 768px) {
-    display: none;
+    width: 300px;
   }
 `;
 
 const NavBarNew = (props) => {
   const [session, loading] = useSession();
+  const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
 
   const barAnimation = useSpring({
     // from: { transform: 'translate3d(0, -10rem, 0)' },
@@ -131,21 +110,30 @@ const NavBarNew = (props) => {
     <>
       <NavBar style={barAnimation}>
         <FlexContainer>
-          <Brand />
-          <SearchContainer>
-            <form onSubmit={submitSearch}>
-              <Input
-                onChange={handleChangeSearch}
-                fluid
-                icon="search"
-                placeholder="Search..."
-                value={search || ''}
-              />
-            </form>
-          </SearchContainer>
+          {(!session || (!isMobile && !isTablet)) && <Brand />}
+          {(!isMobile || (isMobile && session)) && (
+            <SearchContainer>
+              <form onSubmit={submitSearch}>
+                <Input
+                  style={{ fontSize: 16 }}
+                  onChange={handleChangeSearch}
+                  fluid
+                  icon="search"
+                  placeholder="Search..."
+                  value={search || ''}
+                />
+              </form>
+            </SearchContainer>
+          )}
+
           <NavLinks style={linkAnimation}>
-            <Link href="/my_movies">My movies</Link>
-            <Link href="/discover">Discover</Link>
+            {!isMobile && !isTablet && (
+              <>
+                <Link href="/movies">Movies</Link>
+                <Link href="/users">Users</Link>
+                <Link href={`/users/${session && session.id}`}>My profile</Link>
+              </>
+            )}
             <a>
               <span
                 onClick={(e) => {
@@ -167,25 +155,39 @@ const NavBarNew = (props) => {
                 EN
               </span>
             </a>
-            {session ? (
-              <Button style={{ marginRight: 16 }} circular onClick={signOut}>
-                Signout
-              </Button>
-            ) : (
-              <>
-                <Button style={{ marginRight: 16 }} circular href="/login">
-                  Login
-                </Button>
 
-                <Button
-                  circular
-                  primary
-                  style={{
-                    marginRight: '1.1rem',
-                  }}
-                  href="/register"
-                  content={'register'}
-                />
+            {!isMobile && !isTablet && (
+              <>
+                {session ? (
+                  <Button style={{ marginRight: 16 }} circular onClick={signOut}>
+                    Signout
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      style={{ marginRight: 16 }}
+                      circular
+                      onClick={() => {
+                        router.push('/login');
+                      }}
+                    >
+                      Login
+                    </Button>
+
+                    <Button
+                      circular
+                      primary
+                      style={{
+                        marginRight: '1.1rem',
+                      }}
+                      onClick={() => {
+                        router.push('/login');
+                      }}
+                    >
+                      Register
+                    </Button>
+                  </>
+                )}
               </>
             )}
           </NavLinks>

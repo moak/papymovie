@@ -9,7 +9,7 @@ dbConnect();
 
 export default async (req, res) => {
   const {
-    query: { id },
+    query: { id, movieId },
     method,
   } = req;
 
@@ -18,7 +18,11 @@ export default async (req, res) => {
   switch (method) {
     case 'GET':
       try {
-        const movie = await Movie.findById(id);
+        if (!session) {
+          return res.status(400).json({ success: false });
+        }
+
+        const movie = await Movie.findOne({ user: id, themoviedbId: movieId });
 
         if (!movie) {
           return res.status(400).json({ success: false });
@@ -31,40 +35,26 @@ export default async (req, res) => {
       break;
     case 'PUT':
       try {
-        const movie = await Movie.findByIdAndUpdate(id, req.body, {
-          new: true,
-          runValidators: true,
-        });
-
-        await Feed.create({ action: 'edit', movie, user: movie.user });
-
-        if (!movie) {
+        if (!session) {
           return res.status(400).json({ success: false });
         }
 
-        res.status(200).json({ success: true, data: movie });
-      } catch (error) {
-        res.status(400).json({ success: false });
-      }
-      break;
-    case 'DELETE':
-      try {
-        const deletedMovie = await Movie.deleteOne({ _id: id });
-
-        if (!deletedMovie) {
-          return res.status(400).json({ success: false });
-        }
-
-        User.findOneAndUpdate(
-          { _id: session.id },
-          { $pull: { movies: deletedMovie } },
+        Movie.findOneAndUpdate(
+          { user: id, _id: movieId },
+          { description: req.body.description, rating: req.body.rating },
           { new: true },
-        ).exec(),
-          res.status(200).json({ success: true, data: {} });
+          (error) => {
+            if (error) {
+              return res.status(404).send({ success: false, error });
+            }
+            return res.send({ success: true });
+          },
+        );
       } catch (error) {
         res.status(400).json({ success: false });
       }
       break;
+
     default:
       res.status(400).json({ success: false });
       break;

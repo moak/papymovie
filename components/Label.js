@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import media from '../utils/media';
+import media from 'utils/media';
 
 const Label = styled.label`
   font-size: 15px;

@@ -1,11 +1,11 @@
 const getColorFromMark = (mark) => {
   if (mark >= 7) {
-    return 'green';
+    return '#21ba45';
   }
   if (mark > 5) {
-    return 'orange';
+    return '#f2711c';
   }
-  return 'red';
+  return '#db2828';
 };
 
 export default getColorFromMark;

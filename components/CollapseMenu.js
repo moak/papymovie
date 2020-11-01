@@ -1,15 +1,24 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/anchor-is-valid */
+
 import React from 'react';
 import styled from 'styled-components';
+import Link from 'next/link';
+import { signOut, useSession } from 'next-auth/client';
 
 import { useSpring, animated } from 'react-spring';
 
 const CollapseMenu = (props) => {
+  const [session, loading] = useSession();
+
   const { open } = useSpring({ open: props.navbarState ? 0 : 1 });
 
   if (props.navbarState === true) {
     return (
       <CollapseWrapper
         style={{
+          zIndex: 3,
           transform: open
             .interpolate({
               range: [0, 0.2, 0.3, 1],
@@ -20,25 +29,29 @@ const CollapseMenu = (props) => {
       >
         <NavLinks>
           <li>
-            <a href="/" onClick={props.handleNavbar}>
-              link n1
-            </a>
+            <Link href="/movies">Movies</Link>
           </li>
           <li>
-            <a href="/" onClick={props.handleNavbar}>
-              link n2
-            </a>
+            <Link href="/users">Users</Link>
           </li>
           <li>
-            <a href="/" onClick={props.handleNavbar}>
-              link n3
-            </a>
+            <Link href={`/users/${session && session.id}`}>My profile</Link>
           </li>
-          <li>
-            <a href="/" onClick={props.handleNavbar}>
-              link n4
-            </a>
-          </li>
+          {session ? (
+            <li>
+              <a onClick={signOut}>Logout</a>
+            </li>
+          ) : (
+            <>
+              <hr />
+              <li>
+                <Link href="/login">Register</Link>
+              </li>
+              <li>
+                <Link href="/login">Login</Link>
+              </li>
+            </>
+          )}
         </NavLinks>
       </CollapseWrapper>
     );
@@ -64,7 +77,8 @@ const NavLinks = styled.ul`
     transition: all 300ms linear 0s;
   }
 
-  & a {
+  & a,
+  div {
     font-size: 1.4rem;
     line-height: 2;
     color: #dfe6e9;
