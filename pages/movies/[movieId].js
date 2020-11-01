@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Breadcrumb, Label, Form, Button } from 'semantic-ui-react';
+import { Breadcrumb, Form, Button, Icon } from 'semantic-ui-react';
 import ReactStars from 'react-stars';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import moment from 'moment';
 import { useSession, getSession } from 'next-auth/client';
 
-import styles from 'styles/Home.module.css';
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
 import Text from 'components/Text';
 import Box from 'components/Box';
 import CardMovie from 'components/CardMovie';
-import RoundedLabel from 'components/RoundedLabel';
 import CardContainer from 'components/CardContainer';
 import List from 'components/List';
 
-import getColorFromMark from 'utils/getColorFromMark';
 import getHourMinutesFromMinutes from 'utils/getHourMinutesFromMinutes';
 
 import useIsMobile from 'hooks/useIsMobile';
@@ -48,10 +45,13 @@ export const SubContainer = styled.div`
     flex-direction: column;
   }
 `;
+
 export const Left = styled.div`
   display: flex;
   align-items: center;
-  margin-left: 24px;
+  justify-content: center;
+  margin-left: ${(p) => (p.isMobile ? 0 : 24)}px;
+  width: ${(p) => p.width}px;
 `;
 
 export const Right = styled.div`
@@ -86,25 +86,17 @@ const View = (props) => {
     } = {},
     similarMovies,
     isFound,
-    movie: {
-      backdrop_path,
-      poster_path,
-      runtime,
-      vote_average,
-      title,
-      overview,
-      release_date,
-      genres,
-    } = {},
+    movie,
+    movie: { backdrop_path, poster_path, runtime, title, overview, release_date, genres } = {},
   } = props;
 
+  console.log('userMovie', userMovie);
+  console.log('movie', movie.title);
   const router = useRouter();
 
   const { movieId } = router.query;
   const isMobile = useIsMobile();
   const [session, loading] = useSession();
-
-  const hasRated = false;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -115,6 +107,10 @@ const View = (props) => {
     rating: userMovieRating,
     image: poster_path,
   });
+
+  useEffect(() => {
+    setForm({ ...form, description: userMovieDescription, rating: userMovieRating });
+  }, [userMovie]);
 
   const [errors, setErrors] = useState({});
 
@@ -205,7 +201,7 @@ const View = (props) => {
   return (
     <Page title="login">
       <PageContainer>
-        {router.back && (
+        {/* {router.back && (
           <Breadcrumb style={{ marginBottom: 24 }} size={'huge'}>
             <Breadcrumb.Divider icon="left chevron" />
             <Breadcrumb.Section
@@ -219,16 +215,18 @@ const View = (props) => {
               BACK
             </Breadcrumb.Section>
           </Breadcrumb>
-        )}
+        )} */}
 
         <ContentContainer
           imageUrl={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${backdrop_path}`}
         >
           <SubContainer>
-            <Left>
+            <Left isMobile={isMobile} width={isMobile ? window.screen.width - 32 : 600}>
               <img
+                width="100%"
+                // height="100%"
                 alt="paster_path"
-                style={{ borderRadius: 16 }}
+                style={{ borderRadius: isMobile ? 0 : 16 }}
                 src={`//image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
               />
             </Left>
@@ -242,11 +240,6 @@ const View = (props) => {
                     ({release_date.substring(0, 4)})
                   </Text>
                 )}
-                <div style={{ float: 'right' }}>
-                  <RoundedLabel borderWith={3} rounded color={getColorFromMark(vote_average)}>
-                    {vote_average}
-                  </RoundedLabel>
-                </div>
               </Box>
 
               <Text marginBottom={16} textColor="#ffffff">
@@ -266,11 +259,18 @@ const View = (props) => {
               <hr />
 
               <Text isBold marginTop={24} marginBottom={16} fontSize={24} textColor="#ffffff">
-                {userMovie ? 'You have saved this movie' : 'Save this movie:'}
+                {userMovie ? (
+                  <div>
+                    <span>You have saved this movie</span>
+                    <Icon color="green" name="check" style={{ marginLeft: 4 }} />
+                  </div>
+                ) : (
+                  'Save this movie'
+                )}
               </Text>
 
               <Text isBold marginTop={44} marginBottom={8} fontSize={14} textColor="#ffffff">
-                {userMovie ? 'Your rating' : 'Rate this movie'}
+                {userMovie ? 'Your rating:' : 'Rate this movie:'}
               </Text>
 
               <ReactStars
@@ -280,9 +280,7 @@ const View = (props) => {
                 color2={'#ffd700'}
                 color1={'#d3d3d3'}
                 value={form.rating}
-                style={{ marginBottom: 10 }}
                 half
-                className={styles.stars}
               />
 
               <Form
@@ -294,14 +292,17 @@ const View = (props) => {
                       }
                 }
               >
+                <Text isBold marginTop={16} marginBottom={8} fontSize={14} textColor="#ffffff">
+                  {userMovie ? 'Your description:' : 'Add a description'}
+                </Text>
+
                 <Form.TextArea
                   placeholder="Write a personnal note for this movie"
                   name="description"
                   value={form.description || ''}
                   onChange={handleChangeDescription}
-                  style={{ width: 600 }}
+                  style={{ width: isMobile ? null : 600 }}
                 />
-
                 <Button loading={!!isSubmitting} color="green" style={{ marginTop: 10 }}>
                   {userMovie ? 'Edit' : 'Ajouter'}
                 </Button>
@@ -345,12 +346,10 @@ const View = (props) => {
 };
 
 View.getInitialProps = async (context) => {
-  const session = await getSession(context);
-  console.log('session', session);
-
-  let userMovie = null;
+  let userMovie = undefined;
   const { query: { movieId } = {} } = context;
 
+  console.log('movieId', movieId);
   const movieRequest = await fetch(
     `https://api.themoviedb.org/3/movie/${movieId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
   );
@@ -361,6 +360,8 @@ View.getInitialProps = async (context) => {
   );
   const similarMovies = await similarMovieRequest.json();
 
+  const session = await getSession(context);
+
   if (session) {
     const userMovieRequest = await fetch(
       `${process.env.API_URL}/api/users/${session.id}/movies/${movieId}`,
@@ -368,11 +369,6 @@ View.getInitialProps = async (context) => {
     const { data: userMovieData } = await userMovieRequest.json();
     userMovie = userMovieData;
   }
-
-  // const userMovieRequest = await fetch(
-  //   `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
-  // );
-  // const similarMovies = await similarMovieRequest.json();
 
   return {
     movie,

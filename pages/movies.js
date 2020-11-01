@@ -256,6 +256,8 @@ const Movies = (props) => {
                 <Pagination
                   activePage={activePage}
                   ellipsisItem={!isMobile ? undefined : null}
+                  prevItem={isMobile ? false : true}
+                  nextItem={isMobile ? false : true}
                   size="mini"
                   onPageChange={handlePaginationChange}
                   totalPages={totalPages}

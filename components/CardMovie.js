@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 
-import Text from 'components/Text';
-import RoundedLabel from 'components/RoundedLabel';
-import getColorFromMark from 'utils/getColorFromMark';
+import Text from '../components/Text';
+import RoundedLabel from '../components/RoundedLabel';
+import getColorFromMark from '../utils/getColorFromMark';
 
 const Container = styled.div`
   display: flex;

@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 
 import Text from './Text';
+import getRandomNumber from 'utils/getRandomNumber';
 
 const Container = styled.div`
   display: flex;
@@ -76,15 +77,33 @@ const NameContainer = styled.div`
   width: 100%;
 }`;
 
+//picsum.photos/265/200?random=0.4697816248839266
+
+const images = [
+  'https://i.picsum.photos/id/154/265/200.jpg?hmac=bXZZfPchEv1Jh-FQzFFSGRcKQk7z3NyKaTm8lhJv2fM',
+  'https://i.picsum.photos/id/765/265/200.jpg?hmac=f_RD9fPJLNndzyEtMg7HRFPkqGpyyHUPzowTlSa5T5M',
+  'https://i.picsum.photos/id/537/265/200.jpg?hmac=tXtg3mZhgOhBQPuxK-yW93Np8PLVCkD7ILougIS8IsI',
+  'https://i.picsum.photos/id/52/265/200.jpg?hmac=tpccfdlnnbHRKG8JoYPxzhlwhcVBkT5X3i8laLUI1hs',
+  'https://i.picsum.photos/id/974/265/200.jpg?hmac=wHfruI3gdA2enQTxQ7oSvhNgBj6UbArWdRpCP6vyrK4',
+  'https://i.picsum.photos/id/196/265/200.jpg?hmac=306T2zPeKgS7rs4BDTe2TeXaaUNwDECA-duue8nnhQ8',
+  'https://i.picsum.photos/id/249/265/200.jpg?hmac=L0RIXB8dmkHDY1epWu5hHCwLpBbZyAJwM3lyYLE89Kk',
+  'https://i.picsum.photos/id/797/265/200.jpg?hmac=GhvM-j-e8Dx-rznyyY77TbbvNHsNwJIyx-zzoZHWKTI',
+  'https://i.picsum.photos/id/676/265/200.jpg?hmac=YKlco3qBdd4Zx_a5AwMtr7ynT8LsWsfHsq_Y4eNjGco',
+];
+
 const CardUser = (props) => {
   const { href, name, imageUrl, infos } = props;
+
+  const getRandomImage = useMemo(() => {
+    return images[getRandomNumber(0, images.length - 1)];
+  }, []);
+
+  console.log('getRandomImage', getRandomImage);
 
   const component = (
     <Container isClickable={!!href}>
       <UserContainer>
-        <BackgroundImage
-          backgroundUrl={`https://picsum.photos/265/200?random=${Math.random(0, 1)}`}
-        />
+        <BackgroundImage backgroundUrl={getRandomImage} />
 
         <Image
           onError={(e) => {

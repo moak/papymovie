@@ -63,7 +63,7 @@ const NavLinks = styled(animated.ul)`
 const BurgerWrapper = styled.div`
   margin: auto 0;
 
-  @media (min-width: 969px) {
+  @media (min-width: 1100px) {
     display: none;
   }
 `;

@@ -6,7 +6,6 @@ import { useSession } from 'next-auth/client';
 import styled from 'styled-components';
 import { Confirm, Button, Icon } from 'semantic-ui-react';
 
-import styles from 'styles/Home.module.css';
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
 
@@ -176,7 +175,7 @@ const User = (props) => {
                         href={`/movies/${themoviedbId}`}
                         amountVotes={vote_count}
                         userRating={rating}
-                        imageHeight={60}
+                        imageHeight={isMyProfile ? 60 : 70}
                         centered
                       >
                         <Box alignItems="center">
@@ -189,7 +188,6 @@ const User = (props) => {
                               value={rating}
                               isHalf
                               edit={false}
-                              className={styles.stars}
                             />
                           )}
                           <Description>{description || 'Add a description...'}</Description>
@@ -219,18 +217,7 @@ const User = (props) => {
                                   Delete
                                 </Button>
                               </>
-                            ) : (
-                              <Button
-                                size="tiny"
-                                primary
-                                onClick={(e) => {
-                                  console.log('heyyy');
-                                  e.preventDefault();
-                                }}
-                              >
-                                View
-                              </Button>
-                            )}
+                            ) : null}
                           </ActionsContainer>
                         </Box>
                       </CardMovie>

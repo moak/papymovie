@@ -5,6 +5,10 @@ const List = styled.div`
   display: flex;
   flex: 1;
   flex-wrap: wrap;
+
+  @media (max-width: 768px) {
+    width: 80%;
+  }
 }`;
 
 export default List;
