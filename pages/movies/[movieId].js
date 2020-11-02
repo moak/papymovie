@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Breadcrumb, Form, Button, Icon } from 'semantic-ui-react';
+import { Form, Button, Icon, Divider } from 'semantic-ui-react';
 import ReactStars from 'react-stars';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
@@ -19,7 +19,7 @@ import getHourMinutesFromMinutes from 'utils/getHourMinutesFromMinutes';
 import useIsMobile from 'hooks/useIsMobile';
 
 export const ContentContainer = styled.div`
-  height: 650px;
+  height: 100%;
   border-bottom: 1px solid rgba(8.24%, 31.96%, 31.57%, 1);
   background-position: right -200px top;
   background-size: cover;
@@ -39,7 +39,6 @@ export const SubContainer = styled.div`
   );
 
   display: flex;
-  height: 100%;
 
   @media (max-width: 769px) {
     flex-direction: column;
@@ -78,6 +77,7 @@ export const Infos = styled.div`
 
 const View = (props) => {
   const {
+    user,
     userMovie,
     userMovie: {
       _id: userMovieId,
@@ -90,15 +90,18 @@ const View = (props) => {
     movie: { backdrop_path, poster_path, runtime, title, overview, release_date, genres } = {},
   } = props;
 
-  console.log('userMovie', userMovie);
-  console.log('movie', movie.title);
   const router = useRouter();
 
   const { movieId } = router.query;
   const isMobile = useIsMobile();
-  const [session, loading] = useSession();
+  const [session] = useSession();
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmittingMovie, setIsSubmittingMovie] = useState(false);
+  const [isSubmittingMovieToWatch, setIsSubmittingMovieToWatch] = useState(false);
+
+  const [isInMoviesToWatch, setIsInMoviesToWatch] = useState(
+    user && user.moviesToWatch.find((movieToWatch) => movieToWatch.themoviedbId === movieId),
+  );
 
   const [form, setForm] = useState({
     themoviedbId: movieId,
@@ -124,12 +127,17 @@ const View = (props) => {
     return err;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmitMovie = (e) => {
     e.preventDefault();
 
     let errs = validate();
     setErrors(errs);
-    setIsSubmitting(true);
+    setIsSubmittingMovie(true);
+  };
+
+  const handleSubmitMovieToWatch = (e) => {
+    e.preventDefault();
+    setIsSubmittingMovieToWatch(true);
   };
 
   const handleChangeRating = (newRating) => {
@@ -163,6 +171,34 @@ const View = (props) => {
     }
   };
 
+  const submitMovieToWatch = async () => {
+    try {
+      console.log('hey');
+      const request = await fetch(`${process.env.API_URL}/api/movies/towatch`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          themoviedbId: form.themoviedbId,
+          title: form.title,
+          image: form.image,
+        }),
+      });
+
+      const { isInMoviesToWatch } = await request.json();
+
+      setIsInMoviesToWatch(!isInMoviesToWatch);
+
+      setIsSubmittingMovieToWatch(false);
+    } catch (error) {
+      setIsSubmittingMovieToWatch(false);
+      console.log('error', error);
+      console.log(error);
+    }
+  };
+
   const editMovie = async () => {
     try {
       await fetch(`${process.env.API_URL}/api/users/${session.id}/movies/${userMovieId}`, {
@@ -181,7 +217,7 @@ const View = (props) => {
   };
 
   useEffect(() => {
-    if (isSubmitting) {
+    if (isSubmittingMovie) {
       if (Object.keys(errors).length === 0) {
         if (userMovie) {
           editMovie();
@@ -189,10 +225,18 @@ const View = (props) => {
           createMovie();
         }
       } else {
-        setIsSubmitting(false);
+        setIsSubmittingMovie(false);
       }
     }
   }, [errors]);
+
+  useEffect(() => {
+    if (isSubmittingMovieToWatch) {
+      submitMovieToWatch();
+    } else {
+      setIsSubmittingMovieToWatch(false);
+    }
+  }, [isSubmittingMovieToWatch]);
 
   if (!isFound) {
     return <div>not found</div>;
@@ -201,30 +245,13 @@ const View = (props) => {
   return (
     <Page title="login">
       <PageContainer>
-        {/* {router.back && (
-          <Breadcrumb style={{ marginBottom: 24 }} size={'huge'}>
-            <Breadcrumb.Divider icon="left chevron" />
-            <Breadcrumb.Section
-              onClick={(e) => {
-                e.preventDefault;
-
-                return router.back();
-              }}
-              link
-            >
-              BACK
-            </Breadcrumb.Section>
-          </Breadcrumb>
-        )} */}
-
         <ContentContainer
           imageUrl={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${backdrop_path}`}
         >
           <SubContainer>
-            <Left isMobile={isMobile} width={isMobile ? window.screen.width - 32 : 600}>
+            <Left isMobile={isMobile} width={isMobile ? window.screen.width - 32 : null}>
               <img
-                width="100%"
-                // height="100%"
+                height="350px"
                 alt="paster_path"
                 style={{ borderRadius: isMobile ? 0 : 16 }}
                 src={`//image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
@@ -256,20 +283,43 @@ const View = (props) => {
                 {overview}
               </Text>
 
-              <hr />
+              <Divider />
 
-              <Text isBold marginTop={24} marginBottom={16} fontSize={24} textColor="#ffffff">
+              <Text isBold marginTop={8} marginBottom={4} fontSize={24} textColor="#ffffff">
+                {isInMoviesToWatch ? (
+                  <div>
+                    <span>Movie in to watch list</span>
+                    <Icon color="green" name="check" style={{ marginLeft: 8 }} />
+                  </div>
+                ) : (
+                  'Save in to-watch list'
+                )}
+              </Text>
+              <Button
+                color={isInMoviesToWatch ? 'red' : 'blue'}
+                onClick={handleSubmitMovieToWatch}
+                loading={isSubmittingMovieToWatch}
+                style={{ marginTop: 8, marginBottom: 8 }}
+              >
+                {isInMoviesToWatch ? 'Supprimer' : 'Ajouter'}
+              </Button>
+
+              <Divider style={{ color: 'white' }} horizontal>
+                Or
+              </Divider>
+
+              <Text isBold marginTop={16} fontSize={24} textColor="#ffffff">
                 {userMovie ? (
                   <div>
                     <span>You have saved this movie</span>
-                    <Icon color="green" name="check" style={{ marginLeft: 4 }} />
+                    <Icon color="green" name="check" style={{ marginLeft: 8 }} />
                   </div>
                 ) : (
                   'Save this movie'
                 )}
               </Text>
 
-              <Text isBold marginTop={44} marginBottom={8} fontSize={14} textColor="#ffffff">
+              <Text isBold marginTop={16} marginBottom={8} fontSize={14} textColor="#ffffff">
                 {userMovie ? 'Your rating:' : 'Rate this movie:'}
               </Text>
 
@@ -286,7 +336,7 @@ const View = (props) => {
               <Form
                 onSubmit={
                   session
-                    ? handleSubmit
+                    ? handleSubmitMovie
                     : () => {
                         router.push('/login');
                       }
@@ -303,7 +353,7 @@ const View = (props) => {
                   onChange={handleChangeDescription}
                   style={{ width: isMobile ? null : 600 }}
                 />
-                <Button loading={!!isSubmitting} color="green" style={{ marginTop: 10 }}>
+                <Button loading={!!isSubmittingMovie} color="green" style={{ marginTop: 10 }}>
                   {userMovie ? 'Edit' : 'Ajouter'}
                 </Button>
                 {errors.rating && (
@@ -346,37 +396,51 @@ const View = (props) => {
 };
 
 View.getInitialProps = async (context) => {
-  let userMovie = undefined;
   const { query: { movieId } = {} } = context;
-
-  console.log('movieId', movieId);
-  const movieRequest = await fetch(
-    `https://api.themoviedb.org/3/movie/${movieId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
-  );
-  const movie = await movieRequest.json();
-
-  const similarMovieRequest = await fetch(
-    `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
-  );
-  const similarMovies = await similarMovieRequest.json();
 
   const session = await getSession(context);
 
+  const promises = [
+    // movie
+    fetch(
+      `https://api.themoviedb.org/3/movie/${movieId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
+    ),
+    // similarMovies
+    fetch(
+      `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
+    ),
+  ];
+
   if (session) {
-    const userMovieRequest = await fetch(
-      `${process.env.API_URL}/api/users/${session.id}/movies/${movieId}`,
-    );
-    const { data: userMovieData } = await userMovieRequest.json();
-    userMovie = userMovieData;
+    // userMovie
+    promises.push(fetch(`${process.env.API_URL}/api/users/${session.id}/movies/${movieId}`));
+    // user
+    promises.push(fetch(`${process.env.API_URL}/api/users/${session.id}`));
   }
 
-  return {
-    movie,
-    similarMovies: similarMovies.results,
-    userMovie,
-    isFound: movie.success !== false,
-    namespacesRequired: ['common'],
-  };
+  return Promise.all(promises)
+    .then((responses) => {
+      return Promise.all(
+        responses.map((response) => {
+          return response.json();
+        }),
+      );
+    })
+    .then((data) => {
+      const [movie = {}, similarMovies = {}, userMovie = {}, user = {}] = data;
+
+      return {
+        movie,
+        similarMovies: similarMovies.results,
+        userMovie: userMovie.data,
+        user: user.data,
+        isFound: movie.success !== false,
+        namespacesRequired: ['common'],
+      };
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 };
 
 export default View;

@@ -41,7 +41,10 @@ const CardUserContainer = styled.div`
 }`;
 
 const User = (props) => {
-  const { user: { _id, name, image, movies, followers, followings } = {}, userIdParam } = props;
+  const {
+    user: { _id, name, image, movies, followers, followings, moviesToWatch } = {},
+    userIdParam,
+  } = props;
   const [session, loading] = useSession();
   const [followersState, setFollowersState] = useState(followers);
   const [isFollowRequestLoading, setIsFollowRequestLoading] = useState(false);
@@ -221,6 +224,43 @@ const User = (props) => {
                           </ActionsContainer>
                         </Box>
                       </CardMovie>
+                    </CardContainer>
+                  );
+                })}
+            </List>
+
+            <Text marginTop={24} marginBottom={24} fontSize={32}>
+              To watch later
+              {moviesToWatch.length > 0 ? ` (${moviesToWatch.length})` : ''}
+            </Text>
+
+            {moviesToWatch && moviesToWatch.length === 0 && (
+              <EmptyState>
+                <Text fontSize={16} marginBottom={16}>
+                  No movies in the to watch list
+                </Text>
+              </EmptyState>
+            )}
+
+            <List>
+              {moviesToWatch &&
+                moviesToWatch.length > 0 &&
+                moviesToWatch.map((movieToWatch) => {
+                  const { _id, title, themoviedbId, image } = movieToWatch;
+
+                  return (
+                    <CardContainer
+                      key={_id}
+                      height={300}
+                      percent={isMobile ? 100 : isTablet ? 50 : 25}
+                    >
+                      <CardMovie
+                        title={title}
+                        imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
+                        href={`/movies/${themoviedbId}`}
+                        imageHeight={80}
+                        centered
+                      />
                     </CardContainer>
                   );
                 })}

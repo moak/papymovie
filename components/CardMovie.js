@@ -71,7 +71,6 @@ const CardMovie = (props) => {
     imageHeight,
   } = props;
 
-  console.log('!!href', !!href);
   const component = (
     <Container isClickable={!!href}>
       <ImageContainer imageHeight={imageHeight}>

@@ -98,8 +98,6 @@ const CardUser = (props) => {
     return images[getRandomNumber(0, images.length - 1)];
   }, []);
 
-  console.log('getRandomImage', getRandomImage);
-
   const component = (
     <Container isClickable={!!href}>
       <UserContainer>

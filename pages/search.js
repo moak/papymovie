@@ -122,7 +122,6 @@ const New = () => {
             {series && (
               <List>
                 {series.map((serie) => {
-                  console.log('serie', serie);
                   const { id, name, poster_path, first_air_date, vote_average } = serie;
 
                   return (

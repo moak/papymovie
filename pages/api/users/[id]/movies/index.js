@@ -32,7 +32,6 @@ export default async (req, res) => {
 
         const isFollowing = userFollowed.followers.find((follower) => follower == userFollowingId);
 
-        console.log('isFollowing', isFollowing);
         let promises = null;
 
         if (isFollowing) {

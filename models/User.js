@@ -33,6 +33,13 @@ const userSchema = new Schema(
         ref: 'Movie',
       },
     ],
+    moviesToWatch: [
+      {
+        themoviedbId: String,
+        title: String,
+        image: String,
+      },
+    ],
     followers: [
       {
         type: Schema.Types.ObjectId,
