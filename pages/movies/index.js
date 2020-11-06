@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { Button, Select, Pagination } from 'semantic-ui-react';
@@ -27,7 +27,7 @@ export const LeftColumn = styled.div`
   flex: 1;
   flex-direction: column;
   align-items: center;
-  margin-left: 16px;
+  margin-left: ${(p) => (p.isMobile ? 0 : 16)};
 `;
 
 const RightColumn = styled.div`
@@ -36,10 +36,16 @@ const RightColumn = styled.div`
   border: 1px solid rgb(224, 230, 233);
   border-radius: 10px;
   padding: 16px 16px 0px;
+  top: 90px;
+  align-self: flex-start;
 
   @media (max-width: 768px) {
     width: 100%;
     margin-bottom: 12px;
+  }
+  @media (min-width: 768px) {
+    position: sticky;
+
   }
 }`;
 
@@ -47,12 +53,15 @@ export const Row = styled.div`
   display: flex;
   flex-direction: ${(p) => p.flexDirection || 'row'};
   justify-content: ${(p) => p.justifyContent || 'flex-start'};
+  position: relative;
 `;
 
-const Movies = (props) => {
+const Movies = () => {
+  const ref = useRef(null);
   const [movies, setMovies] = useState(null);
   const [totalPages, setTotalPages] = useState(null);
   const [activePage, setActivePage] = useState(1);
+
   const [filter, setFilter] = useState('discover');
   const [sortBy, setSortBy] = useState('popularity.desc');
   const [isFiltersVisible, setIsFiltersVisible] = useState(false);
@@ -79,6 +88,12 @@ const Movies = (props) => {
   for (let i = 2020; i >= 1850; i--) {
     yearsOptions.push({ key: i, value: i, text: i });
   }
+
+  useEffect(() => {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0;
+  }, [activePage]);
+
   useEffect(async () => {
     let query = null;
     let endPoint = null;
@@ -152,7 +167,7 @@ const Movies = (props) => {
           )}
         </Row>
 
-        <Row flexDirection={isMobile ? 'column' : 'row'}>
+        <Row flexDirection={isMobile ? 'column' : 'row'} ref={ref}>
           {(!isMobile || (isMobile && isFiltersVisible)) && (
             <RightColumn>
               <Text isBold fontSize={16} marginBottom={16}>
@@ -225,7 +240,7 @@ const Movies = (props) => {
               )}
             </RightColumn>
           )}
-          <LeftColumn percent={80}>
+          <LeftColumn percent={80} isMobile>
             {movies && (
               <List>
                 {movies.map((movie) => {

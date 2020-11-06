@@ -7,7 +7,7 @@ const List = styled.div`
   flex-wrap: wrap;
 
   @media (max-width: 768px) {
-    width: 80%;
+    width: 90%;
   }
 }`;
 

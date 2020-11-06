@@ -50,7 +50,7 @@ export const Left = styled.div`
   align-items: center;
   justify-content: center;
   margin-left: ${(p) => (p.isMobile ? 0 : 24)}px;
-  width: ${(p) => p.width}px;
+  min-width: ${(p) => p.width}px;
 `;
 
 export const Right = styled.div`
@@ -77,42 +77,41 @@ export const Infos = styled.div`
 
 const View = (props) => {
   const {
-    user,
-    userMovie,
-    userMovie: {
-      _id: userMovieId,
-      rating: userMovieRating,
-      description: userMovieDescription,
-    } = {},
-    similarMovies,
+    // userMovie,
+    // userMovie: {
+    //   _id: userMovieId,
+    //   rating: userMovieRating,
+    //   description: userMovieDescription,
+    // } = {},
     isFound,
-    movie,
     movie: { backdrop_path, poster_path, runtime, title, overview, release_date, genres } = {},
   } = props;
 
   const router = useRouter();
 
-  const { movieId } = router.query;
+  const { themoviedbId } = router.query;
   const isMobile = useIsMobile();
   const [session] = useSession();
+
+  const [user, setUser] = useState(null);
+  const [userMovie, setUserMovie] = useState(null);
+  const [similarMovies, setSimilarMovies] = useState(null);
 
   const [isSubmittingMovie, setIsSubmittingMovie] = useState(false);
   const [isSubmittingMovieToWatch, setIsSubmittingMovieToWatch] = useState(false);
 
-  const [isInMoviesToWatch, setIsInMoviesToWatch] = useState(
-    user && user.moviesToWatch.find((movieToWatch) => movieToWatch.themoviedbId === movieId),
-  );
+  const [isInMoviesToWatch, setIsInMoviesToWatch] = useState(false);
 
   const [form, setForm] = useState({
-    themoviedbId: movieId,
+    themoviedbId,
     title: title,
-    description: userMovieDescription,
-    rating: userMovieRating,
     image: poster_path,
+    description: null,
+    rating: null,
   });
 
   useEffect(() => {
-    setForm({ ...form, description: userMovieDescription, rating: userMovieRating });
+    // setForm({ ...form, description: userMovieDescription, rating: userMovieRating });
   }, [userMovie]);
 
   const [errors, setErrors] = useState({});
@@ -171,6 +170,69 @@ const View = (props) => {
     }
   };
 
+  useEffect(() => {
+    const fetchSimilarMovies = async () => {
+      try {
+        const request = await fetch(
+          `https://api.themoviedb.org/3/movie/${themoviedbId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
+        );
+        const { results } = await request.json();
+
+        setSimilarMovies(results);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+
+    fetchSimilarMovies();
+  }, [themoviedbId]);
+
+  useEffect(() => {
+    const fetchLoggedUser = async () => {
+      console.log('fetchLoggedUser');
+      try {
+        const request = await fetch(`${process.env.API_URL}/api/users/${session.id}`);
+
+        const { data } = await request.json();
+        console.log('data', data);
+        setUser(data);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+
+    if (session && !user) {
+      fetchLoggedUser();
+    }
+  }, [session]);
+
+  useEffect(() => {
+    if (user) {
+      const userMovie = user.movies.find((movie) => movie.themoviedbId === themoviedbId);
+
+      setUserMovie(userMovie);
+      setForm({
+        ...form,
+        description: userMovie ? userMovie.description : null,
+        rating: userMovie ? userMovie.rating : null,
+      });
+    }
+  }, [themoviedbId, user]);
+
+  useEffect(() => {
+    if (user) {
+      setIsInMoviesToWatch(
+        user &&
+          user.moviesToWatch.find((movieToWatch) => movieToWatch.themoviedbId === themoviedbId),
+      );
+    }
+  }, [themoviedbId, user]);
+
+  useEffect(() => {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0;
+  }, [themoviedbId]);
+
   const submitMovieToWatch = async () => {
     try {
       console.log('hey');
@@ -201,7 +263,7 @@ const View = (props) => {
 
   const editMovie = async () => {
     try {
-      await fetch(`${process.env.API_URL}/api/users/${session.id}/movies/${userMovieId}`, {
+      await fetch(`${process.env.API_URL}/api/users/${session.id}/movies/${userMovie._id}`, {
         method: 'PUT',
         headers: {
           Accept: 'application/json',
@@ -252,8 +314,9 @@ const View = (props) => {
             <Left isMobile={isMobile} width={isMobile ? window.screen.width - 32 : null}>
               <img
                 height="350px"
+                width={isMobile ? '100%' : null}
                 alt="paster_path"
-                style={{ borderRadius: isMobile ? 0 : 16 }}
+                style={{ borderRadius: isMobile ? 0 : 16, marginBottom: isMobile ? 8 : 0 }}
                 src={`//image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
               />
             </Left>
@@ -396,27 +459,14 @@ const View = (props) => {
 };
 
 View.getInitialProps = async (context) => {
-  const { query: { movieId } = {} } = context;
-
-  const session = await getSession(context);
+  const { query: { themoviedbId } = {} } = context;
 
   const promises = [
     // movie
     fetch(
-      `https://api.themoviedb.org/3/movie/${movieId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
-    ),
-    // similarMovies
-    fetch(
-      `https://api.themoviedb.org/3/movie/${movieId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
+      `https://api.themoviedb.org/3/movie/${themoviedbId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
     ),
   ];
-
-  if (session) {
-    // userMovie
-    promises.push(fetch(`${process.env.API_URL}/api/users/${session.id}/movies/${movieId}`));
-    // user
-    promises.push(fetch(`${process.env.API_URL}/api/users/${session.id}`));
-  }
 
   return Promise.all(promises)
     .then((responses) => {
@@ -427,13 +477,11 @@ View.getInitialProps = async (context) => {
       );
     })
     .then((data) => {
-      const [movie = {}, similarMovies = {}, userMovie = {}, user = {}] = data;
+      const [movie = {}] = data;
 
       return {
         movie,
-        similarMovies: similarMovies.results,
-        userMovie: userMovie.data,
-        user: user.data,
+        // userMovie: userMovie.data,
         isFound: movie.success !== false,
         namespacesRequired: ['common'],
       };
