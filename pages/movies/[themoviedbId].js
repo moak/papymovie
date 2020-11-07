@@ -4,7 +4,6 @@ import ReactStars from 'react-stars';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import moment from 'moment';
-import { useSession, getSession } from 'next-auth/client';
 
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
@@ -13,6 +12,8 @@ import Box from 'components/Box';
 import CardMovie from 'components/CardMovie';
 import CardContainer from 'components/CardContainer';
 import List from 'components/List';
+
+import { useGetSession } from 'utils/session';
 
 import getHourMinutesFromMinutes from 'utils/getHourMinutesFromMinutes';
 
@@ -91,8 +92,9 @@ const View = (props) => {
 
   const { themoviedbId } = router.query;
   const isMobile = useIsMobile();
-  const [session] = useSession();
+  const { session } = useGetSession();
 
+  console.log('11222', session);
   const [user, setUser] = useState(null);
   const [userMovie, setUserMovie] = useState(null);
   const [similarMovies, setSimilarMovies] = useState(null);
@@ -201,12 +203,14 @@ const View = (props) => {
       }
     };
 
+    console.log('sessionsessionsessionsession', session);
     if (session && !user) {
       fetchLoggedUser();
     }
   }, [session]);
 
   useEffect(() => {
+    console.log('user', user);
     if (user) {
       const userMovie = user.movies.find((movie) => movie.themoviedbId === themoviedbId);
 
@@ -304,6 +308,7 @@ const View = (props) => {
     return <div>not found</div>;
   }
 
+  console.log('userMovie', userMovie);
   return (
     <Page title="login">
       <PageContainer>
@@ -481,7 +486,6 @@ View.getInitialProps = async (context) => {
 
       return {
         movie,
-        // userMovie: userMovie.data,
         isFound: movie.success !== false,
         namespacesRequired: ['common'],
       };

@@ -3,13 +3,15 @@ import styled from 'styled-components';
 import { useSpring, animated, config } from 'react-spring';
 import { Button, Input } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
-import { signOut, useSession } from 'next-auth/client';
+import { signOut } from 'next-auth/client';
 import Link from 'next/link';
 
 import Brand from './Brand';
 import BurgerMenu from './BurgerMenu';
 import CollapseMenu from './CollapseMenu';
 import { i18n, withTranslation } from 'i18n';
+
+import { useGetSession, useSession } from 'utils/session';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
@@ -78,7 +80,8 @@ const SearchContainer = styled.div`
 `;
 
 const NavBarNew = (props) => {
-  const [session, loading] = useSession();
+  const { session } = useGetSession();
+
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 

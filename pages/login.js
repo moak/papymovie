@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'semantic-ui-react';
-import { signIn, useSession } from 'next-auth/client';
+import { signIn } from 'next-auth/client';
 import styled from 'styled-components';
 import Router from 'next/router';
 
 import media from 'utils/media';
+
+import { useGetSession } from 'utils/session';
 
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
@@ -25,9 +27,7 @@ export const FormTitle = styled.div`
 const Login = () => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const [session, loading] = useSession();
-
-  if (typeof window !== 'undefined' && loading) return null;
+  const { session } = useGetSession();
 
   if (session) {
     Router.push('/');

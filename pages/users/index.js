@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import useIsMobile from 'hooks/useIsMobile';
 
 import PageContainer from 'components/PageContainer';
-import AuthPage from 'components/AuthPage';
+import Page from 'components/Page';
 import Text from 'components/Text';
 import EmptyState from 'components/EmptyState';
 import CardUser from 'components/CardUser';
@@ -14,8 +14,13 @@ const Movies = (props) => {
   const { users } = props;
   const isMobile = useIsMobile();
 
+  useEffect(() => {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0;
+  }, []);
+
   return (
-    <AuthPage title="Users">
+    <Page title="Users">
       <PageContainer>
         <Text marginBottom={24} fontSize={32}>
           Users
@@ -46,7 +51,7 @@ const Movies = (props) => {
           </List>
         )}
       </PageContainer>
-    </AuthPage>
+    </Page>
   );
 };
 

@@ -2,15 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Col, Row } from 'react-styled-flexboxgrid';
 import ReactStars from 'react-rating-stars-component';
-import { useSession } from 'next-auth/client';
 import styled from 'styled-components';
 import { Confirm, Button, Icon } from 'semantic-ui-react';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
 
+import { useGetSession } from 'utils/session';
+
 import PageContainer from 'components/PageContainer';
-import AuthPage from 'components/AuthPage';
+import Page from 'components/Page';
 import Box from 'components/Box';
 import Text from 'components/Text';
 import EmptyState from 'components/EmptyState';
@@ -45,7 +46,7 @@ const User = (props) => {
     user: { _id, name, image, movies, followers, followings, moviesToWatch } = {},
     userIdParam,
   } = props;
-  const [session, loading] = useSession();
+  const { session } = useGetSession();
   const [followersState, setFollowersState] = useState(followers);
   const [isFollowRequestLoading, setIsFollowRequestLoading] = useState(false);
 
@@ -72,6 +73,11 @@ const User = (props) => {
       deleteNote();
     }
   }, [isDeleting]);
+
+  useEffect(() => {
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0;
+  }, []);
 
   const close = () => setConfirm(false);
 
@@ -108,7 +114,7 @@ const User = (props) => {
   };
 
   return (
-    <AuthPage title="Users">
+    <Page title="Users">
       <PageContainer>
         <Row>
           <Col xs={12} md={3}>
@@ -275,7 +281,7 @@ const User = (props) => {
           content="Are you sure you want to delete this movie ?"
         />
       </PageContainer>
-    </AuthPage>
+    </Page>
   );
 };
 
