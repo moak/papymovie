@@ -134,10 +134,17 @@ const User = (props) => {
 
             {!isMyProfile && (
               <Button
+                style={{ marginBottom: isMobile ? 16 : 0 }}
                 loading={isFollowRequestLoading}
                 color={isFollowing ? 'red' : 'blue'}
                 fluid
-                onClick={handleClickFollow}
+                onClick={
+                  session
+                    ? handleClickFollow
+                    : () => {
+                        router.push('/login');
+                      }
+                }
               >
                 {isFollowing ? 'Unfollow' : 'Follow'}
               </Button>
@@ -164,32 +171,24 @@ const User = (props) => {
               {movies &&
                 movies.length > 0 &&
                 movies.map((movie) => {
-                  const {
-                    _id,
-                    description,
-                    themoviedbId,
-                    title,
-                    image,
-                    vote_count,
-                    rating,
-                  } = movie;
+                  const { _id, description, themoviedbId, title, image, rating } = movie;
 
                   return (
                     <CardContainer
                       key={_id}
-                      height={400}
+                      height={isMobile ? 150 : isMyProfile ? 450 : 400}
                       percent={isMobile ? 100 : isTablet ? 50 : 25}
                     >
                       <CardMovie
+                        isMobile={isMobile}
                         title={title}
                         imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
                         href={`/movies/${themoviedbId}`}
-                        amountVotes={vote_count}
-                        userRating={rating}
-                        imageHeight={isMyProfile ? 60 : 70}
+                        imageHeight={isMyProfile ? 70 : 70}
                         centered
+                        isMyProfile={isMyProfile}
                       >
-                        <Box alignItems="center">
+                        <Box flexDirection="column" alignItems="center">
                           {rating && (
                             <ReactStars
                               count={5}
@@ -201,7 +200,13 @@ const User = (props) => {
                               edit={false}
                             />
                           )}
-                          <Description>{description || 'Add a description...'}</Description>
+                          <Description>
+                            {isMobile && isMyProfile
+                              ? null
+                              : !session
+                              ? description || 'No notes'
+                              : description || 'Add a note...'}
+                          </Description>
 
                           <ActionsContainer>
                             {isMyProfile ? (
@@ -220,7 +225,6 @@ const User = (props) => {
                                 <Button
                                   color="red"
                                   onClick={(e) => {
-                                    console.log('heyyy');
                                     e.preventDefault();
                                     return open(_id);
                                   }}
@@ -259,10 +263,11 @@ const User = (props) => {
                   return (
                     <CardContainer
                       key={_id}
-                      height={300}
+                      height={isMobile ? 150 : 300}
                       percent={isMobile ? 100 : isTablet ? 50 : 25}
                     >
                       <CardMovie
+                        isMobile={isMobile}
                         title={title}
                         imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
                         href={`/movies/${themoviedbId}`}

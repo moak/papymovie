@@ -250,10 +250,11 @@ const Movies = () => {
                   return (
                     <CardContainer
                       key={id}
-                      height={400}
+                      height={isMobile ? 150 : 400}
                       percent={isMobile ? 100 : isTablet ? 50 : 25}
                     >
                       <CardMovie
+                        isMobile={isMobile}
                         title={title}
                         subtitle={moment(release_date).format('MMM, YYYY')}
                         imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}

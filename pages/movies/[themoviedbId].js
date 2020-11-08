@@ -348,7 +348,13 @@ const View = (props) => {
               </Text>
               <Button
                 color={isInMoviesToWatch ? 'red' : 'blue'}
-                onClick={handleSubmitMovieToWatch}
+                onClick={
+                  session
+                    ? handleSubmitMovieToWatch
+                    : () => {
+                        router.push('/login');
+                      }
+                }
                 loading={isSubmittingMovieToWatch}
                 style={{ marginTop: 8, marginBottom: 8 }}
               >

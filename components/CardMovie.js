@@ -8,7 +8,7 @@ import getColorFromMark from '../utils/getColorFromMark';
 
 const Container = styled.div`
   display: flex;
-  flex-direction: column;
+  flex-direction: ${(p) => (p.isMobile ? 'row' : 'column')};
   border: 1px solid #cecece;
   border-radius: 10px;
   overflow: hidden;
@@ -27,8 +27,15 @@ const Container = styled.div`
 }`;
 
 const ImageContainer = styled.div`
-  height: ${(p) => p.imageHeight || 75}%;
+  height: ${(p) => (p.isMobile ? 100 : p.imageHeight || 75)}%;
   position: relative;
+  width: ${(p) => (p.isMobile ? 40 : 100)}%;
+  min-width: ${(p) => (p.isMobile ? 40 : 100)}%;
+}`;
+
+const TitleContainer = styled.div`
+  height: ${(p) => (p.isMobile ? '40%' : 'auto' || 75)};
+  margin-top: ${(p) => (p.grade ? 30 : 0)}px;
 }`;
 
 const ContentContainer = styled.div`
@@ -37,17 +44,19 @@ const ContentContainer = styled.div`
   flex-direction: column;
   padding: 12px;
   border-top: 1px solid #cecece;
+  width: ${(p) => (p.isMobile ? 60 : 100)}%;
+  min-width: ${(p) => (p.isMobile ? 60 : 100)}%;
 }`;
 
 const GradeContainer = styled.div`
   position: absolute;
-  top: -18px;
+  top: ${(p) => (p.isMobile ? 10 : -18)}px;
   left: 7.5%;
 }`;
 
 const VotesContainer = styled.div`
   position: absolute;
-  top: -14px;
+  top: ${(p) => (p.isMobile ? 10 : -14)}px;
   right: 12px;
 }`;
 
@@ -69,11 +78,13 @@ const CardMovie = (props) => {
     userRating,
     centered,
     imageHeight,
+    isMobile,
+    isMyProfile,
   } = props;
 
   const component = (
-    <Container isClickable={!!href}>
-      <ImageContainer imageHeight={imageHeight}>
+    <Container isClickable={!!href} isMobile={isMobile}>
+      <ImageContainer imageHeight={imageHeight} isMobile={isMobile}>
         <Image
           onError={(e) => {
             e.target.onerror = null;
@@ -84,34 +95,36 @@ const CardMovie = (props) => {
           src={imageUrl}
         />
       </ImageContainer>
-      <ContentContainer>
+      <ContentContainer isMobile={isMobile}>
         {amountVotes && (
-          <VotesContainer>
+          <VotesContainer isMobile={isMobile}>
             <RoundedLabel width="50px" height="26px" color="#333333">
               {amountVotes}
             </RoundedLabel>
           </VotesContainer>
         )}
         {grade ? (
-          <GradeContainer>
+          <GradeContainer isMobile={isMobile}>
             <RoundedLabel borderWith={3} rounded color={getColorFromMark(grade)}>
               {grade}
             </RoundedLabel>
           </GradeContainer>
         ) : null}
-        <Text
-          isBold
-          textAlign={centered ? 'center' : 'left'}
-          fontSize={16}
-          marginTop={grade ? 8 : 0}
-          marginBottom={8}
-          dotdotdot
-        >
-          {title}
-        </Text>
+        <TitleContainer grade={grade} isMobile={isMobile}>
+          <Text
+            isBold
+            textAlign={centered ? 'center' : 'left'}
+            fontSize={16}
+            marginTop={isMyProfile ? 0 : isMobile ? 16 : 0}
+            marginBottom={8}
+            dotdotdot
+          >
+            {title}
+          </Text>
+        </TitleContainer>
         {subtitle && <Text>{subtitle}</Text>}
+        {children}
       </ContentContainer>
-      {children}
     </Container>
   );
 
