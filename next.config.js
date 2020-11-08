@@ -7,6 +7,9 @@ module.exports = {
   publicRuntimeConfig: {
     localeSubpaths,
   },
+  images: {
+    domains: ['image.tmdb.org'],
+  },
   env: {
     API_URL: process.env.API_URL,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,

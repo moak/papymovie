@@ -33,11 +33,11 @@ export const LeftColumn = styled.div`
 `;
 
 const RightColumn = styled.div`
-  background-color: #ffffff;
+  background-color: #f5f5f5;
   width: 280px;
   border: 1px solid rgb(224, 230, 233);
   border-radius: 10px;
-  padding: 16px 16px;
+  padding: 16px 16px 16px 16px;
   top: 90px;
   align-self: flex-start;
 
@@ -47,6 +47,7 @@ const RightColumn = styled.div`
   }
   @media (min-width: 768px) {
     position: sticky;
+    margin-right: 16px;
 
   }
 }`;
@@ -76,11 +77,6 @@ const Movies = (props) => {
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
-
-  const sortByOptions = [
-    { key: 'popularity.desc', value: 'popularity.desc', text: 'Popularity' },
-    { key: 'vote_count.desc', value: 'vote_count.desc', text: 'Vote count' },
-  ];
 
   const filters = [
     { key: 'discover', value: 'discover', text: 'Popular' },
@@ -173,7 +169,7 @@ const Movies = (props) => {
   };
 
   return (
-    <Page title="login">
+    <Page title="Movies | GoldMovies">
       <PageContainer maxWidth="1300">
         <Row justifyContent="space-between">
           <Text marginBottom={24} fontSize={32}>
@@ -270,7 +266,6 @@ const Movies = (props) => {
                         imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}
                         href={`/movies/${id}`}
                         grade={vote_average}
-                        amountVotes={vote_count}
                       />
                     </CardContainer>
                   );

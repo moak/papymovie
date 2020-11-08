@@ -34,6 +34,7 @@ const Page = ({ children, title }) => {
       {title && (
         <Head>
           <title>{title}</title>
+          {/* <description>Don't forget what you watch and get inspired!</description> */}
           <link rel="icon" href="/favicon.ico" />
           <meta
             name="viewport"

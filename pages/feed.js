@@ -30,8 +30,8 @@ const Feed = (props) => {
   const isTablet = useIsTablet();
 
   return (
-    <Page title="login">
-      <PageContainer>
+    <Page title="Feed | GoldMovies">
+      <PageContainer maxWidth={1024}>
         <Row justifyContent="space-between">
           <Text marginBottom={24} fontSize={32}>
             Feed

@@ -1,30 +1,32 @@
-import React, { useMemo } from 'react';
-import Link from 'next/link';
+import React from 'react';
 import styled from 'styled-components';
-import ReactStars from 'react-rating-stars-component';
 import moment from 'moment';
 import { useRouter } from 'next/router';
+
+import RoundedLabel from 'components/RoundedLabel';
+
+import getColorFromMark from 'utils/getColorFromMark';
 
 import Text from './Text';
 
 const Wrapper = styled.div`
   display: flex;
   width: 100%;
-  border: 1px solid grey;
-  justify-content: space-between;
+  border: 1px solid #d8d7d7;
   border-radius: 10px;
-
+  background-color: #f5f5f5;
 }`;
 
 const Container = styled.div`
-  padding: 16px 16px;
+  padding: ${(p) => (p.isMobile ? '12px 12px' : '16px 16px')};
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }`;
 
 const MovieContainer = styled.div`
   cursor: pointer;
+  width: ${(p) => (p.isMobile ? '100px' : '120px')};
 }`;
 
 const UserContainer = styled.div`
@@ -46,6 +48,10 @@ const MovieImage = styled.img`
 }`;
 
 const DetailsContainer = styled.div`
+display: flex;
+flex-direction: column;
+justify-content: space-around;
+flex: 1;
 
 }`;
 const NameContainer = styled.div`
@@ -73,7 +79,7 @@ const CardFeed = (props) => {
 
   const component = (
     <Wrapper>
-      <Container>
+      <Container isMobile={isMobile}>
         <UserContainer>
           <UserImage
             onClick={(e) => {
@@ -111,47 +117,84 @@ const CardFeed = (props) => {
           </NameContainer>
         </UserContainer>
         <DetailsContainer>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: isMobile ? 'column' : 'row',
-              marginBottom: 32,
-            }}
-          >
-            <div style={{ marginRight: 16, marginBottom: isMobile ? 8 : 0 }}>
-              {userName} added
-              <b
-                style={{ cursor: 'pointer' }}
+          {isMobile ? (
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-around',
+                alignItems: 'center',
+                flexBasis: 80,
+              }}
+            >
+              <Text
+                textAlign="center"
+                marginRight={4}
+                marginLeft={4}
+                isBold
                 onClick={(e) => {
                   e.preventDefault();
                   router.push(linkMovie);
                 }}
+                cursor="pointer"
               >
-                {` ${title} `}
-              </b>
-              in his library.
+                {title}
+              </Text>
+              <RoundedLabel
+                borderWith={2}
+                width="30px"
+                height="30px"
+                rounded
+                color={getColorFromMark(rating)}
+              >
+                {rating}
+              </RoundedLabel>
             </div>
-            {rating && (
-              <ReactStars
-                count={5}
-                size={24}
-                color2={'#ffd700'}
-                color1={'#d3d3d3'}
-                value={rating}
-                isHalf
-                edit={false}
-              />
-            )}
-          </div>
-          <div style={{ display: 'flex' }}>
+          ) : (
+            <>
+              <div
+                style={{
+                  display: 'flex',
+                  marginBottom: 16,
+                  alignItems: 'center',
+                }}
+              >
+                <Text>{userName} added</Text>
+                <Text
+                  marginRight={4}
+                  marginLeft={4}
+                  isBold
+                  onClick={(e) => {
+                    e.preventDefault();
+                    router.push(linkMovie);
+                  }}
+                  cursor="pointer"
+                >
+                  {title}
+                </Text>
+                <Text marginRight={8}>in his library.</Text>
+
+                <RoundedLabel
+                  borderWith={2}
+                  width="30px"
+                  height="30px"
+                  rounded
+                  color={getColorFromMark(rating)}
+                >
+                  {rating}
+                </RoundedLabel>
+              </div>
+            </>
+          )}
+          {/* <div style={{ display: 'flex' }}>
             <Text isBold style={{ marginRight: 8 }}>
               Likes ({likes.length})
             </Text>
             <Text isBold>Comments ({comments.length})</Text>
-          </div>
+          </div> */}
         </DetailsContainer>
       </Container>
-      <MovieContainer>
+      <MovieContainer isMobile={isMobile}>
         <MovieImage
           onClick={(e) => {
             e.preventDefault();
@@ -161,7 +204,7 @@ const CardFeed = (props) => {
             e.target.onerror = null;
             e.target.src = 'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png';
           }}
-          width="100px"
+          width="100%"
           height="100%"
           src={`https://image.tmdb.org/t/p/w500/${movieImage}`}
         />

@@ -6,7 +6,6 @@ const Grade = styled.div`
   background-color: ${(p) => p.color};
   border-radius: ${(p) => (p.rounded ? '50%' : '10%')};
   color: #ffffff;
-  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;

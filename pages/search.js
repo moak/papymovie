@@ -64,7 +64,7 @@ const New = () => {
   };
 
   return (
-    <Page title="Search a movie">
+    <Page title="Search a movie | GoldMovies">
       <PageContainer>
         <Text marginTop={24} marginBottom={24} fontSize={32}>
           Movies:

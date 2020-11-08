@@ -34,7 +34,7 @@ const Login = () => {
   }
 
   return (
-    <Page title="login">
+    <Page title="Login | GoldMovies">
       <PageContainer centered>
         <FormWrapper>
           {/* <FormTitle>Login</FormTitle> */}

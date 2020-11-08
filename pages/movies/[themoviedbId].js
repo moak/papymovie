@@ -12,12 +12,14 @@ import Box from 'components/Box';
 import CardMovie from 'components/CardMovie';
 import CardContainer from 'components/CardContainer';
 import List from 'components/List';
+import RoundedLabel from 'components/RoundedLabel';
 
 import { useGetSession } from 'utils/session';
-
+import getColorFromMark from 'utils/getColorFromMark';
 import getHourMinutesFromMinutes from 'utils/getHourMinutesFromMinutes';
 
 import useIsMobile from 'hooks/useIsMobile';
+import useIsTablet from 'hooks/useIsTablet';
 
 export const ContentContainer = styled.div`
   height: 100%;
@@ -51,7 +53,7 @@ export const Left = styled.div`
   align-items: center;
   justify-content: center;
   margin-left: ${(p) => (p.isMobile ? 0 : 24)}px;
-  min-width: ${(p) => p.width}px;
+  min-width: ${(p) => p.width};
 `;
 
 export const Right = styled.div`
@@ -79,13 +81,23 @@ export const Infos = styled.div`
 const View = (props) => {
   const {
     isFound,
-    movie: { backdrop_path, poster_path, runtime, title, overview, release_date, genres } = {},
+    movie: {
+      backdrop_path,
+      poster_path,
+      runtime,
+      title,
+      overview,
+      release_date,
+      genres,
+      vote_average,
+    } = {},
   } = props;
 
   const router = useRouter();
 
   const { themoviedbId } = router.query;
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
   const { session } = useGetSession();
 
   const [user, setUser] = useState(null);
@@ -99,7 +111,7 @@ const View = (props) => {
 
   const [form, setForm] = useState({
     themoviedbId,
-    title: title,
+    title,
     image: poster_path,
     description: null,
     rating: null,
@@ -293,13 +305,13 @@ const View = (props) => {
   }
 
   return (
-    <Page title="login">
+    <Page title={`${title} | GoldMovies`}>
       <PageContainer>
         <ContentContainer
           imageUrl={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${backdrop_path}`}
         >
           <SubContainer>
-            <Left isMobile={isMobile} width={isMobile ? window.screen.width - 32 : null}>
+            <Left isMobile={isMobile} width={isMobile ? `${window.screen.width} - 32}` : '20%'}>
               <img
                 height="350px"
                 width={isMobile ? '100%' : null}
@@ -310,15 +322,49 @@ const View = (props) => {
             </Left>
             <Right>
               <Box alignItems="center" flexDirection="row">
-                <Text isBold marginRight={8} marginBottom={4} fontSize={30} textColor="#ffffff">
+                {!isMobile && (
+                  <RoundedLabel borderWith={3} rounded color={getColorFromMark(vote_average)}>
+                    {vote_average}
+                  </RoundedLabel>
+                )}
+                <Text
+                  textAlign={isMobile ? 'center' : 'left'}
+                  isBold
+                  marginRight={8}
+                  marginLeft={4}
+                  marginBottom={4}
+                  fontSize={isMobile ? 24 : 30}
+                  marginTop={isMobile ? 4 : 0}
+                  textColor="#ffffff"
+                >
                   {title}
                 </Text>
-                {release_date.substring(0, 4) && (
-                  <Text marginTop={4} isBold fontSize={16} marginRight={8} textColor="#ffffff">
+                {!isMobile && release_date.substring(0, 4) && (
+                  <Text isBold fontSize={16} marginLeft={4} textColor="#ffffff">
                     ({release_date.substring(0, 4)})
                   </Text>
                 )}
               </Box>
+
+              {isMobile && (
+                <Box
+                  marginTop={4}
+                  marginBottom={4}
+                  alignItems="center"
+                  justifyContent="center"
+                  flexDirection="row"
+                >
+                  <RoundedLabel borderWith={3} rounded color={getColorFromMark(vote_average)}>
+                    {vote_average}
+                  </RoundedLabel>
+
+                  {release_date.substring(0, 4) && (
+                    <Text isBold fontSize={16} marginLeft={8} textColor="#ffffff">
+                      ({release_date.substring(0, 4)})
+                    </Text>
+                  )}
+                </Box>
+              )}
 
               <Text marginBottom={16} textColor="#ffffff">
                 {genres.map((genre) => {
@@ -367,9 +413,14 @@ const View = (props) => {
 
               <Text isBold marginTop={16} fontSize={24} textColor="#ffffff">
                 {userMovie ? (
-                  <div>
-                    <span>You have saved this movie</span>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Icon color="green" name="check" style={{ marginLeft: 8 }} />
+                    <Text textColor="#ffffff" isBold fontSize={isMobile ? 14 : 24} marginRight={8}>
+                      You have saved this movie
+                    </Text>
+                    <RoundedLabel borderWith={3} rounded color={getColorFromMark(form.rating)}>
+                      {form.rating}
+                    </RoundedLabel>
                   </div>
                 ) : (
                   'Save this movie'
@@ -381,13 +432,13 @@ const View = (props) => {
               </Text>
 
               <ReactStars
-                count={5}
+                count={10}
                 onChange={handleChangeRating}
                 size={24}
                 color2={'#ffd700'}
                 color1={'#d3d3d3'}
                 value={form.rating}
-                half
+                half={false}
               />
 
               <Form
@@ -433,8 +484,13 @@ const View = (props) => {
                 const { id, title, poster_path, vote_average, release_date } = movie;
 
                 return (
-                  <CardContainer key={id} height={350} percent={isMobile ? 100 : 20}>
+                  <CardContainer
+                    key={id}
+                    height={isMobile ? 150 : 400}
+                    percent={isMobile ? 100 : isTablet ? 33 : 20}
+                  >
                     <CardMovie
+                      isMobile={isMobile}
                       title={title}
                       subtitle={moment(release_date).format('MMM, YYYY')}
                       imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}

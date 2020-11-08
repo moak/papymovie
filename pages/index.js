@@ -11,7 +11,7 @@ import { withTranslation } from '../i18n';
 
 const Home = () => {
   return (
-    <Page title="Home">
+    <Page title="Home | GoldMovies">
       <PageContainer>
         <div className={styles.container}>
           <main>

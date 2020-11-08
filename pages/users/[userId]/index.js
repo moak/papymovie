@@ -9,6 +9,7 @@ import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
 
 import { useGetSession } from 'utils/session';
+import getColorFromMark from 'utils/getColorFromMark';
 
 import PageContainer from 'components/PageContainer';
 import Page from 'components/Page';
@@ -20,6 +21,7 @@ import CardUser from 'components/CardUser';
 import CardImage from 'components/CardImage';
 import CardContainer from 'components/CardContainer';
 import List from 'components/List';
+import RoundedLabel from 'components/RoundedLabel';
 
 const ActionsContainer = styled.div`
   display: flex;
@@ -27,8 +29,6 @@ const ActionsContainer = styled.div`
 
 const Description = styled.div`
   height: 30px;
-  margin-top: 8px;
-  margin-bottom: 8px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -128,9 +128,8 @@ const User = (props) => {
 
   const { _id, name, image, movies, followings, followers, moviesToWatch } = userState;
 
-  console.log('followings', followings);
   return (
-    <Page title="Users">
+    <Page title={`${name} | GoldMovies`}>
       <PageContainer>
         <Row>
           <Col xs={12} md={3}>
@@ -192,7 +191,6 @@ const User = (props) => {
                             title={title}
                             imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
                             href={`/movies/${themoviedbId}`}
-                            centered
                           />
                         </CardContainer>
                       );
@@ -236,28 +234,28 @@ const User = (props) => {
                         imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
                         href={`/movies/${themoviedbId}`}
                         imageHeight={isMyProfile ? 70 : 70}
-                        centered
                         isMyProfile={isMyProfile}
+                        userRating={rating}
+                        centered
                       >
                         <Box flexDirection="column" alignItems="center">
-                          {rating && (
-                            <ReactStars
-                              count={5}
-                              size={24}
-                              color2={'#ffd700'}
-                              color1={'#d3d3d3'}
-                              value={rating}
-                              isHalf
-                              edit={false}
-                            />
-                          )}
                           <Description>
-                            {isMobile && isMyProfile
-                              ? null
-                              : !session
-                              ? description || 'No notes'
-                              : description || 'Add a note...'}
+                            {isMobile ? description || 'No notes' : description || 'Add a note...'}
                           </Description>
+
+                          {isMobile && (
+                            <div style={{ marginBottom: 8 }}>
+                              <RoundedLabel
+                                borderWith={2}
+                                width="30px"
+                                height="30px"
+                                rounded
+                                color={getColorFromMark(rating)}
+                              >
+                                {rating}
+                              </RoundedLabel>
+                            </div>
+                          )}
 
                           <ActionsContainer>
                             {isMyProfile ? (

@@ -20,7 +20,7 @@ const Movies = (props) => {
   }, []);
 
   return (
-    <Page title="Users">
+    <Page title="Users | GoldMovies">
       <PageContainer>
         <Text marginBottom={24} fontSize={32}>
           Users

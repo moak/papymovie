@@ -37,6 +37,8 @@ const HelperMovies = (props) => {
     return null;
   }
 
+  return null;
+
   return (
     <>
       <Message warning onDismiss={isClosable ? handleClickClose : null}>

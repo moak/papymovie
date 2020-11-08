@@ -22,7 +22,7 @@ const NavBar = styled(animated.nav)`
   top: 0;
   left: 0;
   background: #2d3436;
-  z-index: 2;
+  z-index: 3;
   font-size: 14px;
 `;
 
@@ -136,7 +136,7 @@ const NavBarNew = (props) => {
                 <Link href="/feed">Feed</Link>
                 <Link href="/movies">Movies</Link>
                 <Link href="/users">Users</Link>
-                <Link href={`/users/${session && session.id}`}>My profile</Link>
+                {session && <Link href={`/users/${session && session.id}`}>My profile</Link>}
               </>
             )}
             <a>
