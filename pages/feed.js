@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import moment from 'moment';
 
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
@@ -33,8 +32,6 @@ const Feed = (props) => {
   return (
     <Page title="login">
       <PageContainer>
-        <h1>UNDER CONSTRUCTION</h1>
-
         <Row justifyContent="space-between">
           <Text marginBottom={24} fontSize={32}>
             Feed
@@ -43,17 +40,8 @@ const Feed = (props) => {
         {feed.map((feedItem) => {
           console.log('feedItem', feedItem);
           return (
-            <div style={{ marginBottom: 8 }} key={feedItem._id}>
-              <CardFeed
-                date={moment(feedItem.created_at).fromNow()}
-                userImage={feedItem.user.image}
-                movieImage={
-                  feedItem.movie ? `https://image.tmdb.org/t/p/w500/${feedItem.movie.image}` : null
-                }
-                rating={feedItem.movie ? feedItem.movie.rating : null}
-                movieTitle={feedItem.movie ? feedItem.movie.title : null}
-                name={feedItem.user && feedItem.user.name}
-              />
+            <div style={{ marginBottom: 16 }} key={feedItem._id}>
+              <CardFeed isMobile={isMobile} feedItem={feedItem} />
             </div>
           );
         })}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
-import { Button, Select, Pagination } from 'semantic-ui-react';
+import { Label, Button, Select, Pagination } from 'semantic-ui-react';
 import { withTranslation } from 'i18n';
 
 import Page from 'components/Page';
@@ -34,7 +34,7 @@ export const LeftColumn = styled.div`
 
 const RightColumn = styled.div`
   background-color: #ffffff;
-  width: 250px;
+  width: 280px;
   border: 1px solid rgb(224, 230, 233);
   border-radius: 10px;
   padding: 16px 16px;
@@ -72,6 +72,7 @@ const Movies = (props) => {
 
   const [yearStart, setYearStart] = useState();
   const [yearEnd, setYearEnd] = useState();
+  const [genres, setGenres] = useState(null);
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
@@ -97,6 +98,23 @@ const Movies = (props) => {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0;
   }, [activePage]);
+
+  useEffect(() => {
+    const fetchGenres = async () => {
+      try {
+        const request = await fetch(
+          `https://api.themoviedb.org/3/genre/movie/list?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
+        );
+        const { genres } = await request.json();
+
+        setGenres(genres);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+
+    fetchGenres();
+  }, []);
 
   useEffect(async () => {
     let query = null;
@@ -189,6 +207,18 @@ const Movies = (props) => {
                 options={filters}
                 value={filter}
               />
+
+              <Text marginBottom={8}>Genre (not working yet)</Text>
+              <div style={{ marginBottom: 16 }}>
+                {genres &&
+                  genres.map((genre) => {
+                    return (
+                      <Label key={genre.id} style={{ marginBottom: 6 }} color="blue">
+                        {genre.name}
+                      </Label>
+                    );
+                  })}
+              </div>
 
               {filter === 'discover' && (
                 <Row flexDirection="row">
