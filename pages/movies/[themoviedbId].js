@@ -78,12 +78,6 @@ export const Infos = styled.div`
 
 const View = (props) => {
   const {
-    // userMovie,
-    // userMovie: {
-    //   _id: userMovieId,
-    //   rating: userMovieRating,
-    //   description: userMovieDescription,
-    // } = {},
     isFound,
     movie: { backdrop_path, poster_path, runtime, title, overview, release_date, genres } = {},
   } = props;
@@ -94,7 +88,6 @@ const View = (props) => {
   const isMobile = useIsMobile();
   const { session } = useGetSession();
 
-  console.log('11222', session);
   const [user, setUser] = useState(null);
   const [userMovie, setUserMovie] = useState(null);
   const [similarMovies, setSimilarMovies] = useState(null);
@@ -111,10 +104,6 @@ const View = (props) => {
     description: null,
     rating: null,
   });
-
-  useEffect(() => {
-    // setForm({ ...form, description: userMovieDescription, rating: userMovieRating });
-  }, [userMovie]);
 
   const [errors, setErrors] = useState({});
 
@@ -191,26 +180,22 @@ const View = (props) => {
 
   useEffect(() => {
     const fetchLoggedUser = async () => {
-      console.log('fetchLoggedUser');
       try {
         const request = await fetch(`${process.env.API_URL}/api/users/${session.id}`);
-
         const { data } = await request.json();
-        console.log('data', data);
+
         setUser(data);
       } catch (error) {
         console.log('error', error);
       }
     };
 
-    console.log('sessionsessionsessionsession', session);
     if (session && !user) {
       fetchLoggedUser();
     }
   }, [session]);
 
   useEffect(() => {
-    console.log('user', user);
     if (user) {
       const userMovie = user.movies.find((movie) => movie.themoviedbId === themoviedbId);
 
@@ -239,7 +224,6 @@ const View = (props) => {
 
   const submitMovieToWatch = async () => {
     try {
-      console.log('hey');
       const request = await fetch(`${process.env.API_URL}/api/movies/towatch`, {
         method: 'POST',
         headers: {
@@ -308,7 +292,6 @@ const View = (props) => {
     return <div>not found</div>;
   }
 
-  console.log('userMovie', userMovie);
   return (
     <Page title="login">
       <PageContainer>

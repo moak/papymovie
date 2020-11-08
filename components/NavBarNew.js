@@ -118,11 +118,14 @@ const NavBarNew = (props) => {
             <SearchContainer>
               <form onSubmit={submitSearch}>
                 <Input
+                  action={{
+                    icon: 'search',
+                    onClick: submitSearch,
+                  }}
                   style={{ fontSize: 16 }}
                   onChange={handleChangeSearch}
                   fluid
-                  icon="search"
-                  placeholder="Search..."
+                  placeholder="Search a movie..."
                   value={search || ''}
                 />
               </form>

@@ -73,9 +73,6 @@ const Movies = () => {
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 
-  const test = useSession();
-
-  console.log('test', test);
   const sortByOptions = [
     { key: 'popularity.desc', value: 'popularity.desc', text: 'Popularity' },
     { key: 'vote_count.desc', value: 'vote_count.desc', text: 'Vote count' },
@@ -165,7 +162,7 @@ const Movies = () => {
             <Button
               primary
               style={{ height: '40px' }}
-              icon="settings"
+              icon="options"
               onClick={handleClickFilters}
             />
           )}

@@ -42,12 +42,10 @@ const CardUserContainer = styled.div`
 }`;
 
 const User = (props) => {
-  const {
-    user: { _id, name, image, movies, followers, followings, moviesToWatch } = {},
-    userIdParam,
-  } = props;
+  const { user, userIdParam } = props;
   const { session } = useGetSession();
-  const [followersState, setFollowersState] = useState(followers);
+  const [userState, setUserState] = useState(user);
+  const [followersState, setFollowersState] = useState(user.followers);
   const [isFollowRequestLoading, setIsFollowRequestLoading] = useState(false);
 
   const isMyProfile = userIdParam === (session && session.id);
@@ -70,7 +68,7 @@ const User = (props) => {
 
   useEffect(() => {
     if (isDeleting) {
-      deleteNote();
+      deleteMovie();
     }
   }, [isDeleting]);
 
@@ -81,11 +79,13 @@ const User = (props) => {
 
   const close = () => setConfirm(false);
 
-  const deleteNote = async () => {
+  const deleteMovie = async () => {
     try {
       await fetch(`${process.env.API_URL}/api/movies/${movieId}`, {
         method: 'Delete',
       });
+      const { user } = await fetchData({ query: { userId: session.id } });
+      setUserState(user);
     } catch (error) {
       console.log(error);
     }
@@ -112,6 +112,8 @@ const User = (props) => {
     setIsDeleting(movieId);
     close();
   };
+
+  const { _id, name, image, movies, followings, moviesToWatch } = userState;
 
   return (
     <Page title="Users">
@@ -285,13 +287,18 @@ const User = (props) => {
   );
 };
 
-User.getInitialProps = async (ctx) => {
+async function fetchData(ctx) {
+  // console.log('ctx', ctx);
   const { query: { userId } = {} } = ctx;
+  console.log('userId', userId);
 
   const res = await fetch(`${process.env.API_URL}/api/users/${userId}`);
 
   const { data } = await res.json();
+
   return { user: data, userIdParam: userId };
-};
+}
+
+User.getInitialProps = fetchData;
 
 export default User;

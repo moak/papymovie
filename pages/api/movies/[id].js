@@ -55,11 +55,7 @@ export default async (req, res) => {
           return res.status(400).json({ success: false });
         }
 
-        User.findOneAndUpdate(
-          { _id: session.id },
-          { $pull: { movies: deletedMovie } },
-          { new: true },
-        ).exec(),
+        User.findOneAndUpdate({ _id: session.id }, { $pull: { movies: id } }, { new: true }).exec(),
           res.status(200).json({ success: true, data: {} });
       } catch (error) {
         res.status(400).json({ success: false });

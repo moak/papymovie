@@ -29,7 +29,6 @@ const Discover = (props) => {
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 
-  console.log('feed', feed);
   return (
     <Page title="login">
       <PageContainer>

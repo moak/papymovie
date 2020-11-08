@@ -31,7 +31,6 @@ function useRouterScroll({ behavior = 'smooth', left = 0, top = 0 } = {}) {
 
     // If the component is unmounted, unsubscribe from the event
     return () => {
-      console.log('router', router);
       router.events.off('routeChangeComplete', handleRouteChangeComplete);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps

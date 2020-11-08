@@ -14,8 +14,6 @@ export default async (req, res) => {
   switch (method) {
     case 'POST':
       try {
-        console.log('session', session);
-        console.log('req.body', req.body);
         if (!session) {
           res.status(400).json({ success: false, error: 'invalid' });
         }
