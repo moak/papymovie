@@ -33,6 +33,9 @@ const CollapseMenu = (props) => {
             <Link href="/">Home</Link>
           </li>
           <li>
+            <Link href="/feed">Feed</Link>
+          </li>
+          <li>
             <Link href="/movies">Movies</Link>
           </li>
           <li>
@@ -44,6 +47,8 @@ const CollapseMenu = (props) => {
               <li>
                 <Link href={`/users/${session && session.id}`}>My profile</Link>
               </li>
+              <hr />
+
               <li>
                 <a onClick={signOut}>Logout</a>
               </li>

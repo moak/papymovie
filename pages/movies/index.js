@@ -11,6 +11,7 @@ import CardMovie from 'components/CardMovie';
 import RoundedLabel from 'components/RoundedLabel';
 import CardContainer from 'components/CardContainer';
 import List from 'components/List';
+import HelperMovies from 'components/HelperMovies';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
@@ -170,6 +171,8 @@ const Movies = (props) => {
           )}
         </Row>
 
+        {isMobile && <HelperMovies isClosable />}
+
         <Row flexDirection={isMobile ? 'column' : 'row'} ref={ref}>
           {(!isMobile || (isMobile && isFiltersVisible)) && (
             <RightColumn>
@@ -205,7 +208,7 @@ const Movies = (props) => {
 
                     <Select
                       fluid
-                      style={{ marginBottom: 32, width: isMobile ? '100%' : '92px' }}
+                      style={{ width: isMobile ? '100%' : '92px' }}
                       onChange={handleChangeYearEnd}
                       placeholder={t('all')}
                       options={yearsOptions}
@@ -215,32 +218,7 @@ const Movies = (props) => {
                 </Row>
               )}
 
-              {!isMobile && (
-                <>
-                  <hr />
-
-                  <Text isBold fontSize={16} marginBottom={16} marginTop={16}>
-                    {t('information')}
-                  </Text>
-                  <div style={{ display: 'flex', marginBottom: 16 }}>
-                    <RoundedLabel borderWith={3} rounded color="#21ba45 ">
-                      {6}
-                    </RoundedLabel>
-                    <Text marginLeft={8}>
-                      Global rating on <a href="www.themoviedb.org">themoviedb</a>.
-                    </Text>
-                  </div>
-
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <RoundedLabel width="50px" height="26px" color="#333333">
-                      {345}
-                    </RoundedLabel>
-                    <Text marginLeft={8}>
-                      Amount of votes on <a href="www.themoviedb.org">themoviedb</a>.
-                    </Text>
-                  </div>
-                </>
-              )}
+              {!isMobile && <HelperMovies />}
             </RightColumn>
           )}
           <LeftColumn percent={80} isMobile>

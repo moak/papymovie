@@ -24,7 +24,7 @@ export const Row = styled.div`
   justify-content: ${(p) => p.justifyContent || 'flex-start'};
 `;
 
-const Discover = (props) => {
+const Feed = (props) => {
   const { feed } = props;
 
   const isMobile = useIsMobile();
@@ -33,6 +33,8 @@ const Discover = (props) => {
   return (
     <Page title="login">
       <PageContainer>
+        <h1>UNDER CONSTRUCTION</h1>
+
         <Row justifyContent="space-between">
           <Text marginBottom={24} fontSize={32}>
             Feed
@@ -60,7 +62,7 @@ const Discover = (props) => {
   );
 };
 
-Discover.getInitialProps = async () => {
+Feed.getInitialProps = async () => {
   const res = await fetch(`${process.env.API_URL}/api/feed`);
 
   const { data } = await res.json();
@@ -71,4 +73,4 @@ Discover.getInitialProps = async () => {
   };
 };
 
-export default Discover;
+export default Feed;
