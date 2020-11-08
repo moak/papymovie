@@ -15,7 +15,7 @@ export default async (req, res) => {
     case 'GET':
       try {
         const user = await User.findById(id)
-          .populate('movies')
+          .populate({ path: 'movies', options: { sort: { created_at: -1 } } })
           .populate('followers')
           .populate('followings');
 

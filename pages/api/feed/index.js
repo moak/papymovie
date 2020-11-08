@@ -13,7 +13,7 @@ export default async (req, res) => {
       try {
         const feed = await Feed.find({}).populate('movie').populate('user');
 
-        res.status(200).json({ success: true, data: feed });
+        res.status(200).json({ success: true, data: feed.reverse() });
       } catch (error) {
         console.log('error', error);
         res.status(400).json({ success: false });

@@ -1,3 +1,10 @@
 {
-  "title": "New movie"
+  "title": "New movie",
+  "movies": "Movies",
+  "filters": "Filters",
+  "sort_by": "Sort by",
+  "between": "Between",
+  "and": "and",
+  "information": "Information",
+  "all": "All"
 }

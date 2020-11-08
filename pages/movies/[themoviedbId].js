@@ -408,7 +408,7 @@ const View = (props) => {
                   name="description"
                   value={form.description || ''}
                   onChange={handleChangeDescription}
-                  style={{ width: isMobile ? null : 600 }}
+                  style={{ width: isMobile ? null : 600, fontSize: 16 }}
                 />
                 <Button loading={!!isSubmittingMovie} color="green" style={{ marginTop: 10 }}>
                   {userMovie ? 'Edit' : 'Ajouter'}

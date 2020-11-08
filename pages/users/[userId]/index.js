@@ -17,6 +17,7 @@ import Text from 'components/Text';
 import EmptyState from 'components/EmptyState';
 import CardMovie from 'components/CardMovie';
 import CardUser from 'components/CardUser';
+import CardImage from 'components/CardImage';
 import CardContainer from 'components/CardContainer';
 import List from 'components/List';
 
@@ -162,53 +163,57 @@ const User = (props) => {
                 {isFollowing ? 'Unfollow' : 'Follow'}
               </Button>
             )}
-            <Text marginTop={24} marginBottom={24} fontSize={24}>
-              To watch
-              {moviesToWatch.length > 0 ? ` (${moviesToWatch.length})` : ''}
-            </Text>
 
-            {moviesToWatch && moviesToWatch.length === 0 && (
-              <EmptyState>
-                <Text fontSize={16} marginBottom={16}>
-                  No movies in the to watch list
+            {isMyProfile || moviesToWatch.length ? (
+              <>
+                <Text marginTop={24} marginBottom={24} fontSize={24}>
+                  To watch
+                  {moviesToWatch.length > 0 ? ` (${moviesToWatch.length})` : ''}
                 </Text>
-              </EmptyState>
-            )}
 
-            <List>
-              {moviesToWatch &&
-                moviesToWatch.length > 0 &&
-                moviesToWatch.map((movieToWatch) => {
-                  const { _id, title, themoviedbId, image } = movieToWatch;
+                {moviesToWatch && moviesToWatch.length === 0 && (
+                  <EmptyState>
+                    <Text fontSize={16} marginBottom={16}>
+                      No movies in the to watch list
+                    </Text>
+                  </EmptyState>
+                )}
 
-                  return (
-                    <CardContainer key={_id} height={150} percent={100}>
-                      <CardMovie
-                        isMobile
-                        title={title}
-                        imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
-                        href={`/movies/${themoviedbId}`}
-                        imageHeight={80}
-                        centered
-                      />
-                    </CardContainer>
-                  );
-                })}
-            </List>
+                <List>
+                  {moviesToWatch &&
+                    moviesToWatch.length > 0 &&
+                    moviesToWatch.map((movieToWatch) => {
+                      const { _id, title, themoviedbId, image } = movieToWatch;
+
+                      return (
+                        <CardContainer key={_id} height={180} percent={50}>
+                          <CardImage
+                            isMobile
+                            title={title}
+                            imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
+                            href={`/movies/${themoviedbId}`}
+                            centered
+                          />
+                        </CardContainer>
+                      );
+                    })}
+                </List>
+              </>
+            ) : null}
           </Col>
           <Col xs={12} md={9}>
-            <Text marginBottom={24} fontSize={32}>
+            <Text marginBottom={24} marginTop={isMobile ? 8 : 0} fontSize={isMobile ? 24 : 32}>
               {isMyProfile
                 ? 'My movies'
-                : `His movies ${movies.length > 0 ? `(${movies.length})` : ''}`}
+                : `${user.name || user.email}'s movies ${
+                    movies.length > 0 ? `(${movies.length})` : ''
+                  }`}
             </Text>
 
             {movies && movies.length === 0 && (
               <EmptyState>
-                <Text fontSize={16} marginBottom={16}>
-                  {isMyProfile
-                    ? 'You have not added movies yet'
-                    : `${name} has not added movies yet.`}
+                <Text fontSize={16}>
+                  {isMyProfile ? 'You have not added movies yet' : `No movies.`}
                 </Text>
               </EmptyState>
             )}
@@ -289,7 +294,7 @@ const User = (props) => {
                 })}
             </List>
 
-            <Text marginTop={24} marginBottom={24} fontSize={32}>
+            <Text marginTop={24} marginBottom={8} fontSize={24}>
               Followings
             </Text>
             <List>
@@ -314,14 +319,14 @@ const User = (props) => {
             </List>
             {followings && followings.length === 0 && (
               <EmptyState>
-                <Text fontSize={16} marginBottom={16}>
+                <Text fontSize={16}>
                   {isMyProfile
                     ? 'You do not follow anyone yet'
                     : `This user does not follow anyone.`}
                 </Text>
               </EmptyState>
             )}
-            <Text marginTop={24} marginBottom={24} fontSize={32}>
+            <Text marginTop={24} marginBottom={16} fontSize={24}>
               Followers
             </Text>
             <List>
@@ -346,7 +351,7 @@ const User = (props) => {
             </List>
             {followers && followers.length === 0 && (
               <EmptyState>
-                <Text fontSize={16} marginBottom={16}>
+                <Text fontSize={16}>
                   {isMyProfile ? 'You do not have any followers' : `This user as no followers.`}
                 </Text>
               </EmptyState>

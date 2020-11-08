@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { Button, Select, Pagination } from 'semantic-ui-react';
+import { withTranslation } from 'i18n';
 
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
@@ -13,7 +14,6 @@ import List from 'components/List';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
-import { useSession } from 'utils/session';
 
 import { objectToQueryString } from 'utils/queryString';
 
@@ -36,7 +36,7 @@ const RightColumn = styled.div`
   width: 250px;
   border: 1px solid rgb(224, 230, 233);
   border-radius: 10px;
-  padding: 16px 16px 0px;
+  padding: 16px 16px;
   top: 90px;
   align-self: flex-start;
 
@@ -57,7 +57,9 @@ export const Row = styled.div`
   position: relative;
 `;
 
-const Movies = () => {
+const Movies = (props) => {
+  const { t } = props;
+
   const ref = useRef(null);
   const [movies, setMovies] = useState(null);
   const [totalPages, setTotalPages] = useState(null);
@@ -156,7 +158,7 @@ const Movies = () => {
       <PageContainer maxWidth="1300">
         <Row justifyContent="space-between">
           <Text marginBottom={24} fontSize={32}>
-            Movies
+            {t('movies')}
           </Text>
           {isMobile && (
             <Button
@@ -172,15 +174,15 @@ const Movies = () => {
           {(!isMobile || (isMobile && isFiltersVisible)) && (
             <RightColumn>
               <Text isBold fontSize={16} marginBottom={16}>
-                Filters
+                {t('filters')}
               </Text>
 
-              <Text marginBottom={4}>Sort by:</Text>
+              <Text marginBottom={4}>{t('sort_by')}</Text>
               <Select
                 fluid
                 style={{ marginBottom: 32 }}
                 onChange={handleChangeFilter}
-                placeholder="Filter by"
+                placeholder={t('sort_by')}
                 options={filters}
                 value={filter}
               />
@@ -188,24 +190,24 @@ const Movies = () => {
               {filter === 'discover' && (
                 <Row flexDirection="row">
                   <div style={{ marginRight: 12, width: '100%' }}>
-                    <Text marginBottom={4}>Between</Text>
+                    <Text marginBottom={4}>{t('between')}</Text>
                     <Select
                       fluid
                       style={{ marginBottom: 32, width: isMobile ? '100%' : '92px' }}
                       onChange={handleChangeYearStart}
-                      placeholder="All"
+                      placeholder={t('all')}
                       options={yearsOptions}
                       value={yearStart || null}
                     />
                   </div>
                   <div style={{ width: '100%' }}>
-                    <Text marginBottom={4}>And</Text>
+                    <Text marginBottom={4}>{t('and')}</Text>
 
                     <Select
                       fluid
                       style={{ marginBottom: 32, width: isMobile ? '100%' : '92px' }}
                       onChange={handleChangeYearEnd}
-                      placeholder="All"
+                      placeholder={t('all')}
                       options={yearsOptions}
                       value={yearEnd || null}
                     />
@@ -218,7 +220,7 @@ const Movies = () => {
                   <hr />
 
                   <Text isBold fontSize={16} marginBottom={16} marginTop={16}>
-                    Notes
+                    {t('information')}
                   </Text>
                   <div style={{ display: 'flex', marginBottom: 16 }}>
                     <RoundedLabel borderWith={3} rounded color="#21ba45 ">
@@ -290,8 +292,8 @@ const Movies = () => {
 
 Movies.getInitialProps = async () => {
   return {
-    namespacesRequired: ['common'],
+    namespacesRequired: ['movie'],
   };
 };
 
-export default Movies;
+export default withTranslation('movie')(Movies);

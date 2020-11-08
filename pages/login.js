@@ -37,10 +37,10 @@ const Login = () => {
     <Page title="login">
       <PageContainer centered>
         <FormWrapper>
-          <FormTitle>Login</FormTitle>
-          <button onClick={signIn}>Sign in</button>
+          {/* <FormTitle>Login</FormTitle> */}
+          <button onClick={signIn}>Register / login</button>
 
-          <Form autoComplete="on" onSubmit={null}>
+          {/* <Form autoComplete="on" onSubmit={null}>
             <Form.Field>
               <Label htmlFor="email">email</Label>
               <input
@@ -74,7 +74,7 @@ const Login = () => {
             <a href="/" style={{ marginLeft: '5px' }}>
               forgot
             </a>
-          </Form>
+          </Form> */}
         </FormWrapper>
       </PageContainer>
     </Page>

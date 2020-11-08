@@ -1,3 +1,10 @@
 {
-  "title": "Ajouter un firm"
+  "title": "Ajouter un firm",
+  "movies": "Films",
+  "filters": "Filtres",
+  "sort_by": "Trier par",
+  "between": "Entre",
+  "and": "et",
+  "information": "Information",
+  "all": "Tout"
 }

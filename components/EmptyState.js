@@ -7,7 +7,8 @@ export default styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 70px 20px;
+    padding: 50px 20px;
     color: grey;
     margin-top: 10px;
+    margin-bottom: 10px;
 }`;
