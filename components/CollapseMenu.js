@@ -30,6 +30,9 @@ const CollapseMenu = (props) => {
       >
         <NavLinks>
           <li>
+            <Link href="/">Home</Link>
+          </li>
+          <li>
             <Link href="/movies">Movies</Link>
           </li>
           <li>

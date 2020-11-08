@@ -42,18 +42,22 @@ const CardUserContainer = styled.div`
 }`;
 
 const User = (props) => {
-  const { user, userIdParam } = props;
+  const { user } = props;
+  const router = useRouter();
+
   const { session } = useGetSession();
   const [userState, setUserState] = useState(user);
   const [followersState, setFollowersState] = useState(user.followers);
   const [isFollowRequestLoading, setIsFollowRequestLoading] = useState(false);
 
-  const isMyProfile = userIdParam === (session && session.id);
+  const { userId } = router.query;
+
+  const isMyProfile = userId === (session && session.id);
+
   const isFollowing = isMyProfile
     ? false
-    : !!followersState.find((follower) => follower === (session && session.id));
+    : !!followersState.find((follower) => follower._id === (session && session.id));
 
-  const router = useRouter();
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 
@@ -71,6 +75,14 @@ const User = (props) => {
       deleteMovie();
     }
   }, [isDeleting]);
+
+  useEffect(async () => {
+    const { user } = await fetchData({ query: { userId: userId } });
+    setUserState(user);
+
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0;
+  }, [userId]);
 
   useEffect(() => {
     document.body.scrollTop = 0; // For Safari
@@ -113,8 +125,9 @@ const User = (props) => {
     close();
   };
 
-  const { _id, name, image, movies, followings, moviesToWatch } = userState;
+  const { _id, name, image, movies, followings, followers, moviesToWatch } = userState;
 
+  console.log('followings', followings);
   return (
     <Page title="Users">
       <PageContainer>
@@ -149,6 +162,39 @@ const User = (props) => {
                 {isFollowing ? 'Unfollow' : 'Follow'}
               </Button>
             )}
+            <Text marginTop={24} marginBottom={24} fontSize={24}>
+              To watch
+              {moviesToWatch.length > 0 ? ` (${moviesToWatch.length})` : ''}
+            </Text>
+
+            {moviesToWatch && moviesToWatch.length === 0 && (
+              <EmptyState>
+                <Text fontSize={16} marginBottom={16}>
+                  No movies in the to watch list
+                </Text>
+              </EmptyState>
+            )}
+
+            <List>
+              {moviesToWatch &&
+                moviesToWatch.length > 0 &&
+                moviesToWatch.map((movieToWatch) => {
+                  const { _id, title, themoviedbId, image } = movieToWatch;
+
+                  return (
+                    <CardContainer key={_id} height={150} percent={100}>
+                      <CardMovie
+                        isMobile
+                        title={title}
+                        imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
+                        href={`/movies/${themoviedbId}`}
+                        imageHeight={80}
+                        centered
+                      />
+                    </CardContainer>
+                  );
+                })}
+            </List>
           </Col>
           <Col xs={12} md={9}>
             <Text marginBottom={24} fontSize={32}>
@@ -212,6 +258,7 @@ const User = (props) => {
                             {isMyProfile ? (
                               <>
                                 <Button
+                                  size="tiny"
                                   onClick={(e) => {
                                     e.preventDefault();
                                     router.push(`/movies/${themoviedbId}`);
@@ -223,6 +270,7 @@ const User = (props) => {
                                 </Button>
 
                                 <Button
+                                  size="tiny"
                                   color="red"
                                   onClick={(e) => {
                                     e.preventDefault();
@@ -242,42 +290,67 @@ const User = (props) => {
             </List>
 
             <Text marginTop={24} marginBottom={24} fontSize={32}>
-              To watch later
-              {moviesToWatch.length > 0 ? ` (${moviesToWatch.length})` : ''}
+              Followings
             </Text>
-
-            {moviesToWatch && moviesToWatch.length === 0 && (
-              <EmptyState>
-                <Text fontSize={16} marginBottom={16}>
-                  No movies in the to watch list
-                </Text>
-              </EmptyState>
-            )}
-
             <List>
-              {moviesToWatch &&
-                moviesToWatch.length > 0 &&
-                moviesToWatch.map((movieToWatch) => {
-                  const { _id, title, themoviedbId, image } = movieToWatch;
-
+              {followings &&
+                followings.map((following) => {
+                  const { _id, name, followings, followers, movies, image } = following;
                   return (
-                    <CardContainer
-                      key={_id}
-                      height={isMobile ? 150 : 300}
-                      percent={isMobile ? 100 : isTablet ? 50 : 25}
-                    >
-                      <CardMovie
-                        isMobile={isMobile}
-                        title={title}
-                        imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
-                        href={`/movies/${themoviedbId}`}
-                        imageHeight={80}
-                        centered
+                    <CardContainer key={_id} height={350} percent={isMobile ? 100 : 33}>
+                      <CardUser
+                        href={`/users/${_id}`}
+                        name={name}
+                        imageUrl={image}
+                        infos={[
+                          { amount: movies.length, title: 'Movies' },
+                          { amount: followers.length, title: 'Followers' },
+                          { amount: followings.length, title: 'Following' },
+                        ]}
                       />
                     </CardContainer>
                   );
                 })}
             </List>
+            {followings && followings.length === 0 && (
+              <EmptyState>
+                <Text fontSize={16} marginBottom={16}>
+                  {isMyProfile
+                    ? 'You do not follow anyone yet'
+                    : `This user does not follow anyone.`}
+                </Text>
+              </EmptyState>
+            )}
+            <Text marginTop={24} marginBottom={24} fontSize={32}>
+              Followers
+            </Text>
+            <List>
+              {followers &&
+                followers.map((follower) => {
+                  const { _id, name, followings, followers, movies, image } = follower;
+                  return (
+                    <CardContainer key={_id} height={350} percent={isMobile ? 100 : 33}>
+                      <CardUser
+                        href={`/users/${_id}`}
+                        name={name}
+                        imageUrl={image}
+                        infos={[
+                          { amount: movies.length, title: 'Movies' },
+                          { amount: followers.length, title: 'Followers' },
+                          { amount: followings.length, title: 'Following' },
+                        ]}
+                      />
+                    </CardContainer>
+                  );
+                })}
+            </List>
+            {followers && followers.length === 0 && (
+              <EmptyState>
+                <Text fontSize={16} marginBottom={16}>
+                  {isMyProfile ? 'You do not have any followers' : `This user as no followers.`}
+                </Text>
+              </EmptyState>
+            )}
           </Col>
         </Row>
         <Confirm
@@ -293,15 +366,11 @@ const User = (props) => {
 };
 
 async function fetchData(ctx) {
-  // console.log('ctx', ctx);
   const { query: { userId } = {} } = ctx;
-  console.log('userId', userId);
-
   const res = await fetch(`${process.env.API_URL}/api/users/${userId}`);
-
   const { data } = await res.json();
 
-  return { user: data, userIdParam: userId };
+  return { user: data };
 }
 
 User.getInitialProps = fetchData;

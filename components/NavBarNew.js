@@ -22,7 +22,7 @@ const NavBar = styled(animated.nav)`
   top: 0;
   left: 0;
   background: #2d3436;
-  z-index: 1;
+  z-index: 2;
   font-size: 14px;
 `;
 
@@ -113,24 +113,22 @@ const NavBarNew = (props) => {
     <>
       <NavBar style={barAnimation}>
         <FlexContainer>
-          {(!session || (!isMobile && !isTablet)) && <Brand />}
-          {(!isMobile || (isMobile && session)) && (
-            <SearchContainer>
-              <form onSubmit={submitSearch}>
-                <Input
-                  action={{
-                    icon: 'search',
-                    onClick: submitSearch,
-                  }}
-                  style={{ fontSize: 16 }}
-                  onChange={handleChangeSearch}
-                  fluid
-                  placeholder="Search a movie..."
-                  value={search || ''}
-                />
-              </form>
-            </SearchContainer>
-          )}
+          {!isMobile && <Brand />}
+          <SearchContainer>
+            <form onSubmit={submitSearch}>
+              <Input
+                action={{
+                  icon: 'search',
+                  onClick: submitSearch,
+                }}
+                style={{ fontSize: 16 }}
+                onChange={handleChangeSearch}
+                fluid
+                placeholder="Search a movie..."
+                value={search || ''}
+              />
+            </form>
+          </SearchContainer>
 
           <NavLinks style={linkAnimation}>
             {!isMobile && !isTablet && (

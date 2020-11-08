@@ -14,7 +14,10 @@ export default async (req, res) => {
   switch (method) {
     case 'GET':
       try {
-        const user = await User.findById(id).populate('movies');
+        const user = await User.findById(id)
+          .populate('movies')
+          .populate('followers')
+          .populate('followings');
 
         if (!user) {
           return res.status(400).json({ success: false });

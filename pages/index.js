@@ -20,7 +20,7 @@ const Home = () => {
             </h1>
 
             <p className={styles.description}>
-              Don't forget what you watch <code className={styles.code}>and share!</code>
+              Don't forget what you watch <code className={styles.code}>and get inspired!</code>
             </p>
 
             <div className={styles.grid}>
@@ -32,14 +32,14 @@ const Home = () => {
               </Link> */}
               <Link href="/movies">
                 <div className={styles.card}>
-                  <h3>Discover &rarr;</h3>
+                  <h3>Movies &rarr;</h3>
                   <p>Discover the trends and best movies of all time. </p>
                 </div>
               </Link>
-              <Link href="my_movies">
+              <Link href="/users">
                 <div className={styles.card}>
-                  <h3>Save your movies &rarr;</h3>
-                  <p>Don't forget what you have watched recently.</p>
+                  <h3>Users &rarr;</h3>
+                  <p>Get inspired by what other people have watched.</p>
                 </div>
               </Link>
               {/* <Link href="/">
