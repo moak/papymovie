@@ -266,6 +266,7 @@ const Movies = (props) => {
                         imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}
                         href={`/movies/${id}`}
                         grade={vote_average}
+                        userRating={vote_average}
                       />
                     </CardContainer>
                   );

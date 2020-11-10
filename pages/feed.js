@@ -38,7 +38,6 @@ const Feed = (props) => {
           </Text>
         </Row>
         {feed.map((feedItem) => {
-          console.log('feedItem', feedItem);
           return (
             <div style={{ marginBottom: 16 }} key={feedItem._id}>
               <CardFeed isMobile={isMobile} feedItem={feedItem} />

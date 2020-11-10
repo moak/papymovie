@@ -133,13 +133,19 @@ const CardMovie = (props) => {
             </Text>
           )}
 
-          {isMobile && (
+          {isMobile ? (
             <GradeContainerMobile>
-              <RoundedLabel borderWith={3} rounded color={getColorFromMark(grade)}>
-                {grade}
+              <RoundedLabel
+                width="30px"
+                height="30px"
+                borderWith={2}
+                rounded
+                color={getColorFromMark(userRating)}
+              >
+                {userRating}
               </RoundedLabel>
             </GradeContainerMobile>
-          )}
+          ) : null}
 
           {children}
         </ContentContainer>

@@ -24,5 +24,7 @@ module.exports = {
     AUTH0_REDIRECT: process.env.AUTH0_REDIRECT,
     AUTH0_POST_LOGOUT_REDIRECT: process.env.AUTH0_POST_LOGOUT_REDIRECT,
     AUTH0_COOKIE_SECRET: process.env.AUTH0_COOKIE_SECRET,
+
+    GA_TRACKING_ID: process.env.GA_TRACKING_ID,
   },
 };

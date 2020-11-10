@@ -66,7 +66,7 @@ const Image = styled.img`
   top: 70%;
   left: 50%;
   transform: translate(-50%, -70%);
-  border: 1px solid #ffffff;
+  border: 2px solid #ffffff;
 }`;
 
 const NameContainer = styled.div`

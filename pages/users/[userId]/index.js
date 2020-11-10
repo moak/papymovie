@@ -243,7 +243,7 @@ const User = (props) => {
                             {isMobile ? description || 'No notes' : description || 'Add a note...'}
                           </Description>
 
-                          {isMobile && (
+                          {/* {isMobile && (
                             <div style={{ marginBottom: 8 }}>
                               <RoundedLabel
                                 borderWith={2}
@@ -255,7 +255,7 @@ const User = (props) => {
                                 {rating}
                               </RoundedLabel>
                             </div>
-                          )}
+                          )} */}
 
                           <ActionsContainer>
                             {isMyProfile ? (

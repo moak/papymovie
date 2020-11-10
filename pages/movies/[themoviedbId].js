@@ -321,7 +321,7 @@ const View = (props) => {
               />
             </Left>
             <Right>
-              <Box alignItems="center" flexDirection="row">
+              <Box alignItems="center" flexDirection={isMobile ? 'column' : 'row'}>
                 {!isMobile && (
                   <RoundedLabel borderWith={3} rounded color={getColorFromMark(vote_average)}>
                     {vote_average}
@@ -349,7 +349,7 @@ const View = (props) => {
               {isMobile && (
                 <Box
                   marginTop={4}
-                  marginBottom={4}
+                  marginBottom={8}
                   alignItems="center"
                   justifyContent="center"
                   flexDirection="row"
@@ -495,7 +495,7 @@ const View = (props) => {
                       subtitle={moment(release_date).format('MMM, YYYY')}
                       imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}
                       href={`/movies/${id}`}
-                      grade={vote_average}
+                      userRating={vote_average}
                     />
                   </CardContainer>
                 );
