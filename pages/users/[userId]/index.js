@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { Col, Row } from 'react-styled-flexboxgrid';
-import ReactStars from 'react-rating-stars-component';
 import styled from 'styled-components';
 import { Confirm, Button, Icon } from 'semantic-ui-react';
+import { useSession } from 'next-auth/client';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
-
-import { useGetSession } from 'utils/session';
-import getColorFromMark from 'utils/getColorFromMark';
 
 import PageContainer from 'components/PageContainer';
 import Page from 'components/Page';
@@ -21,7 +18,6 @@ import CardUser from 'components/CardUser';
 import CardImage from 'components/CardImage';
 import CardContainer from 'components/CardContainer';
 import List from 'components/List';
-import RoundedLabel from 'components/RoundedLabel';
 
 const ActionsContainer = styled.div`
   display: flex;
@@ -34,19 +30,11 @@ const Description = styled.div`
   overflow: hidden;
 }`;
 
-const CardUserContainer = styled.div`
-  height: 370px;
-  width: ${(p) => p.percent}%;
-  display: flex;
-  background-color: #fff;
-  margin-bottom: 16px;
-}`;
-
 const User = (props) => {
   const { user } = props;
   const router = useRouter();
 
-  const { session } = useGetSession();
+  const [session] = useSession();
   const [userState, setUserState] = useState(user);
   const [followersState, setFollowersState] = useState(user.followers);
   const [isFollowRequestLoading, setIsFollowRequestLoading] = useState(false);
@@ -57,7 +45,7 @@ const User = (props) => {
 
   const isFollowing = isMyProfile
     ? false
-    : !!followersState.find((follower) => follower._id === (session && session.id));
+    : !!followersState.find((follower) => (follower || follower._id) === (session && session.id));
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
@@ -129,12 +117,13 @@ const User = (props) => {
   const { _id, name, image, movies, followings, followers, moviesToWatch } = userState;
 
   return (
-    <Page title={`${name} | GoldMovies`}>
+    <Page title={`User | ${name} | PapyMovie`}>
       <PageContainer>
         <Row>
           <Col xs={12} md={3}>
-            <CardUserContainer>
+            <CardContainer height={isMobile ? 280 : 350}>
               <CardUser
+                isMobile={isMobile}
                 name={name}
                 imageUrl={image}
                 infos={[
@@ -143,7 +132,7 @@ const User = (props) => {
                   { amount: followings.length, title: 'Following' },
                 ]}
               />
-            </CardUserContainer>
+            </CardContainer>
 
             {!isMyProfile && (
               <Button
@@ -185,11 +174,11 @@ const User = (props) => {
                       const { _id, title, themoviedbId, image } = movieToWatch;
 
                       return (
-                        <CardContainer key={_id} height={180} percent={50}>
+                        <CardContainer key={_id} height={160} percent={50}>
                           <CardImage
                             isMobile
                             title={title}
-                            imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
+                            imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
                             href={`/movies/${themoviedbId}`}
                           />
                         </CardContainer>
@@ -225,37 +214,23 @@ const User = (props) => {
                   return (
                     <CardContainer
                       key={_id}
-                      height={isMobile ? 150 : isMyProfile ? 450 : 400}
-                      percent={isMobile ? 100 : isTablet ? 50 : 25}
+                      height={isMobile ? 330 : 400}
+                      percent={isMobile || isTablet ? 50 : 25}
                     >
                       <CardMovie
                         isMobile={isMobile}
                         title={title}
-                        imageUrl={`https://image.tmdb.org/t/p/w500/${image}`}
+                        imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
                         href={`/movies/${themoviedbId}`}
                         imageHeight={isMyProfile ? 70 : 70}
                         isMyProfile={isMyProfile}
                         userRating={rating}
-                        centered
+                        titleCentered
                       >
                         <Box flexDirection="column" alignItems="center">
                           <Description>
                             {isMobile ? description || 'No notes' : description || 'Add a note...'}
                           </Description>
-
-                          {/* {isMobile && (
-                            <div style={{ marginBottom: 8 }}>
-                              <RoundedLabel
-                                borderWith={2}
-                                width="30px"
-                                height="30px"
-                                rounded
-                                color={getColorFromMark(rating)}
-                              >
-                                {rating}
-                              </RoundedLabel>
-                            </div>
-                          )} */}
 
                           <ActionsContainer>
                             {isMyProfile ? (
@@ -292,7 +267,7 @@ const User = (props) => {
                 })}
             </List>
 
-            <Text marginTop={24} marginBottom={8} fontSize={24}>
+            <Text marginTop={24} marginBottom={16} fontSize={24}>
               Followings
             </Text>
             <List>
@@ -300,8 +275,13 @@ const User = (props) => {
                 followings.map((following) => {
                   const { _id, name, followings, followers, movies, image } = following;
                   return (
-                    <CardContainer key={_id} height={350} percent={isMobile ? 100 : 33}>
+                    <CardContainer
+                      key={_id}
+                      height={isMobile ? 280 : 350}
+                      percent={isMobile ? 100 : 33}
+                    >
                       <CardUser
+                        isMobile={isMobile}
                         href={`/users/${_id}`}
                         name={name}
                         imageUrl={image}
@@ -332,8 +312,13 @@ const User = (props) => {
                 followers.map((follower) => {
                   const { _id, name, followings, followers, movies, image } = follower;
                   return (
-                    <CardContainer key={_id} height={350} percent={isMobile ? 100 : 33}>
+                    <CardContainer
+                      key={_id}
+                      height={isMobile ? 280 : 350}
+                      percent={isMobile ? 100 : 33}
+                    >
                       <CardUser
+                        isMobile={isMobile}
                         href={`/users/${_id}`}
                         name={name}
                         imageUrl={image}

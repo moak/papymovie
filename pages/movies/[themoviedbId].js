@@ -4,6 +4,7 @@ import ReactStars from 'react-stars';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import moment from 'moment';
+import { useSession } from 'next-auth/client';
 
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
@@ -14,7 +15,6 @@ import CardContainer from 'components/CardContainer';
 import List from 'components/List';
 import RoundedLabel from 'components/RoundedLabel';
 
-import { useGetSession } from 'utils/session';
 import getColorFromMark from 'utils/getColorFromMark';
 import getHourMinutesFromMinutes from 'utils/getHourMinutesFromMinutes';
 
@@ -98,7 +98,7 @@ const View = (props) => {
   const { themoviedbId } = router.query;
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
-  const { session } = useGetSession();
+  const [session] = useSession();
 
   const [user, setUser] = useState(null);
   const [userMovie, setUserMovie] = useState(null);
@@ -305,7 +305,7 @@ const View = (props) => {
   }
 
   return (
-    <Page title={`${title} | GoldMovies`}>
+    <Page title={`Movie | ${title} | PapyMovie`}>
       <PageContainer>
         <ContentContainer
           imageUrl={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${backdrop_path}`}
@@ -497,7 +497,7 @@ const View = (props) => {
                       isMobile={isMobile}
                       title={title}
                       subtitle={moment(release_date).format('MMM, YYYY')}
-                      imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                      imageUrl={`https://image.tmdb.org/t/p/w300/${poster_path}`}
                       href={`/movies/${id}`}
                       userRating={vote_average}
                     />

@@ -63,8 +63,9 @@ const New = () => {
     setActivePageSeries(activePage);
   };
 
+  console.log(isMobile);
   return (
-    <Page title="Search a movie | GoldMovies">
+    <Page title="Search a movie | PapyMovie">
       <PageContainer>
         <Text marginTop={24} marginBottom={24} fontSize={32}>
           Movies:
@@ -82,13 +83,16 @@ const New = () => {
                   return (
                     <CardContainer
                       key={id}
-                      height={450}
-                      percent={isMobile ? 100 : isTablet ? 50 : 25}
+                      height={isMobile ? 270 : 400}
+                      percent={isMobile || isTablet ? 50 : 25}
                     >
                       <CardMovie
+                        isMobile={isMobile}
                         title={title}
                         subtitle={moment(release_date).format('MMM, YYYY')}
-                        imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                        imageUrl={`https://image.tmdb.org/t/p/w${
+                          isMobile ? 200 : 300
+                        }/${poster_path}`}
                         href={`/movies/${id}`}
                         grade={vote_average}
                       />
@@ -129,7 +133,7 @@ const New = () => {
                       <CardMovie
                         title={name}
                         subtitle={moment(first_air_date).format('MMM, YYYY')}
-                        imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                        imageUrl={`https://image.tmdb.org/t/p/w300/${poster_path}`}
                         href={null}
                         grade={vote_average}
                       />

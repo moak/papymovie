@@ -6,12 +6,12 @@ import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { signOut } from 'next-auth/client';
-import { useGetSession } from 'utils/session';
+import { useSession } from 'next-auth/client';
 
 import { useSpring, animated } from 'react-spring';
 
 const CollapseMenu = (props) => {
-  const { session } = useGetSession();
+  const [session] = useSession();
 
   const { open } = useSpring({ open: props.navbarState ? 0 : 1 });
 

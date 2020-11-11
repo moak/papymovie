@@ -15,7 +15,7 @@ const Logo = styled.a`
 `;
 
 const Brand = () => {
-  return <Logo href="/">GoldMovie</Logo>;
+  return <Logo href="/">PapyMovie</Logo>;
 };
 
 export default Brand;

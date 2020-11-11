@@ -6,19 +6,20 @@ import Text from 'components/Text';
 import RoundedLabel from 'components/RoundedLabel';
 
 import getColorFromMark from 'utils/getColorFromMark';
+import { truncate } from 'utils/string';
 
 const Container = styled.div`
   display: flex;
-  flex-direction: ${(p) => (p.isMobile ? 'row' : 'column')};
+  flex-direction: ${(p) => (p.isMobile ? 'column' : 'column')};
   overflow: visible;
   width: 100%;
   height: 100%;
 }`;
 
 const ImageContainer = styled.div`
-  height: ${(p) => (p.isMobile ? 100 : p.imageHeight || 80)}%;
+  height: ${(p) => (p.isMobile ? '200px' : '300px')};
   position: relative;
-  width: ${(p) => (p.isMobile ? 40 : 100)}%;
+  width: ${(p) => (p.isMobile ? 100 : 100)}%;
   min-width: ${(p) => (p.isMobile ? 40 : 100)}%;
 }`;
 
@@ -36,17 +37,15 @@ const Image = styled.img`
 }`;
 
 const TitleContainer = styled.div`
-  height: ${(p) => (p.isMobile ? '30%' : 'auto' || 75)};
   margin-top: 4px;
 }`;
 
 const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 12px;
+  padding: ${(p) => (p.isMobile ? 8 : 12)}px;
   background-color: #ffffff;
-  width: ${(p) => (p.isMobile ? 60 : 100)}%;
-  min-width: ${(p) => (p.isMobile ? 60 : 100)}%;
+  width: ${(p) => (p.isMobile ? 100 : 100)}%;
 }`;
 
 const GradeContainerDesktop = styled.div`
@@ -54,12 +53,6 @@ const GradeContainerDesktop = styled.div`
   bottom: ${(p) => (p.isMobile ? 10 : -4)}%;
   left: 7.5%;
   z-index: 2;
-}`;
-
-const GradeContainerMobile = styled.div`
-  display: flex;
-  margin-top: 12px;
-  justify-content: center;
 }`;
 
 const UserRatingContainer = styled.div`
@@ -78,9 +71,9 @@ const CardMovie = (props) => {
     href,
     grade,
     userRating,
-    centered,
     imageHeight,
     isMobile,
+    titleCentered,
   } = props;
 
   const component = (
@@ -98,7 +91,7 @@ const CardMovie = (props) => {
           src={imageUrl}
           style={{ borderRadius: 10 }}
         />
-        {!isMobile && userRating ? (
+        {userRating ? (
           <UserRatingContainer isMobile={isMobile}>
             <RoundedLabel borderWith={3} rounded color={getColorFromMark(userRating)}>
               {userRating}
@@ -106,7 +99,7 @@ const CardMovie = (props) => {
           </UserRatingContainer>
         ) : null}
 
-        {grade && !isMobile ? (
+        {grade ? (
           <GradeContainerDesktop>
             <RoundedLabel borderWith={3} rounded color={getColorFromMark(grade)}>
               {grade}
@@ -118,22 +111,19 @@ const CardMovie = (props) => {
         <ContentContainer isMobile={isMobile}>
           <TitleContainer grade={grade} isMobile={isMobile}>
             <Text
-              isBold
-              textAlign={centered || isMobile ? 'center' : 'left'}
-              fontSize={16}
-              marginBottom={4}
               dotdotdot
+              isBold
+              fontSize={16}
+              marginBottom={8}
+              textAlign={titleCentered ? 'center' : 'left'}
             >
               {title}
+              {/* {truncate(title, isMobile ? 16 : 22)} */}
             </Text>
           </TitleContainer>
-          {subtitle && (
-            <Text textAlign={isMobile ? 'center' : 'left'} marginBottom={4}>
-              {subtitle}
-            </Text>
-          )}
+          {subtitle && <Text marginBottom={4}>{subtitle}</Text>}
 
-          {isMobile ? (
+          {/* {isMobile ? (
             <GradeContainerMobile>
               <RoundedLabel
                 width="30px"
@@ -145,7 +135,7 @@ const CardMovie = (props) => {
                 {userRating}
               </RoundedLabel>
             </GradeContainerMobile>
-          ) : null}
+          ) : null} */}
 
           {children}
         </ContentContainer>
@@ -160,4 +150,4 @@ const CardMovie = (props) => {
   return component;
 };
 
-export default CardMovie;
+export default React.memo(CardMovie);

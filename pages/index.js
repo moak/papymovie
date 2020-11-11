@@ -11,12 +11,12 @@ import { withTranslation } from '../i18n';
 
 const Home = () => {
   return (
-    <Page title="Home | GoldMovies">
+    <Page title="PapyMovie">
       <PageContainer>
         <div className={styles.container}>
           <main>
             <h1 className={styles.title}>
-              Welcome to <Link href="/">GoldMovies</Link>
+              Welcome to <Link href="/">PapyMovie</Link>
             </h1>
 
             <p className={styles.description}>

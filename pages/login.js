@@ -3,10 +3,9 @@ import { Form, Button } from 'semantic-ui-react';
 import { signIn } from 'next-auth/client';
 import styled from 'styled-components';
 import Router from 'next/router';
+import { useSession } from 'next-auth/client';
 
 import media from 'utils/media';
-
-import { useGetSession } from 'utils/session';
 
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
@@ -27,14 +26,14 @@ export const FormTitle = styled.div`
 const Login = () => {
   const [email, setEmail] = useState(null);
   const [password, setPassword] = useState(null);
-  const { session } = useGetSession();
+  const [session] = useSession();
 
   if (session) {
     Router.push('/');
   }
 
   return (
-    <Page title="Login | GoldMovies">
+    <Page title="Login | PapyMovie">
       <PageContainer centered>
         <FormWrapper>
           {/* <FormTitle>Login</FormTitle> */}

@@ -20,7 +20,7 @@ const Movies = (props) => {
   }, []);
 
   return (
-    <Page title="Users | GoldMovies">
+    <Page title="Users | PapyMovie">
       <PageContainer>
         <Text marginBottom={24} fontSize={32}>
           Users
@@ -34,8 +34,13 @@ const Movies = (props) => {
               const { _id, name, image } = user;
 
               return (
-                <CardContainer key={_id} height={350} percent={isMobile ? 100 : 25}>
+                <CardContainer
+                  key={_id}
+                  height={isMobile ? 280 : 350}
+                  percent={isMobile ? 100 : 25}
+                >
                   <CardUser
+                    isMobile={isMobile}
                     name={name}
                     imageUrl={image}
                     href={`/users/${_id}`}

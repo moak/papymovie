@@ -5,18 +5,17 @@ import { Button, Input } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
 import { signOut } from 'next-auth/client';
 import Link from 'next/link';
+import { useSession } from 'next-auth/client';
 
 import Brand from './Brand';
 import BurgerMenu from './BurgerMenu';
 import CollapseMenu from './CollapseMenu';
 import { i18n, withTranslation } from 'i18n';
 
-import { useGetSession, useSession } from 'utils/session';
-
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
 
-const NavBar = styled(animated.nav)`
+const NavBarContainer = styled(animated.nav)`
   position: fixed;
   width: 100%;
   top: 0;
@@ -80,7 +79,7 @@ const SearchContainer = styled.div`
 `;
 
 const NavBarNew = (props) => {
-  const { session } = useGetSession();
+  const [session, loading] = useSession();
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
@@ -111,7 +110,7 @@ const NavBarNew = (props) => {
 
   return (
     <>
-      <NavBar style={barAnimation}>
+      <NavBarContainer style={barAnimation}>
         <FlexContainer>
           {!isMobile && <Brand />}
           <SearchContainer>
@@ -201,7 +200,7 @@ const NavBarNew = (props) => {
             <BurgerMenu navbarState={props.navbarState} handleNavbar={props.handleNavbar} />
           </BurgerWrapper>
         </FlexContainer>
-      </NavBar>
+      </NavBarContainer>
       <CollapseMenu navbarState={props.navbarState} handleNavbar={props.handleNavbar} />
     </>
   );

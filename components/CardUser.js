@@ -16,6 +16,7 @@ const Container = styled.div`
 
   ${(p) =>
     p.isClickable &&
+    !p.isMobile &&
     `
     &:hover{
       box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.4);
@@ -33,7 +34,8 @@ const BackgroundImage = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 200px;
+  height: ${(p) => (p.isMobile ? 120 : 200)}px;
+
   background-image: url(${(p) => p.backgroundUrl});
   background-repeat: no-repeat;
   background-size:  100% 200px;
@@ -63,9 +65,9 @@ const InfoContainer = styled.div`
 const Image = styled.img`
   border-radius: 50%;
   position: absolute;
-  top: 70%;
+  top: ${(p) => (p.isMobile ? 50 : 70)}%;
   left: 50%;
-  transform: translate(-50%, -70%);
+  transform: translate(-50%, -${(p) => (p.isMobile ? 50 : 70)}%);
   border: 2px solid #ffffff;
 }`;
 
@@ -92,18 +94,19 @@ const images = [
 ];
 
 const CardUser = (props) => {
-  const { href, name, imageUrl, infos } = props;
+  const { href, name, imageUrl, infos, isMobile } = props;
 
   const getRandomImage = useMemo(() => {
     return images[getRandomNumber(0, images.length - 1)];
   }, []);
 
   const component = (
-    <Container isClickable={!!href}>
+    <Container isClickable={!!href} isMobile={isMobile}>
       <UserContainer>
-        <BackgroundImage backgroundUrl={getRandomImage} />
+        <BackgroundImage isMobile={isMobile} backgroundUrl={getRandomImage} />
 
         <Image
+          isMobile={isMobile}
           onError={(e) => {
             e.target.onerror = null;
             e.target.src = 'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png';

@@ -25,7 +25,7 @@ const Register = () => {
   const [password, setPassword] = useState(null);
 
   return (
-    <Page title="Register | GoldMovies">
+    <Page title="Register | PapyMovie">
       <PageContainer centered>
         <FormWrapper>
           <FormTitle>Register</FormTitle>

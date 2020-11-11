@@ -2,21 +2,10 @@ import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 
-import { useGetSession } from 'utils/session';
+import { useSession } from 'next-auth/client';
 
-import {
-  Popup,
-  Form,
-  Image,
-  TextArea,
-  Button,
-  Label,
-  Icon,
-  Comment,
-  Header,
-} from 'semantic-ui-react';
+import { Button, Label, Icon } from 'semantic-ui-react';
 
 import RoundedLabel from 'components/RoundedLabel';
 
@@ -26,10 +15,7 @@ import Text from './Text';
 
 const SocialButtons = styled.div`
   display: flex;
-
   justify-content: ${(p) => (p.isMobile ? 'center' : 'start')};
-
-
 }`;
 
 const Wrapper = styled.div`
@@ -49,7 +35,7 @@ const Container = styled.div`
 
 const MovieContainer = styled.div`
   cursor: pointer;
-  width: ${(p) => (p.isMobile ? '100px' : '120px')};
+  width: ${(p) => (p.isMobile ? '120px' : '120px')};
 }`;
 
 const UserContainer = styled.div`
@@ -77,11 +63,6 @@ justify-content: space-around;
 flex: 1;
 }`;
 
-const TipCommentBloc = styled.div`
-  margin-top: 5px;
-  margin-bottom: 5px;
-}`;
-
 const NameContainer = styled.div`
 
 }`;
@@ -89,7 +70,7 @@ const NameContainer = styled.div`
 const CardFeed = (props) => {
   const { feedItem, isMobile } = props;
   const router = useRouter();
-  const { session } = useGetSession();
+  const [session] = useSession();
 
   if (!feedItem.movie || !feedItem.user) {
     return null;
@@ -100,22 +81,27 @@ const CardFeed = (props) => {
     created_at,
     likes = [],
     dislikes = [],
-    comments = [],
     user: { _id: userId, image: userImage, name: userName } = {},
     movie: { image: movieImage, title, rating, themoviedbId } = {},
   } = feedItem;
 
-  const [showComments, setShowComments] = useState(false);
+  const [isLikingLoading, setIsLikingLoading] = useState(false);
+  const [isDislikingLoading, setIsDislikingLoading] = useState(false);
   const [likesState, setLikesState] = useState(likes);
   const [dislikesState, setDislikesState] = useState(dislikes);
-  const [commentsState, setCommentsState] = useState(comments);
-  const [comment, setComment] = useState('');
 
   const linkMovie = themoviedbId ? `/movies/${themoviedbId}` : null;
   const linkUser = `/users/${userId}`;
 
-  const handleClickLike = useCallback(async () => {
+  const handleClickLike = useCallback(async (e) => {
+    e.preventDefault();
+
+    if (!session) {
+      return null;
+    }
+
     try {
+      setIsLikingLoading(true);
       const request = await fetch(`${process.env.API_URL}/api/feed/${_id}/like`, {
         method: 'Post',
       });
@@ -123,6 +109,8 @@ const CardFeed = (props) => {
       const { data } = await request.json();
       const { likes, dislikes } = data;
 
+      setIsLikingLoading(false);
+
       setLikesState(likes);
       setDislikesState(dislikes);
     } catch (error) {
@@ -130,8 +118,15 @@ const CardFeed = (props) => {
     }
   }, []);
 
-  const handleClickDislike = useCallback(async () => {
+  const handleClickDislike = useCallback(async (e) => {
+    e.preventDefault();
+
+    if (!session) {
+      return null;
+    }
+
     try {
+      setIsDislikingLoading(true);
       const request = await fetch(`${process.env.API_URL}/api/feed/${_id}/dislike`, {
         method: 'Post',
       });
@@ -139,47 +134,14 @@ const CardFeed = (props) => {
       const { data } = await request.json();
       const { likes, dislikes } = data;
 
+      setIsDislikingLoading(false);
+
       setLikesState(likes);
       setDislikesState(dislikes);
     } catch (error) {
       console.log(error);
     }
   }, []);
-
-  const submitComment = useCallback(
-    async (e) => {
-      e.preventDefault();
-
-      console.log('submt comment= >', comment);
-      if (comment.length > 0) {
-        try {
-          const request = await fetch(`${process.env.API_URL}/api/feed/${_id}/comment`, {
-            method: 'Post',
-            body: JSON.stringify({ comment }),
-          });
-
-          const { data } = await request.json();
-          setCommentsState(data.comments);
-          setComment('');
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    },
-    [comment],
-  );
-
-  const toggleShowComments = useCallback(() => {
-    event.preventDefault();
-    setShowComments(!showComments);
-  }, [showComments]);
-
-  const changeComment = useCallback((event) => {
-    event.preventDefault();
-    setComment(event.target.value);
-  }, []);
-
-  console.log('comment', comment);
 
   const component = (
     <Wrapper>
@@ -299,110 +261,23 @@ const CardFeed = (props) => {
           </div> */}
 
           <SocialButtons isMobile={isMobile}>
-            <Button as="div" labelPosition="right">
-              <Button
-                compact
-                size="mini"
-                color="green"
-                onClick={
-                  session
-                    ? (e) => {
-                        e.preventDefault();
-                        handleClickLike();
-                      }
-                    : null
-                }
-              >
-                <Icon name="thumbs up" />
+            <Button onClick={handleClickLike} as="div" labelPosition="right">
+              <Button compact size="mini" color="green">
+                <Icon name={isLikingLoading ? 'loading' : 'thumbs up'} />
               </Button>
               <Label as="a" basic color="green" pointing="left">
                 {!!likesState && likesState.length}
               </Label>
             </Button>
-            <Button as="div" labelPosition="right">
-              <Button
-                compact
-                size="mini"
-                color="red"
-                onClick={
-                  session
-                    ? (e) => {
-                        e.preventDefault();
-                        handleClickDislike();
-                      }
-                    : null
-                }
-              >
-                <Icon name="thumbs down" />
+            <Button as="div" onClick={handleClickDislike} labelPosition="right">
+              <Button compact size="mini" color="red">
+                <Icon name={isDislikingLoading ? 'loading' : 'thumbs down'} />
               </Button>
               <Label as="a" basic color="red" pointing="left">
                 {!!dislikesState && dislikesState.length}
               </Label>
             </Button>
-            {/* <Button as="div" labelPosition="right">
-              <Button
-                compact
-                size='mini'
-                onClick={toggleShowComments}
-                basic
-                color="blue"
-              >
-                <Icon name="comment" />
-                {isMobile ? null : 'comments'}
-              </Button>
-              <Label as="a" basic color="blue" pointing="left">
-                {commentsState && commentsState.length}
-              </Label>
-            </Button> */}
           </SocialButtons>
-
-          <TipCommentBloc>
-            {showComments && [
-              <Header key={1} as="h3" style={{ marginTop: '5px', marginBottom: '5px' }} dividing>
-                Comments
-              </Header>,
-              <Comment.Group style={{ marginTop: '0px' }} key={2} size="small">
-                {commentsState.map((comment) => {
-                  return (
-                    <Comment key={comment._id}>
-                      <Comment.Avatar
-                        as="a"
-                        src={comment.user && comment.user.image ? comment.user.image : null}
-                      />
-                      <Comment.Content style={{ marginLeft: '3em' }}>
-                        <Comment.Author to={`/users/23`} href={`/users/23`} as="a">
-                          {comment.user && comment.user.username}
-                        </Comment.Author>
-                        <Comment.Metadata>
-                          <span>{moment(comment.updated_at).fromNow()}</span>
-                        </Comment.Metadata>
-                        <Comment.Text>{comment.content}</Comment.Text>
-                      </Comment.Content>
-                    </Comment>
-                  );
-                })}
-              </Comment.Group>,
-              <Form style={{ fontSize: '1.2rem' }} key={3} onSubmit={submitComment}>
-                <TextArea
-                  style={{ fontSize: '16px' }}
-                  value={comment}
-                  onChange={changeComment}
-                  disabled={!session}
-                  placeholde="Write a comment"
-                />
-                <Button
-                  size="tiny"
-                  style={{ marginTop: '5px' }}
-                  labelPosition="left"
-                  icon="edit"
-                  content="Comment"
-                  primary
-                  disabled={!session || comment.length === 0}
-                  onClick={submitComment}
-                />
-              </Form>,
-            ]}
-          </TipCommentBloc>
         </DetailsContainer>
       </Container>
       <MovieContainer isMobile={isMobile}>
@@ -417,7 +292,7 @@ const CardFeed = (props) => {
           }}
           width="100%"
           height="100%"
-          src={`https://image.tmdb.org/t/p/w500/${movieImage}`}
+          src={`https://image.tmdb.org/t/p/w300/${movieImage}`}
         />
       </MovieContainer>
     </Wrapper>
@@ -426,4 +301,4 @@ const CardFeed = (props) => {
   return component;
 };
 
-export default CardFeed;
+export default React.memo(CardFeed);

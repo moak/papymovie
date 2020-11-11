@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const PageContainer = styled.div`
-  padding: 120px 24px 32px 24px;
+  padding: 100px 24px 32px 24px;
   height: 100%;
   margin: 0 auto;
   max-width: ${(p) => p.maxWidth || 1180}px;

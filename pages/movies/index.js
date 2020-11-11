@@ -169,7 +169,7 @@ const Movies = (props) => {
   };
 
   return (
-    <Page title="Movies | GoldMovies">
+    <Page title="Movies | PapyMovie">
       <PageContainer maxWidth="1300">
         <Row justifyContent="space-between">
           <Text marginBottom={24} fontSize={32}>
@@ -256,17 +256,18 @@ const Movies = (props) => {
                   return (
                     <CardContainer
                       key={id}
-                      height={isMobile ? 180 : 400}
-                      percent={isMobile ? 100 : isTablet ? 50 : 25}
+                      height={isMobile ? 270 : 400}
+                      percent={isMobile || isTablet ? 50 : 25}
                     >
                       <CardMovie
                         isMobile={isMobile}
                         title={title}
                         subtitle={moment(release_date).format('MMM, YYYY')}
-                        imageUrl={`https://image.tmdb.org/t/p/w500/${poster_path}`}
+                        imageUrl={`https://image.tmdb.org/t/p/w${
+                          isMobile ? 200 : 300
+                        }/${poster_path}`}
                         href={`/movies/${id}`}
                         grade={vote_average}
-                        userRating={vote_average}
                       />
                     </CardContainer>
                   );
