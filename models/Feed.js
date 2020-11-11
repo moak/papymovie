@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+import User from './User';
+import Movie from './Movie';
+
 const FeedSchema = new mongoose.Schema({
   user: {
     type: Schema.Types.ObjectId,
@@ -22,10 +25,10 @@ const FeedSchema = new mongoose.Schema({
       ref: 'User',
     },
   ],
-  comments: [
+  dislikes: [
     {
       type: Schema.Types.ObjectId,
-      ref: 'Comment',
+      ref: 'User',
     },
   ],
   created_at: { type: Date, default: new Date().toUTCString() },

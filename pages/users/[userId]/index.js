@@ -166,14 +166,14 @@ const User = (props) => {
             {isMyProfile || moviesToWatch.length ? (
               <>
                 <Text marginTop={24} marginBottom={24} fontSize={24}>
-                  To watch
+                  Watching list
                   {moviesToWatch.length > 0 ? ` (${moviesToWatch.length})` : ''}
                 </Text>
 
                 {moviesToWatch && moviesToWatch.length === 0 && (
                   <EmptyState>
                     <Text fontSize={16} marginBottom={16}>
-                      No movies in the to watch list
+                      No movies in the watching list
                     </Text>
                   </EmptyState>
                 )}

@@ -33,10 +33,10 @@ const CollapseMenu = (props) => {
             <Link href="/">Home</Link>
           </li>
           <li>
-            <Link href="/feed">Feed</Link>
+            <Link href="/movies">Movies</Link>
           </li>
           <li>
-            <Link href="/movies">Movies</Link>
+            <Link href="/community">Community</Link>
           </li>
           <li>
             <Link href="/users">Users</Link>

@@ -256,7 +256,7 @@ const Movies = (props) => {
                   return (
                     <CardContainer
                       key={id}
-                      height={isMobile ? 150 : 400}
+                      height={isMobile ? 180 : 400}
                       percent={isMobile ? 100 : isTablet ? 50 : 25}
                     >
                       <CardMovie

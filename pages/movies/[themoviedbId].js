@@ -314,9 +314,13 @@ const View = (props) => {
             <Left isMobile={isMobile} width={isMobile ? `${window.screen.width} - 32}` : '20%'}>
               <img
                 height="350px"
-                width={isMobile ? '100%' : null}
+                width={isMobile ? '70%' : null}
                 alt="paster_path"
-                style={{ borderRadius: isMobile ? 0 : 16, marginBottom: isMobile ? 8 : 0 }}
+                style={{
+                  borderRadius: 16,
+                  marginBottom: isMobile ? 8 : 0,
+                  marginTop: isMobile ? 16 : 0,
+                }}
                 src={`//image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
               />
             </Left>
@@ -349,7 +353,7 @@ const View = (props) => {
               {isMobile && (
                 <Box
                   marginTop={4}
-                  marginBottom={8}
+                  marginBottom={12}
                   alignItems="center"
                   justifyContent="center"
                   flexDirection="row"
@@ -376,7 +380,7 @@ const View = (props) => {
               <Text isBold marginBottom={8} fontSize={22} textColor="#ffffff">
                 Description
               </Text>
-              <Text marginBottom={24} fontSize={16} textColor="#ffffff">
+              <Text marginBottom={24} fontSize={14} textColor="#ffffff">
                 {overview}
               </Text>
 
@@ -385,11 +389,11 @@ const View = (props) => {
               <Text isBold marginTop={8} marginBottom={4} fontSize={24} textColor="#ffffff">
                 {isInMoviesToWatch ? (
                   <div>
-                    <span>Movie in to watch list</span>
+                    <span>Watching list</span>
                     <Icon color="green" name="check" style={{ marginLeft: 8 }} />
                   </div>
                 ) : (
-                  'Save in to-watch list'
+                  'Save in watching list'
                 )}
               </Text>
               <Button

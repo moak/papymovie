@@ -1,17 +1,29 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const FeedSchema = new mongoose.Schema({
-  user: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
+const CommentSchema = new Schema(
+  {
+    updated_at: Date,
+    created_at: Date,
+    deleted: Boolean,
+    content: String,
+    user: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    movie: {
+      type: Schema.Types.ObjectId,
+      ref: 'Movie',
+    },
   },
-  content: {
-    type: String,
-    required: true,
+  {
+    usePushEach: true,
   },
-  created_at: { type: Date, default: new Date().toUTCString() },
+);
+
+CommentSchema.pre('save', function (next) {
+  this.updated_at = new Date().toUTCString();
+  next();
 });
 
-module.exports = mongoose.models.Feed || mongoose.model('Feed', FeedSchema);
+module.exports = mongoose.models.Comment || mongoose.model('Comment', CommentSchema);

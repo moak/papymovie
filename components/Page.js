@@ -20,7 +20,13 @@ const Container = styled.div`
   -webkit-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
 `;
-const Page = ({ children, title }) => {
+const Page = ({
+  children,
+  title,
+  description = 'Stop forgetting what you watch and get inspired!',
+  siteName = 'GoldMovies',
+  previewImage,
+}) => {
   const [isNavBarOpen, setIsNavBarOpen] = useState(false);
 
   const handleNavbar = () => {
@@ -34,18 +40,19 @@ const Page = ({ children, title }) => {
       {title && (
         <Head>
           <title>{title}</title>
-          {/* <description>Don't forget what you watch and get inspired!</description> */}
+
           <link rel="icon" href="/favicon.ico" />
-          <meta
-            name="viewport"
-            content="width=device-width,minimum-scale=1,initial-scale=1"
-            className="next-head"
-          />
-          <script
-            data-ad-client="ca-pub-8592736460427517"
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-          ></script>
+
+          <meta charSet="utf-8" />
+          <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+
+          <meta name="description" content={description}></meta>
+
+          <meta property="og:image" content={previewImage} key="ogimage" />
+
+          <meta property="og:site_name" content={siteName} key="ogsitename" />
+          <meta property="og:title" content={title} key="ogtitle" />
+          <meta property="og:description" content={description} key="ogdesc" />
         </Head>
       )}
       <SessionProvider value={{ session, loading }}>

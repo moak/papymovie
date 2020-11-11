@@ -23,18 +23,18 @@ export const Row = styled.div`
   justify-content: ${(p) => p.justifyContent || 'flex-start'};
 `;
 
-const Feed = (props) => {
+const Community = (props) => {
   const { feed } = props;
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 
   return (
-    <Page title="Feed | GoldMovies">
+    <Page title="Community | GoldMovies">
       <PageContainer maxWidth={1024}>
         <Row justifyContent="space-between">
           <Text marginBottom={24} fontSize={32}>
-            Feed
+            Community
           </Text>
         </Row>
         {feed.map((feedItem) => {
@@ -49,7 +49,7 @@ const Feed = (props) => {
   );
 };
 
-Feed.getInitialProps = async () => {
+Community.getInitialProps = async () => {
   const res = await fetch(`${process.env.API_URL}/api/feed`);
 
   const { data } = await res.json();
@@ -60,4 +60,4 @@ Feed.getInitialProps = async () => {
   };
 };
 
-export default Feed;
+export default Community;
