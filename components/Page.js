@@ -7,7 +7,7 @@ import Head from 'next/head';
 
 import NavBarNew from 'components/NavBarNew';
 
-const Container = styled.div`
+const LoaderContainer = styled.div`
   position: fixed;
   top: 50%;
   left: 50%;
@@ -60,9 +60,9 @@ const Page = ({
         </Head>
       )}
       {loading ? (
-        <Container>
+        <LoaderContainer>
           <Loader active inline="centered" size="large" />
-        </Container>
+        </LoaderContainer>
       ) : (
         <>
           <NavBarNew navbarState={isNavBarOpen} handleNavbar={handleNavbar} />
