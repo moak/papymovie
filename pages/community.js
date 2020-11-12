@@ -30,7 +30,10 @@ const Community = (props) => {
   const isTablet = useIsTablet();
 
   return (
-    <Page title="Community | PapyMovie">
+    <Page
+      title="Community - PapyMovie"
+      description="Stop forgetting what you watch and get inspired!"
+    >
       <PageContainer maxWidth={1024}>
         <Row justifyContent="space-between">
           <Text marginBottom={24} fontSize={32}>

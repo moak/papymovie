@@ -117,7 +117,7 @@ const User = (props) => {
   const { _id, name, image, movies, followings, followers, moviesToWatch } = userState;
 
   return (
-    <Page title={`User | ${name} | PapyMovie`}>
+    <Page title={`${isMyProfile ? 'My profile' : name} - PapyMovie`}>
       <PageContainer>
         <Row>
           <Col xs={12} md={3}>

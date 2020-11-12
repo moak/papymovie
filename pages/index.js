@@ -11,7 +11,7 @@ import { withTranslation } from '../i18n';
 
 const Home = () => {
   return (
-    <Page title="PapyMovie">
+    <Page title="PapyMovie" description="Stop forgetting what you watch and get inspired!">
       <PageContainer>
         <div className={styles.container}>
           <main>

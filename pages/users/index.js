@@ -20,7 +20,10 @@ const Movies = (props) => {
   }, []);
 
   return (
-    <Page title="Users | PapyMovie">
+    <Page
+      title="Users - PapyMovie"
+      description="Check out your friends movies or follow the most inspiring users"
+    >
       <PageContainer>
         <Text marginBottom={24} fontSize={32}>
           Users

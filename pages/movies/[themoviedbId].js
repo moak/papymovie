@@ -305,7 +305,10 @@ const View = (props) => {
   }
 
   return (
-    <Page title={`Movie | ${title} | PapyMovie`}>
+    <Page
+      title={`${title} - Movie (${release_date.substring(0, 4)}) - PapyMovie`}
+      previewImage={`//image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
+    >
       <PageContainer>
         <ContentContainer
           imageUrl={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${backdrop_path}`}

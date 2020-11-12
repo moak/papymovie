@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { Label, Button, Select, Pagination } from 'semantic-ui-react';
@@ -8,7 +8,6 @@ import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
 import Text from 'components/Text';
 import CardMovie from 'components/CardMovie';
-import RoundedLabel from 'components/RoundedLabel';
 import CardContainer from 'components/CardContainer';
 import List from 'components/List';
 import HelperMovies from 'components/HelperMovies';
@@ -62,18 +61,18 @@ export const Row = styled.div`
 const Movies = (props) => {
   const { t } = props;
 
-  const ref = useRef(null);
   const [movies, setMovies] = useState(null);
   const [totalPages, setTotalPages] = useState(null);
   const [activePage, setActivePage] = useState(1);
 
   const [filter, setFilter] = useState('discover');
-  const [sortBy, setSortBy] = useState('popularity.desc');
+  // // const [sortBy, setSortBy] = useState('popularity.desc');
   const [isFiltersVisible, setIsFiltersVisible] = useState(false);
 
   const [yearStart, setYearStart] = useState();
   const [yearEnd, setYearEnd] = useState();
   const [genres, setGenres] = useState(null);
+  const [selectedGenres, setSelectedGenres] = useState([]);
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
@@ -122,24 +121,24 @@ const Movies = (props) => {
       language: 'fr',
     };
 
+    if (selectedGenres.length) {
+      obj.with_genres = selectedGenres;
+    }
+
+    if (yearStart && yearEnd) {
+      obj['release_date.gte'] = `${yearStart}-01-01`;
+      obj['release_date.lte'] = `${yearEnd}-01-01`;
+    }
+
+    if (filter === 'discover') {
+      endPoint = 'discover/movie';
+    }
+
     if (filter === 'top_rated') {
       endPoint = 'movie/top_rated';
     }
     if (filter === 'upcoming') {
       endPoint = 'movie/upcoming';
-    }
-
-    if (filter === 'discover') {
-      obj.sortBy = sortBy;
-
-      if (yearStart) {
-        obj['release_date.gte'] = `${yearStart}-01-01`;
-      }
-      if (yearEnd) {
-        obj['release_date.lte'] = `${yearEnd}-01-01`;
-      }
-
-      endPoint = 'discover/movie';
     }
 
     query = `https://api.themoviedb.org/3/${endPoint}?${objectToQueryString(obj)}`;
@@ -150,26 +149,51 @@ const Movies = (props) => {
     setMovies(results);
     setTotalPages(total_pages);
     // }
-  }, [activePage, filter, yearStart, yearEnd]);
+  }, [activePage, filter, yearStart, yearEnd, selectedGenres]);
+
+  const handleClickGenre = useCallback(
+    (genreId) => {
+      const selectedIndex = selectedGenres.indexOf(genreId);
+
+      let newGenres = [...selectedGenres];
+
+      if (selectedIndex === -1) {
+        newGenres.push(genreId);
+      } else {
+        newGenres.splice(selectedIndex, 1);
+      }
+
+      console.log('newGenres', newGenres);
+      setSelectedGenres(newGenres);
+    },
+    [selectedGenres],
+  );
 
   const handlePaginationChange = (e, { activePage }) => {
     setActivePage(activePage);
   };
+
   const handleChangeFilter = (e, data) => {
     setFilter(data.value);
   };
+
   const handleChangeYearStart = (e, data) => {
     setYearStart(data.value);
   };
+
   const handleChangeYearEnd = (e, data) => {
     setYearEnd(data.value);
   };
+
   const handleClickFilters = () => {
     setIsFiltersVisible(!isFiltersVisible);
   };
 
   return (
-    <Page title="Movies | PapyMovie">
+    <Page
+      title="Movies - PapyMovie"
+      description="Discover the popular or best rated movies as well as the ones coming soon"
+    >
       <PageContainer maxWidth="1300">
         <Row justifyContent="space-between">
           <Text marginBottom={24} fontSize={32}>
@@ -187,7 +211,7 @@ const Movies = (props) => {
 
         {isMobile && <HelperMovies isClosable />}
 
-        <Row flexDirection={isMobile ? 'column' : 'row'} ref={ref}>
+        <Row flexDirection={isMobile ? 'column' : 'row'}>
           {(!isMobile || (isMobile && isFiltersVisible)) && (
             <RightColumn>
               <Text isBold fontSize={16} marginBottom={16}>
@@ -204,45 +228,50 @@ const Movies = (props) => {
                 value={filter}
               />
 
-              <Text marginBottom={8}>Genre (not working yet)</Text>
+              <Text marginBottom={8}>Genres</Text>
               <div style={{ marginBottom: 16 }}>
                 {genres &&
                   genres.map((genre) => {
                     return (
-                      <Label key={genre.id} style={{ marginBottom: 6 }} color="blue">
+                      <Label
+                        onClick={() => {
+                          handleClickGenre(genre.id);
+                        }}
+                        key={genre.id}
+                        style={{ marginBottom: 6, cursor: 'pointer', fontWeight: 500 }}
+                        color={selectedGenres.includes(genre.id) ? 'blue' : 'grey'}
+                      >
                         {genre.name}
                       </Label>
                     );
                   })}
               </div>
 
-              {filter === 'discover' && (
-                <Row flexDirection="row">
-                  <div style={{ marginRight: 12, width: '100%' }}>
-                    <Text marginBottom={4}>{t('between')}</Text>
-                    <Select
-                      fluid
-                      style={{ marginBottom: 32, width: isMobile ? '100%' : '92px' }}
-                      onChange={handleChangeYearStart}
-                      placeholder={t('all')}
-                      options={yearsOptions}
-                      value={yearStart || null}
-                    />
-                  </div>
-                  <div style={{ width: '100%' }}>
-                    <Text marginBottom={4}>{t('and')}</Text>
+              <Row flexDirection="row">
+                <div style={{ marginRight: 12, width: '100%' }}>
+                  <Text marginBottom={4}>{t('between')}</Text>
+                  <Select
+                    fluid
+                    style={{ marginBottom: 32, width: isMobile ? '100%' : '92px' }}
+                    onChange={handleChangeYearStart}
+                    placeholder={t('all')}
+                    options={yearsOptions}
+                    value={yearStart || null}
+                  />
+                </div>
+                <div style={{ width: '100%' }}>
+                  <Text marginBottom={4}>{t('and')}</Text>
 
-                    <Select
-                      fluid
-                      style={{ width: isMobile ? '100%' : '92px' }}
-                      onChange={handleChangeYearEnd}
-                      placeholder={t('all')}
-                      options={yearsOptions}
-                      value={yearEnd || null}
-                    />
-                  </div>
-                </Row>
-              )}
+                  <Select
+                    fluid
+                    style={{ width: isMobile ? '100%' : '92px' }}
+                    onChange={handleChangeYearEnd}
+                    placeholder={t('all')}
+                    options={yearsOptions}
+                    value={yearEnd || null}
+                  />
+                </div>
+              </Row>
 
               {!isMobile && <HelperMovies />}
             </RightColumn>

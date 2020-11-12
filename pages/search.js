@@ -65,7 +65,11 @@ const New = () => {
 
   console.log(isMobile);
   return (
-    <Page title="Search a movie | PapyMovie">
+    <Page
+      title={`Search a movie - ${
+        router.query && router.query.search ? `${router.query.search} - ` : ''
+      } PapyMovie`}
+    >
       <PageContainer>
         <Text marginTop={24} marginBottom={24} fontSize={32}>
           Movies:

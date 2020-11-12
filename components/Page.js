@@ -41,11 +41,6 @@ const Page = ({
           {typeof window !== 'undefined' && (
             <meta property="og:url" content={window.location.href} key="ogurl" />
           )}
-          <meta
-            property="og:image"
-            content="https://i2.wp.com/css-tricks.com/wp-content/uploads/2014/03/css-tricks-star.png?fit=512%2C512&ssl=1"
-            key="ogimage"
-          />
 
           {title && (
             <>

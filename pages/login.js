@@ -33,7 +33,7 @@ const Login = () => {
   }
 
   return (
-    <Page title="Login | PapyMovie">
+    <Page title="Login - PapyMovie">
       <PageContainer centered>
         <FormWrapper>
           {/* <FormTitle>Login</FormTitle> */}
