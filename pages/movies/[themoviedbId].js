@@ -81,6 +81,7 @@ export const Infos = styled.div`
 const View = (props) => {
   const {
     isFound,
+    movie,
     movie: {
       backdrop_path,
       poster_path,
@@ -101,6 +102,7 @@ const View = (props) => {
   const [session] = useSession();
 
   const [user, setUser] = useState(null);
+  const [actors, setActors] = useState([]);
   const [userMovie, setUserMovie] = useState(null);
   const [similarMovies, setSimilarMovies] = useState(null);
 
@@ -188,6 +190,25 @@ const View = (props) => {
     };
 
     fetchSimilarMovies();
+  }, [themoviedbId]);
+
+  useEffect(() => {
+    const fetchCreditMovie = async () => {
+      try {
+        const request = await fetch(
+          `https://api.themoviedb.org/3/movie/${themoviedbId}/credits?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
+        );
+        const { cast } = await request.json();
+
+        setActors(cast);
+      } catch (error) {
+        console.log('error', error);
+      }
+    };
+
+    if (!isMobile && !isTablet) {
+      fetchCreditMovie();
+    }
   }, [themoviedbId]);
 
   useEffect(() => {
@@ -481,9 +502,35 @@ const View = (props) => {
           </SubContainer>
         </ContentContainer>
 
-        {similarMovies && similarMovies.length > 0 && (
+        {!isMobile && !isTablet && actors && actors.length > 0 && (
           <>
-            <Text marginTop={36} marginBottom={36} fontSize={32}>
+            <div style={{ marginBottom: 80 }}>
+              <Text marginTop={36} marginBottom={16} fontSize={32}>
+                Actors
+              </Text>
+              <List>
+                {actors.slice(0, 6).map((actor) => {
+                  const { id, name, profile_path, character } = actor;
+
+                  return (
+                    <CardContainer key={id} height={170} percent={13}>
+                      <CardMovie
+                        title={name}
+                        subtitle={character}
+                        imageUrl={`https://image.tmdb.org/t/p/w138_and_h175_face/${profile_path}`}
+                      />
+                    </CardContainer>
+                  );
+                })}
+              </List>
+            </div>
+            <hr />
+          </>
+        )}
+
+        {similarMovies && similarMovies.length > 0 && (
+          <div>
+            <Text marginTop={36} marginBottom={16} fontSize={32}>
               Similar movies
             </Text>
             <List>
@@ -493,11 +540,11 @@ const View = (props) => {
                 return (
                   <CardContainer
                     key={id}
-                    height={isMobile ? 150 : 400}
-                    percent={isMobile ? 100 : isTablet ? 33 : 20}
+                    height={isMobile ? 290 : 400}
+                    percent={isMobile || isTablet ? 50 : 20}
                   >
                     <CardMovie
-                      isMobile={isMobile}
+                      // isMobile={isMobile}
                       title={title}
                       subtitle={moment(release_date).format('MMM, YYYY')}
                       imageUrl={`https://image.tmdb.org/t/p/w300/${poster_path}`}
@@ -508,7 +555,7 @@ const View = (props) => {
                 );
               })}
             </List>
-          </>
+          </div>
         )}
       </PageContainer>
     </Page>

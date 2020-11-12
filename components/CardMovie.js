@@ -6,7 +6,6 @@ import Text from 'components/Text';
 import RoundedLabel from 'components/RoundedLabel';
 
 import getColorFromMark from 'utils/getColorFromMark';
-import { truncate } from 'utils/string';
 
 const Container = styled.div`
   display: flex;
@@ -17,7 +16,7 @@ const Container = styled.div`
 }`;
 
 const ImageContainer = styled.div`
-  height: ${(p) => (p.isMobile ? '200px' : '300px')};
+  height: ${(p) => (p.isMobile ? '200px' : '100%')};
   position: relative;
   width: ${(p) => (p.isMobile ? 100 : 100)}%;
   min-width: ${(p) => (p.isMobile ? 40 : 100)}%;
@@ -45,7 +44,7 @@ const ContentContainer = styled.div`
   flex-direction: column;
   padding: ${(p) => (p.isMobile ? 8 : 12)}px;
   background-color: #ffffff;
-  width: ${(p) => (p.isMobile ? 100 : 100)}%;
+  // width: ${(p) => (p.isMobile ? 100 : 100)}%;
 }`;
 
 const GradeContainerDesktop = styled.div`
@@ -121,7 +120,11 @@ const CardMovie = (props) => {
               {/* {truncate(title, isMobile ? 16 : 22)} */}
             </Text>
           </TitleContainer>
-          {subtitle && <Text marginBottom={4}>{subtitle}</Text>}
+          {subtitle && (
+            <Text dotdotdot marginBottom={4}>
+              {subtitle}
+            </Text>
+          )}
 
           {/* {isMobile ? (
             <GradeContainerMobile>
