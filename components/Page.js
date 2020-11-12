@@ -18,7 +18,7 @@ const Container = styled.div`
 `;
 const Page = ({
   children,
-  title,
+  title = 'PapyMovie',
   description = 'Stop forgetting what you watch and get inspired!',
   previewImage,
 }) => {
@@ -33,17 +33,35 @@ const Page = ({
     <>
       {title && (
         <Head>
-          <title>{title}</title>
-
           <meta charSet="utf-8" />
           <link rel="icon" href="/favicon.ico" />
           <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
-          <meta name="description" content={description}></meta>
+          <meta property="og:site_name" content="PapyMovie" key="ogsitename" />
 
-          <meta property="og:image" content={previewImage} key="ogimage" />
+          {typeof window !== 'undefined' && (
+            <meta property="og:url" content={window.location.href} key="ogurl" />
+          )}
+          <meta
+            property="og:image"
+            content="https://i2.wp.com/css-tricks.com/wp-content/uploads/2014/03/css-tricks-star.png?fit=512%2C512&ssl=1"
+            key="ogimage"
+          />
 
-          <meta property="og:title" content={title} key="ogtitle" />
-          <meta property="og:description" content={description} key="ogdesc" />
+          {title && (
+            <>
+              <title>{title}</title>
+              <meta property="og:title" content={title} key="ogtitle" />
+            </>
+          )}
+
+          {previewImage && <meta property="og:image" content={previewImage} key="ogimage" />}
+
+          {description && (
+            <>
+              <meta name="description" content={description}></meta>
+              <meta property="og:description" content={description} key="ogdesc" />
+            </>
+          )}
         </Head>
       )}
       {loading ? (

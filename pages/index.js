@@ -20,7 +20,7 @@ const Home = () => {
             </h1>
 
             <p className={styles.description}>
-              Don't forget what you watch <code className={styles.code}>and get inspired!</code>
+              Stop forgetting what you watch <code className={styles.code}>and get inspired!</code>
             </p>
 
             <div className={styles.grid}>
