@@ -12,6 +12,7 @@
   "dependencies": {
     "@auth0/nextjs-auth0": "^0.16.0",
     "babel-plugin-module-resolver": "^4.0.0",
+    "cz-emoji": "^1.3.1",
     "eslint-config-prettier": "^6.14.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-prettier": "^3.1.4",
@@ -37,10 +38,63 @@
   },
   "devDependencies": {
     "eslint": "^7.11.0",
-    "undefined": "^0.1.0"
+    "undefined": "^0.1.0",
+    "commitizen": "^4.0.3"
   },
   "peerOptionalDependencies": {
     "mongodb": "^3.6.0"
+  },
+  "config": {
+    "cz-emoji": {
+      "types": [
+        {
+          "name": "Feature",
+          "emoji": "🌟",
+          "description": "Adding new features",
+          "code": "✅ [ADD]"
+        },
+        {
+          "name": "Fix",
+          "emoji": "🐞",
+          "description": "Fixing issues or bugs",
+          "code": "✴️ [FIX]"
+        },
+        {
+          "name": "Refactoring",
+          "emoji": "🎨",
+          "description": "A code refactoring change",
+          "code": "🔄 [MOD]"
+        },
+        {
+          "name": "Chore",
+          "emoji": "🔩",
+          "description": "A chore change (modifying code, removing files/code, upgrading dependencies)",
+          "code": "🔄 [MOD]"
+        },
+        {
+          "name": "Documentation",
+          "emoji": "📚",
+          "description": "Documentation change (jsdoc, api, comments)",
+          "code": "☑️ [DOC]"
+        },
+        {
+          "name": "Tests",
+          "emoji": "🔬",
+          "description": "Adding missing tests or adjusting existing ones",
+          "value": "🔀 [TEST]"
+        }
+      ],
+      "scopes": [
+        "core",
+        "configuration",
+        "components",
+        "views",
+        "design"
+      ]
+    },
+    "commitizen": {
+      "path": "./node_modules/cz-emoji"
+    }
   },
   "description": "This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).",
   "main": ".eslintrc.js",
