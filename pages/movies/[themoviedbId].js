@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import moment from 'moment';
 import { useSession } from 'next-auth/client';
+import { signIn } from 'next-auth/client';
 
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
@@ -17,6 +18,7 @@ import RoundedLabel from 'components/RoundedLabel';
 
 import getColorFromMark from 'utils/getColorFromMark';
 import getHourMinutesFromMinutes from 'utils/getHourMinutesFromMinutes';
+import { truncate } from 'utils/string';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
@@ -81,7 +83,6 @@ export const Infos = styled.div`
 const View = (props) => {
   const {
     isFound,
-    movie,
     movie: {
       backdrop_path,
       poster_path,
@@ -328,7 +329,9 @@ const View = (props) => {
   return (
     <Page
       title={`${title} - Movie (${release_date.substring(0, 4)}) - PapyMovie`}
-      previewImage={`//image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
+      previewImage={`https://image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
+      url={`/movies/${themoviedbId}`}
+      description={overview ? truncate(overview, 30) : null}
     >
       <PageContainer>
         <ContentContainer
@@ -345,13 +348,13 @@ const View = (props) => {
                   marginBottom: isMobile ? 8 : 0,
                   marginTop: isMobile ? 16 : 0,
                 }}
-                src={`//image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
+                src={`https://image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
               />
             </Left>
             <Right>
               <Box alignItems="center" flexDirection={isMobile ? 'column' : 'row'}>
                 {!isMobile && (
-                  <RoundedLabel borderWith={3} rounded color={getColorFromMark(vote_average)}>
+                  <RoundedLabel borderWith={2} rounded color={getColorFromMark(vote_average)}>
                     {vote_average}
                   </RoundedLabel>
                 )}
@@ -382,7 +385,7 @@ const View = (props) => {
                   justifyContent="center"
                   flexDirection="row"
                 >
-                  <RoundedLabel borderWith={3} rounded color={getColorFromMark(vote_average)}>
+                  <RoundedLabel borderWith={2} rounded color={getColorFromMark(vote_average)}>
                     {vote_average}
                   </RoundedLabel>
 
@@ -404,7 +407,7 @@ const View = (props) => {
               <Text isBold marginBottom={8} fontSize={22} textColor="#ffffff">
                 Description
               </Text>
-              <Text marginBottom={24} fontSize={14} textColor="#ffffff">
+              <Text lineHeight="20px" marginBottom={24} fontSize={14} textColor="#ffffff">
                 {overview}
               </Text>
 
@@ -422,38 +425,32 @@ const View = (props) => {
               </Text>
               <Button
                 color={isInMoviesToWatch ? 'red' : 'blue'}
-                onClick={
-                  session
-                    ? handleSubmitMovieToWatch
-                    : () => {
-                        router.push('/login');
-                      }
-                }
+                onClick={session ? handleSubmitMovieToWatch : signIn}
                 loading={isSubmittingMovieToWatch}
                 style={{ marginTop: 8, marginBottom: 8 }}
+                size="small"
               >
                 {isInMoviesToWatch ? 'Supprimer' : 'Ajouter'}
               </Button>
 
-              <Divider style={{ color: 'white' }} horizontal>
-                Or
+              <Divider horizontal>
+                {userMovie ? <Icon style={{ fontSize: 25 }} color="green" name="check" /> : 'OR'}
               </Divider>
 
-              <Text isBold marginTop={16} fontSize={24} textColor="#ffffff">
-                {userMovie ? (
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Text isBold fontSize={24} textColor="#ffffff">
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Icon color="green" name="check" style={{ marginLeft: 8 }} />
                     <Text textColor="#ffffff" isBold fontSize={isMobile ? 14 : 24} marginRight={8}>
-                      You have saved this movie
+                      {userMovie ? 'You have saved this movie' : 'Save this movie'}
                     </Text>
-                    <RoundedLabel borderWith={3} rounded color={getColorFromMark(form.rating)}>
-                      {form.rating}
-                    </RoundedLabel>
                   </div>
-                ) : (
-                  'Save this movie'
+                </Text>
+                {userMovie && (
+                  <RoundedLabel borderWith={2} rounded color={getColorFromMark(form.rating)}>
+                    {form.rating}
+                  </RoundedLabel>
                 )}
-              </Text>
+              </div>
 
               <Text isBold marginTop={16} marginBottom={8} fontSize={14} textColor="#ffffff">
                 {userMovie ? 'Your rating:' : 'Rate this movie:'}
@@ -469,15 +466,7 @@ const View = (props) => {
                 half={false}
               />
 
-              <Form
-                onSubmit={
-                  session
-                    ? handleSubmitMovie
-                    : () => {
-                        router.push('/login');
-                      }
-                }
-              >
+              <Form onSubmit={session ? handleSubmitMovie : signIn}>
                 <Text isBold marginTop={16} marginBottom={8} fontSize={14} textColor="#ffffff">
                   {userMovie ? 'Your description:' : 'Add a description'}
                 </Text>
@@ -489,7 +478,12 @@ const View = (props) => {
                   onChange={handleChangeDescription}
                   style={{ width: isMobile ? null : 600, fontSize: 16 }}
                 />
-                <Button loading={!!isSubmittingMovie} color="green" style={{ marginTop: 10 }}>
+                <Button
+                  size="small"
+                  loading={!!isSubmittingMovie}
+                  color="green"
+                  style={{ marginTop: 10 }}
+                >
                   {userMovie ? 'Edit' : 'Ajouter'}
                 </Button>
                 {errors.rating && (

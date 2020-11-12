@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { getSession, useSession } from 'next-auth/client';
 
 import Link from 'next/link';
 
-import styles from '../styles/Home.module.css';
+import styles from 'styles/Home.module.css';
 
-import Page from '../components/Page';
-import PageContainer from '../components/PageContainer';
+import Page from 'components/Page';
+import PageContainer from 'components/PageContainer';
 
-import { withTranslation } from '../i18n';
+import { withTranslation } from 'i18n';
 
 const Home = () => {
   return (
@@ -66,8 +68,18 @@ const Home = () => {
   );
 };
 
-Home.getInitialProps = async () => ({
-  namespacesRequired: ['common'],
-});
+Home.getInitialProps = async (context) => {
+  const session = await getSession(context);
+
+  const { res } = context;
+
+  if (res && session) {
+    res.writeHead(301, { Location: '/movies' });
+    res.end();
+  }
+  return {
+    namespacesRequired: ['common'],
+  };
+};
 
 export default withTranslation('common')(Home);

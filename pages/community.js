@@ -7,7 +7,6 @@ import Text from 'components/Text';
 import CardFeed from 'components/CardFeed';
 
 import useIsMobile from 'hooks/useIsMobile';
-import useIsTablet from 'hooks/useIsTablet';
 
 export const LeftColumn = styled.div`
   display: flex;
@@ -27,16 +26,16 @@ const Community = (props) => {
   const { feed } = props;
 
   const isMobile = useIsMobile();
-  const isTablet = useIsTablet();
 
   return (
     <Page
       title="Community - PapyMovie"
-      description="Stop forgetting what you watch and get inspired!"
+      description="Check out the recents movies added by the users"
+      url="/community"
     >
       <PageContainer maxWidth={1024}>
         <Row justifyContent="space-between">
-          <Text marginBottom={24} fontSize={32}>
+          <Text isBold marginBottom={24} fontSize={32}>
             Community
           </Text>
         </Row>

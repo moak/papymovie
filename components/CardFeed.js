@@ -2,14 +2,14 @@ import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-
 import { useSession } from 'next-auth/client';
-
 import { Button, Label, Icon } from 'semantic-ui-react';
+import Link from 'next/link';
 
 import RoundedLabel from 'components/RoundedLabel';
 
 import getColorFromMark from 'utils/getColorFromMark';
+import { truncate } from 'utils/string';
 
 import Text from './Text';
 
@@ -41,16 +41,17 @@ const MovieContainer = styled.div`
 const UserContainer = styled.div`
   display: flex;
   margin-bottom: 16px;
+  align-items: center;
 
 }`;
 
 const UserImage = styled.img`
   border-radius: 50%;
   border: 1px solid #ffffff;
-  margin-right: 16px;
-
-
+  margin-right: ${(p) => (p.isMobile ? 8 : 12)}px;
+  cursor: pointer;
 }`;
+
 const MovieImage = styled.img`
   border-top-right-radius: 10px;
   border-bottom-right-radius: 10px;
@@ -148,6 +149,7 @@ const CardFeed = (props) => {
       <Container isMobile={isMobile}>
         <UserContainer>
           <UserImage
+            isMobile={isMobile}
             onClick={(e) => {
               e.preventDefault();
               router.push(linkUser);
@@ -157,27 +159,24 @@ const CardFeed = (props) => {
               e.target.src =
                 'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png';
             }}
-            width="40px"
-            height="40px"
+            width={isMobile ? 30 : 40}
+            height={isMobile ? 30 : 40}
             src={userImage}
-            style={{ cursor: 'pointer' }}
           />
 
           <NameContainer>
-            <Text
-              onClick={(e) => {
-                e.preventDefault();
-                router.push(linkUser);
-              }}
-              style={{ cursor: 'pointer' }}
-              isBold
-              textColor="#0070f3"
-              fontSize={16}
-              marginBottom={4}
-            >
-              {userName}
-            </Text>
-            <Text textColor="grey" fontSize={12}>
+            <Link href={linkUser}>
+              <Text
+                style={{ cursor: 'pointer' }}
+                isBold
+                fontSize={isMobile ? 12 : 14}
+                marginBottom={4}
+                cursor="pointer"
+              >
+                {userName}
+              </Text>
+            </Link>
+            <Text textColor="grey" fontSize={isMobile ? 11 : 12}>
               {moment(created_at).fromNow()}
             </Text>
           </NameContainer>
@@ -188,25 +187,23 @@ const CardFeed = (props) => {
               style={{
                 display: 'flex',
                 flexDirection: 'column',
-                // justifyContent: 'space-around',
                 alignItems: 'center',
                 flexBasis: 80,
               }}
             >
-              <Text
-                textAlign="center"
-                marginRight={4}
-                marginLeft={4}
-                marginBottom={8}
-                isBold
-                onClick={(e) => {
-                  e.preventDefault();
-                  router.push(linkMovie);
-                }}
-                cursor="pointer"
-              >
-                {title}
-              </Text>
+              <Link href={linkMovie}>
+                <Text
+                  cursor="pointer"
+                  textAlign="center"
+                  marginRight={4}
+                  marginLeft={4}
+                  marginBottom={8}
+                  isBold
+                  fontSize={14}
+                >
+                  {truncate(title, 50)}
+                </Text>
+              </Link>
               <RoundedLabel
                 borderWith={2}
                 width="30px"
@@ -253,19 +250,13 @@ const CardFeed = (props) => {
               </div>
             </>
           )}
-          {/* <div style={{ display: 'flex' }}>
-            <Text isBold style={{ marginRight: 8 }}>
-              Likes ({likes.length})
-            </Text>
-            <Text isBold>Comments ({comments.length})</Text>
-          </div> */}
 
           <SocialButtons isMobile={isMobile}>
             <Button onClick={handleClickLike} as="div" labelPosition="right">
               <Button compact size="mini" color="green">
                 <Icon name={isLikingLoading ? 'loading' : 'thumbs up'} />
               </Button>
-              <Label as="a" basic color="green" pointing="left">
+              <Label style={{ fontSize: 12 }} as="a" basic color="green" pointing="left">
                 {!!likesState && likesState.length}
               </Label>
             </Button>
@@ -273,7 +264,7 @@ const CardFeed = (props) => {
               <Button compact size="mini" color="red">
                 <Icon name={isDislikingLoading ? 'loading' : 'thumbs down'} />
               </Button>
-              <Label as="a" basic color="red" pointing="left">
+              <Label style={{ fontSize: 12 }} as="a" basic color="red" pointing="left">
                 {!!dislikesState && dislikesState.length}
               </Label>
             </Button>

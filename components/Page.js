@@ -1,9 +1,11 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { withTranslation } from 'i18n';
 import { Loader } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { useSession } from 'next-auth/client';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import usePrevious from 'hooks/usePrevious';
 
 import NavBarNew from 'components/NavBarNew';
 
@@ -21,13 +23,26 @@ const Page = ({
   title = 'PapyMovie',
   description = 'Stop forgetting what you watch and get inspired!',
   previewImage,
+  url = '',
 }) => {
   const [isNavBarOpen, setIsNavBarOpen] = useState(false);
   const [session, loading] = useSession();
+  const router = useRouter();
+  const previousSession = usePrevious(session);
 
   const handleNavbar = useCallback(() => {
     setIsNavBarOpen(!isNavBarOpen);
   }, [isNavBarOpen]);
+
+  // useEffect(() => {
+  //   if (!previousSession && session) {
+  //     router.push('/movies');
+  //   }
+
+  //   if (previousSession && !session) {
+  //     router.push('/');
+  //   }
+  // }, [session]);
 
   return (
     <>
@@ -37,10 +52,9 @@ const Page = ({
           <link rel="icon" href="/favicon.ico" />
           <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
           <meta property="og:site_name" content="PapyMovie" key="ogsitename" />
+          <meta property="fb:app_id" content={process.env.FACEBOOK_CLIENT_ID} key="fbappid" />
 
-          {typeof window !== 'undefined' && (
-            <meta property="og:url" content={window.location.href} key="ogurl" />
-          )}
+          <meta property="og:url" content={`${process.env.NEXTAUTH_URL}${url}`} key="ogurl" />
 
           {title && (
             <>

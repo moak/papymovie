@@ -10,7 +10,6 @@ import Text from 'components/Text';
 import CardMovie from 'components/CardMovie';
 import CardContainer from 'components/CardContainer';
 import List from 'components/List';
-import HelperMovies from 'components/HelperMovies';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
@@ -193,10 +192,11 @@ const Movies = (props) => {
     <Page
       title="Movies - PapyMovie"
       description="Discover the popular or best rated movies as well as the ones coming soon"
+      url="/movies"
     >
       <PageContainer maxWidth="1300">
         <Row justifyContent="space-between">
-          <Text marginBottom={24} fontSize={32}>
+          <Text isBold marginBottom={24} fontSize={32}>
             {t('movies')}
           </Text>
           {isMobile && (
@@ -208,8 +208,6 @@ const Movies = (props) => {
             />
           )}
         </Row>
-
-        {isMobile && <HelperMovies isClosable />}
 
         <Row flexDirection={isMobile ? 'column' : 'row'}>
           {(!isMobile || (isMobile && isFiltersVisible)) && (
@@ -238,7 +236,7 @@ const Movies = (props) => {
                           handleClickGenre(genre.id);
                         }}
                         key={genre.id}
-                        style={{ marginBottom: 6, cursor: 'pointer', fontWeight: 500 }}
+                        style={{ marginBottom: 6, cursor: 'pointer' }}
                         color={selectedGenres.includes(genre.id) ? 'blue' : 'grey'}
                       >
                         {genre.name}
@@ -272,8 +270,6 @@ const Movies = (props) => {
                   />
                 </div>
               </Row>
-
-              {!isMobile && <HelperMovies />}
             </RightColumn>
           )}
           <LeftColumn percent={80} isMobile>

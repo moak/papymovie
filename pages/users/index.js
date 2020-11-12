@@ -23,9 +23,10 @@ const Movies = (props) => {
     <Page
       title="Users - PapyMovie"
       description="Check out your friends movies or follow the most inspiring users"
+      url="/users"
     >
       <PageContainer>
-        <Text marginBottom={24} fontSize={32}>
+        <Text isBold marginBottom={24} fontSize={32}>
           Users
         </Text>
 

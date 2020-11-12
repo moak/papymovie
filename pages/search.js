@@ -66,20 +66,19 @@ const New = () => {
     setActivePageSeries(activePage);
   };
 
-  console.log(isMobile);
   return (
     <Page
       title={`Search a movie - ${
         router.query && router.query.search ? `${router.query.search} - ` : ''
       } PapyMovie`}
+      url="/search"
     >
       <PageContainer>
         {isLoading ? (
           <Loader active inline="centered" size="large" />
         ) : (
           <>
-            {' '}
-            <Text marginTop={24} marginBottom={24} fontSize={32}>
+            <Text isBold marginBottom={24} fontSize={32}>
               Movies:
             </Text>
             {movies && movies.length === 0 && series && series.length === 0 ? (
@@ -126,7 +125,7 @@ const New = () => {
                 )}
               </>
             )}
-            <Text marginTop={24} marginBottom={24} fontSize={32}>
+            <Text isBold marginTop={24} marginBottom={24} fontSize={32}>
               Series:
             </Text>
             {series && series.length === 0 ? (

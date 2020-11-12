@@ -92,7 +92,7 @@ const CardMovie = (props) => {
         />
         {userRating ? (
           <UserRatingContainer isMobile={isMobile}>
-            <RoundedLabel borderWith={3} rounded color={getColorFromMark(userRating)}>
+            <RoundedLabel borderWith={2} rounded color={getColorFromMark(userRating)}>
               {userRating}
             </RoundedLabel>
           </UserRatingContainer>
@@ -100,7 +100,7 @@ const CardMovie = (props) => {
 
         {grade ? (
           <GradeContainerDesktop>
-            <RoundedLabel borderWith={3} rounded color={getColorFromMark(grade)}>
+            <RoundedLabel borderWith={2} rounded color={getColorFromMark(grade)}>
               {grade}
             </RoundedLabel>
           </GradeContainerDesktop>
@@ -113,18 +113,13 @@ const CardMovie = (props) => {
               dotdotdot
               isBold
               fontSize={16}
-              marginBottom={8}
+              marginBottom={4}
               textAlign={titleCentered ? 'center' : 'left'}
             >
               {title}
-              {/* {truncate(title, isMobile ? 16 : 22)} */}
             </Text>
           </TitleContainer>
-          {subtitle && (
-            <Text dotdotdot marginBottom={4}>
-              {subtitle}
-            </Text>
-          )}
+          {subtitle && <Text dotdotdot>{subtitle}</Text>}
 
           {/* {isMobile ? (
             <GradeContainerMobile>

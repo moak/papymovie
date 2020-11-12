@@ -5,7 +5,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
-import { signOut } from 'next-auth/client';
+import { signOut, signIn } from 'next-auth/client';
 import { useSession } from 'next-auth/client';
 
 import { useSpring, animated } from 'react-spring';
@@ -29,9 +29,11 @@ const CollapseMenu = (props) => {
         }}
       >
         <NavLinks>
-          <li>
-            <Link href="/">Home</Link>
-          </li>
+          {!session && (
+            <li>
+              <Link href="/">Home</Link>
+            </li>
+          )}
           <li>
             <Link href="/movies">Movies</Link>
           </li>
@@ -57,10 +59,7 @@ const CollapseMenu = (props) => {
             <>
               <hr />
               <li>
-                <Link href="/login">Register</Link>
-              </li>
-              <li>
-                <Link href="/login">Login</Link>
+                <a onClick={signIn}>Connect</a>
               </li>
             </>
           )}

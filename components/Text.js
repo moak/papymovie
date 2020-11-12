@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 
 const Text = styled.div`
-  font-family: ${(p) => (p.isBold ? '' : '')}, 'sans-serif'};
   font-size: ${(p) => p.fontSize || 14}px;
   color: ${(p) => p.textColor || 'black'};
-  font-weight: ${(p) => (p.isBold ? 700 : 300)};
+  font-weight: ${(p) => (p.isBold ? 500 : 400)};
 
   margin-top: ${(p) => p.marginTop || 0}px;
   margin-bottom: ${(p) => p.marginBottom || 0}px;
@@ -15,6 +14,7 @@ const Text = styled.div`
   width: ${(p) => (p.width ? `${p.width}` : 'auto')};
   text-align: ${(p) => p.textAlign || 'left'};
   text-transform: ${(p) => p.textTransform || 'none'};
+  cursor: ${(p) => p.cursor || 'auto'};
 
   ${(p) =>
     p.dotdotdot &&

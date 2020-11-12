@@ -25,6 +25,8 @@ module.exports = {
     AUTH0_POST_LOGOUT_REDIRECT: process.env.AUTH0_POST_LOGOUT_REDIRECT,
     AUTH0_COOKIE_SECRET: process.env.AUTH0_COOKIE_SECRET,
 
+    FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
+
     GA_TRACKING_ID: process.env.GA_TRACKING_ID,
   },
 };

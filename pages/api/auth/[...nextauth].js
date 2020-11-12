@@ -66,8 +66,7 @@ const options = {
   callbacks: {
     session: async (session, user) => {
       session.id = user.id;
-      return session;
-      // return Promise.resolve(session);
+      return Promise.resolve(session);
     },
     // signIn: async (user, account, profile) => {
     //   console.log({ user, account, profile });
@@ -80,7 +79,7 @@ const options = {
     // },
 
     // redirect: async (url, baseUrl) => {
-    //   return baseUrl;
+    //   return url.startsWith(baseUrl) ? Promise.resolve(url) : Promise.resolve(baseUrl);
     // },
   },
   debug: false,

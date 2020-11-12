@@ -1,7 +1,6 @@
 import React from 'react';
+import Link from 'next/link';
 import styled from 'styled-components';
-
-import media from 'utils/media';
 
 const Logo = styled.a`
   list-style-type: none;
@@ -9,18 +8,25 @@ const Logo = styled.a`
   padding: 0;
   font-size: 2rem;
   color: #ffffff;
-  font-weight: 500;
+  font-weight: 400;
   cursor: pointer;
   position: relative;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+    color: #ffffff;
+  }
 `;
 
-const Brand = () => {
-  return <Logo href="/">PapyMovie</Logo>;
+const Brand = (props) => {
+  const { isConnected } = props;
+
+  return (
+    <Link href={isConnected ? '/movies' : '/'} passHref>
+      <Logo>PapyMovie</Logo>
+    </Link>
+  );
 };
 
 export default Brand;
-
-const Image = styled.img`
-  height: 85%;
-  margin: auto 0;
-`;

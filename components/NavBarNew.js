@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useSpring, animated, config } from 'react-spring';
 import { Button, Input } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
-import { signOut } from 'next-auth/client';
+import { signOut, signIn } from 'next-auth/client';
 import Link from 'next/link';
 import { useSession } from 'next-auth/client';
 
@@ -43,7 +43,7 @@ const NavLinks = styled(animated.ul)`
   & a {
     color: #dfe6e9;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 500;
     border-bottom: 1px solid transparent;
     margin: 0 1.5rem;
     transition: all 300ms linear 0s;
@@ -70,12 +70,8 @@ const BurgerWrapper = styled.div`
 `;
 
 const SearchContainer = styled.div`
-  width: 350px;
+  width: ${(p) => (p.isMobile ? 350 : 350)}px;
   margin: auto 0;
-
-  @media (max-width: 768px) {
-    width: 300px;
-  }
 `;
 
 const NavBarNew = (props) => {
@@ -112,19 +108,24 @@ const NavBarNew = (props) => {
     <>
       <NavBarContainer style={barAnimation}>
         <FlexContainer>
-          {!isMobile && <Brand />}
-          <SearchContainer>
+          {!isMobile && <Brand isConnected={!!session} />}
+          <SearchContainer isMobile={isMobile}>
             <form onSubmit={submitSearch}>
               <Input
-                action={{
-                  icon: 'search',
-                  onClick: submitSearch,
-                }}
+                action={
+                  isMobile
+                    ? null
+                    : {
+                        icon: 'search',
+                        onClick: submitSearch,
+                      }
+                }
                 style={{ fontSize: 16 }}
                 onChange={handleChangeSearch}
                 fluid
                 placeholder="Search a movie..."
                 value={search || ''}
+                // size=""
               />
             </form>
           </SearchContainer>
@@ -163,32 +164,19 @@ const NavBarNew = (props) => {
             {!isMobile && !isTablet && (
               <>
                 {session ? (
-                  <Button style={{ marginRight: 16 }} circular onClick={signOut}>
+                  <Button
+                    style={{ marginRight: 16 }}
+                    color="red"
+                    circular
+                    size="small"
+                    onClick={signOut}
+                  >
                     Signout
                   </Button>
                 ) : (
                   <>
-                    <Button
-                      style={{ marginRight: 16 }}
-                      circular
-                      onClick={() => {
-                        router.push('/login');
-                      }}
-                    >
-                      Login
-                    </Button>
-
-                    <Button
-                      circular
-                      primary
-                      style={{
-                        marginRight: '1.1rem',
-                      }}
-                      onClick={() => {
-                        router.push('/login');
-                      }}
-                    >
-                      Register
+                    <Button style={{ marginRight: 16 }} circular primary onClick={signIn}>
+                      Connect
                     </Button>
                   </>
                 )}

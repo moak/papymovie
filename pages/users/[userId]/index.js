@@ -4,6 +4,7 @@ import { Col, Row } from 'react-styled-flexboxgrid';
 import styled from 'styled-components';
 import { Confirm, Button, Icon } from 'semantic-ui-react';
 import { useSession } from 'next-auth/client';
+import { signIn } from 'next-auth/client';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
@@ -117,7 +118,11 @@ const User = (props) => {
   const { _id, name, image, movies, followings, followers, moviesToWatch } = userState;
 
   return (
-    <Page title={`${isMyProfile ? 'My profile' : name} - PapyMovie`}>
+    <Page
+      title={`${isMyProfile ? 'My profile' : name} - PapyMovie`}
+      url={`/users/${_id}`}
+      description={`Visit ${name}'s best movies - PapyMovie`}
+    >
       <PageContainer>
         <Row>
           <Col xs={12} md={3}>
@@ -144,7 +149,7 @@ const User = (props) => {
                   session
                     ? handleClickFollow
                     : () => {
-                        router.push('/login');
+                        signIn({ callbackUrl: `${process.env.NEXTAUTH_URL}/movies` });
                       }
                 }
               >
