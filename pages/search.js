@@ -93,7 +93,7 @@ const New = () => {
                       return (
                         <CardContainer
                           key={id}
-                          height={isMobile ? 270 : 400}
+                          height={isMobile ? 260 : 400}
                           percent={isMobile || isTablet ? 50 : 20}
                         >
                           <CardMovie

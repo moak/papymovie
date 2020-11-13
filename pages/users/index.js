@@ -65,7 +65,7 @@ const Movies = (props) => {
 };
 
 Movies.getInitialProps = async () => {
-  const res = await fetch(`${process.env.API_URL}/api/users`);
+  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/users`);
 
   const { data } = await res.json();
   return { users: data };

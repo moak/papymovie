@@ -52,7 +52,7 @@ const Community = (props) => {
 };
 
 Community.getInitialProps = async () => {
-  const res = await fetch(`${process.env.API_URL}/api/feed`);
+  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/feed`);
 
   const { data } = await res.json();
 

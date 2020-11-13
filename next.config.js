@@ -11,7 +11,7 @@ module.exports = {
     domains: ['image.tmdb.org'],
   },
   env: {
-    API_URL: process.env.API_URL,
+    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     GITHUB_ID: process.env.GITHUB_ID,
     GITHUB_SECRET: process.env.GITHUB_SECRET,

@@ -83,7 +83,7 @@ const User = (props) => {
 
   const deleteMovie = async () => {
     try {
-      await fetch(`${process.env.API_URL}/api/movies/${movieId}`, {
+      await fetch(`${process.env.NEXTAUTH_URL}/api/movies/${movieId}`, {
         method: 'Delete',
       });
       const { user } = await fetchData({ query: { userId: session.id } });
@@ -97,7 +97,7 @@ const User = (props) => {
     try {
       setIsFollowRequestLoading(true);
 
-      const request = await fetch(`${process.env.API_URL}/api/users/${_id}/follow`, {
+      const request = await fetch(`${process.env.NEXTAUTH_URL}/api/users/${_id}/follow`, {
         method: 'Post',
       });
 
@@ -179,7 +179,7 @@ const User = (props) => {
                       const { _id, title, themoviedbId, image } = movieToWatch;
 
                       return (
-                        <CardContainer key={_id} height={160} percent={50}>
+                        <CardContainer key={_id} height={isMobile ? 200 : 180} percent={50}>
                           <CardImage
                             isMobile
                             title={title}
@@ -360,7 +360,7 @@ const User = (props) => {
 
 async function fetchData(ctx) {
   const { query: { userId } = {} } = ctx;
-  const res = await fetch(`${process.env.API_URL}/api/users/${userId}`);
+  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/users/${userId}`);
   const { data } = await res.json();
 
   return { user: data };

@@ -161,7 +161,7 @@ const View = (props) => {
 
   const createMovie = async () => {
     try {
-      await fetch(`${process.env.API_URL}/api/movies`, {
+      await fetch(`${process.env.NEXTAUTH_URL}/api/movies`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -215,7 +215,7 @@ const View = (props) => {
   useEffect(() => {
     const fetchLoggedUser = async () => {
       try {
-        const request = await fetch(`${process.env.API_URL}/api/users/${session.id}`);
+        const request = await fetch(`${process.env.NEXTAUTH_URL}/api/users/${session.id}`);
         const { data } = await request.json();
 
         setUser(data);
@@ -258,7 +258,7 @@ const View = (props) => {
 
   const submitMovieToWatch = async () => {
     try {
-      const request = await fetch(`${process.env.API_URL}/api/movies/towatch`, {
+      const request = await fetch(`${process.env.NEXTAUTH_URL}/api/movies/towatch`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -285,7 +285,7 @@ const View = (props) => {
 
   const editMovie = async () => {
     try {
-      await fetch(`${process.env.API_URL}/api/users/${session.id}/movies/${userMovie._id}`, {
+      await fetch(`${process.env.NEXTAUTH_URL}/api/users/${session.id}/movies/${userMovie._id}`, {
         method: 'PUT',
         headers: {
           Accept: 'application/json',
@@ -434,13 +434,24 @@ const View = (props) => {
               </Button>
 
               <Divider horizontal>
-                {userMovie ? <Icon style={{ fontSize: 25 }} color="green" name="check" /> : 'OR'}
+                {userMovie ? (
+                  <Icon style={{ fontSize: 25 }} color="green" name="check" />
+                ) : (
+                  <Text fontSize={16} textColor="#ffffff" isBold>
+                    OR
+                  </Text>
+                )}
               </Divider>
 
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Text isBold fontSize={24} textColor="#ffffff">
                   <div style={{ display: 'flex', alignItems: 'center' }}>
-                    <Text textColor="#ffffff" isBold fontSize={isMobile ? 14 : 24} marginRight={8}>
+                    <Text
+                      textColor="#ffffff"
+                      isBold
+                      fontSize={isMobile ? (userMovie ? 16 : 24) : 24}
+                      marginRight={8}
+                    >
                       {userMovie ? 'You have saved this movie' : 'Save this movie'}
                     </Text>
                   </div>
@@ -534,7 +545,7 @@ const View = (props) => {
                 return (
                   <CardContainer
                     key={id}
-                    height={isMobile ? 290 : 400}
+                    height={isMobile ? 260 : 400}
                     percent={isMobile || isTablet ? 50 : 20}
                   >
                     <CardMovie

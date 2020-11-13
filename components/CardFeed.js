@@ -103,7 +103,7 @@ const CardFeed = (props) => {
 
     try {
       setIsLikingLoading(true);
-      const request = await fetch(`${process.env.API_URL}/api/feed/${_id}/like`, {
+      const request = await fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/like`, {
         method: 'Post',
       });
 
@@ -128,7 +128,7 @@ const CardFeed = (props) => {
 
     try {
       setIsDislikingLoading(true);
-      const request = await fetch(`${process.env.API_URL}/api/feed/${_id}/dislike`, {
+      const request = await fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/dislike`, {
         method: 'Post',
       });
 
