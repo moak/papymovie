@@ -21,7 +21,7 @@ const PaginationContainer = styled.div`
   justify-content: center;
 }`;
 
-const New = () => {
+const New = (props) => {
   const router = useRouter();
 
   const [movies, setMovies] = useState(null);

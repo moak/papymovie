@@ -8,7 +8,7 @@ module.exports = new NextI18Next({
   //   fr: 'fr',
   // },
   // localeSubpaths,
-  browserLanguageDetection: false,
+  browserLanguageDetection: true,
   // serverLanguageDetection: false,
   defaultLanguage: 'en',
   otherLanguages: ['fr', 'en'],

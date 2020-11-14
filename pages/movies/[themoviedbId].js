@@ -185,7 +185,7 @@ const View = (props) => {
     const fetchSimilarMovies = async () => {
       try {
         const request = await fetch(
-          `https://api.themoviedb.org/3/movie/${themoviedbId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
+          `https://api.themoviedb.org/3/movie/${themoviedbId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${userLanguage}`,
         );
         const { results } = await request.json();
 
@@ -336,7 +336,7 @@ const View = (props) => {
       title={t('view.metas.title', { title, date: release_date.substring(0, 4) })}
       previewImage={`https://image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
       url={`/movies/${themoviedbId}`}
-      description={overview ? truncate(overview, 30) : null}
+      description={overview ? truncate(overview, 100) : null}
     >
       <PageContainer>
         <ContentContainer
