@@ -10,6 +10,8 @@ const Box = styled.div`
   margin-bottom: ${(p) => p.marginBottom || 0}px;
   margin-left: ${(p) => p.marginLeft || 0}px;
   margin-right: ${(p) => p.marginRight || 0}px;
+  width: ${(p) => p.width || '100%'};
+  height: ${(p) => p.height || '100%'};
 
 
 }`;

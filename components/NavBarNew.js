@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useSpring, animated, config } from 'react-spring';
 import { Button, Input } from 'semantic-ui-react';
@@ -20,7 +20,7 @@ const NavBarContainer = styled(animated.nav)`
   width: 100%;
   top: 0;
   left: 0;
-  background: #2d3436;
+  background: ${(p) => (p.isTransparent ? 'transparent' : '#2d3436')};
   z-index: 3;
   font-size: 14px;
 `;
@@ -76,14 +76,11 @@ const SearchContainer = styled.div`
 
 const NavBarNew = (props) => {
   const [session, loading] = useSession();
+  const [isTransparent, setIsTransparent] = useState(true);
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 
-  const barAnimation = useSpring({
-    // from: { transform: 'translate3d(0, -10rem, 0)' },
-    // transform: 'translate3d(0, 0, 0)',
-  });
   const router = useRouter();
 
   const [search, setSearch] = useState(router.query.search || '');
@@ -104,31 +101,64 @@ const NavBarNew = (props) => {
     // config: config.wobbly,
   });
 
+  const barAnimation = useSpring({
+    // from: { transform: 'translate3d(0, -10rem, 0)' },
+    // transform: 'translate3d(0, 0, 0)',
+    // from: { opacity: 0 },
+    // to: { opacity: !isTransparent ? 1 : 0.7 },
+    // config: { tension: 220, friction: 120 },
+    // duration: 2000,
+    // transform: 'translate3d(0, 0, 0)',
+  });
+
+  const handleScroll = () => {
+    if (window.scrollY <= 70) {
+      setIsTransparent(true);
+    } else {
+      setIsTransparent(false);
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  });
+
+  console.log('router.pathname', router.pathname);
+
   return (
     <>
-      <NavBarContainer style={barAnimation}>
+      <NavBarContainer
+        style={barAnimation}
+        isTransparent={router.pathname === '/' && isTransparent}
+      >
         <FlexContainer>
-          {!isMobile && <Brand isConnected={!!session} />}
-          <SearchContainer isMobile={isMobile}>
-            <form onSubmit={submitSearch}>
-              <Input
-                action={
-                  isMobile
-                    ? null
-                    : {
-                        icon: 'search',
-                        onClick: submitSearch,
-                      }
-                }
-                style={{ fontSize: 16 }}
-                onChange={handleChangeSearch}
-                fluid
-                placeholder="Search a movie..."
-                value={search || ''}
-                // size=""
-              />
-            </form>
-          </SearchContainer>
+          {(((!isMobile || router.pathname == '/') && isTransparent) || !isMobile) && (
+            <Brand isConnected={!!session} />
+          )}
+
+          {(router.pathname !== '/' || (router.pathname === '/' && !isTransparent)) && (
+            <SearchContainer isMobile={isMobile}>
+              <form onSubmit={submitSearch}>
+                <Input
+                  action={
+                    isMobile
+                      ? null
+                      : {
+                          icon: 'search',
+                          onClick: submitSearch,
+                        }
+                  }
+                  style={{ fontSize: 16 }}
+                  onChange={handleChangeSearch}
+                  fluid
+                  placeholder="Search a movie..."
+                  value={search || ''}
+                  // size=""
+                />
+              </form>
+            </SearchContainer>
+          )}
 
           <NavLinks style={linkAnimation}>
             {!isMobile && !isTablet && (
@@ -139,6 +169,8 @@ const NavBarNew = (props) => {
                 {session && <Link href={`/users/${session && session.id}`}>My profile</Link>}
               </>
             )}
+          </NavLinks>
+          <NavLinks style={linkAnimation}>
             <a>
               <span
                 onClick={(e) => {
