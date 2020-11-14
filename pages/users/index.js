@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 
+import { i18n, withTranslation } from 'i18n';
+
 import useIsMobile from 'hooks/useIsMobile';
 
 import PageContainer from 'components/PageContainer';
@@ -10,8 +12,8 @@ import CardUser from 'components/CardUser';
 import CardContainer from 'components/CardContainer';
 import List from 'components/List';
 
-const Movies = (props) => {
-  const { users } = props;
+const Users = (props) => {
+  const { users, t } = props;
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -20,18 +22,14 @@ const Movies = (props) => {
   }, []);
 
   return (
-    <Page
-      title="Users - PapyMovie"
-      description="Check out your friends movies or follow the most inspiring users"
-      url="/users"
-    >
+    <Page title={t('list.metas.title')} description={t('list.metas.description')} url="/users">
       <PageContainer>
         <Text isBold marginBottom={24} fontSize={32}>
-          Users
+          {t('list.title')}
         </Text>
 
         {!users || (users && users.length === 0) ? (
-          <EmptyState>No users on the platform.</EmptyState>
+          <EmptyState>{t('list.no_result')}</EmptyState>
         ) : (
           <List>
             {users.map((user) => {
@@ -49,9 +47,9 @@ const Movies = (props) => {
                     imageUrl={image}
                     href={`/users/${_id}`}
                     infos={[
-                      { amount: user.movies.length, title: 'Movies' },
-                      { amount: user.followers.length, title: 'Followers' },
-                      { amount: user.followings.length, title: 'Following' },
+                      { amount: user.movies.length, title: t('movies') },
+                      { amount: user.followers.length, title: t('followers') },
+                      { amount: user.followings.length, title: t('followings') },
                     ]}
                   />
                 </CardContainer>
@@ -64,11 +62,11 @@ const Movies = (props) => {
   );
 };
 
-Movies.getInitialProps = async () => {
+Users.getInitialProps = async () => {
   const res = await fetch(`${process.env.NEXTAUTH_URL}/api/users`);
 
   const { data } = await res.json();
-  return { users: data };
+  return { users: data, namespacesRequired: ['user'] };
 };
 
-export default Movies;
+export default withTranslation('user')(Users);

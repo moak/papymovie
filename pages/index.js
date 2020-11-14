@@ -29,48 +29,50 @@ const Description = styled.div`
 }`;
 
 const Container = styled.div`
-height: ${(p) => (p.isMobile ? 500 : 600)}px;
-display: flex;
-background-image: url(./cover.jpeg);
-background-repeat: no-repeat;
-background-position: center;
-background-size: cover;
-flex-direction: column;
-justify-content: ${(p) => (p.isMobile ? 'flex-start' : 'center')};
-align-items: center;
-opacity: 0.7;
+  height: ${(p) => (p.isMobile ? 500 : 600)}px;
+  display: flex;
+  background-image: url(./cover.jpeg);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  flex-direction: column;
+  justify-content: ${(p) => (p.isMobile ? 'flex-start' : 'center')};
+  align-items: center;
+  opacity: 0.7;
 }`;
 
 const Content = styled.div`
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-width: ${(p) => (p.isMobile ? 70 : 40)}%;
-margin-top: ${(p) => (p.isMobile ? 110 : 0)}px;
-
-
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: ${(p) => (p.isMobile ? 70 : 40)}%;
+  margin-top: ${(p) => (p.isMobile ? 110 : 0)}px;
 }`;
+
 const Card = styled.div`
-margin: 1rem;
-flex-basis: 45%;
-padding: 1.5rem;
-text-align: left;
-color: inherit;
-text-decoration: none;
+  margin: 1rem;
+  flex-basis: 45%;
+  padding: 1.5rem;
+  text-align: left;
+  color: inherit;
+  text-decoration: none;
+  border: ${(p) => (p.isMobile ? 0 : 1)}px solid #eaeaea;
+  border-radius: 10px;
+  transition: color 0.15s ease, border-color 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
-border: ${(p) => (p.isMobile ? 0 : 1)}px solid #eaeaea;
-border-radius: 10px;
-transition: color 0.15s ease, border-color 0.15s ease;
-display: flex;
-flex-direction: column;
-align-items: center;
-
-&:hover {
-  color: #0070f3;
-  border-color: #0070f3;
-  cursor: pointer;
-}
+  ${(p) =>
+    !p.isMobile &&
+    `
+    &:hover {
+      color: #0070f3;
+      border-color: #0070f3;
+      cursor: pointer;
+    }
+  `}
 }`;
 
 const Goal = styled.div`
@@ -81,10 +83,6 @@ const Goal = styled.div`
   width: ${(p) => (p.isMobile ? 70 : 80)}%;
   height: 200px;
   margin: 0 auto;
-
-
-
-
 }`;
 
 const Goal2 = styled.div`
@@ -95,6 +93,7 @@ const Goal2 = styled.div`
   width: ${(p) => (p.isMobile ? 90 : 80)}%;
   padding: 32px 0;
   margin: 0 auto;
+  max-width: 1200px;
 }`;
 
 const GoalTitle = styled.div`
@@ -105,7 +104,6 @@ const GoalTitle = styled.div`
   font-size: 1.75rem;
   font-weight: 500;
   text-transform: uppercase;
-
 }`;
 
 const Separator = styled.div`
@@ -115,18 +113,15 @@ const Separator = styled.div`
   margin-left: auto;
   margin: 8px 0;
   background-color: red;
-
 }`;
 
-const Home = () => {
+const Home = (props) => {
+  const { t } = props;
+
   const [latestMovies, setLatestMovies] = useState([]);
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
-  // const [scrollY] = useScroll();
 
-  // let sidebar = window.querySelector('.sidebar');
-
-  console.log('process', process);
   useEffect(() => {
     const fetchLatestMovies = async () => {
       try {
@@ -143,7 +138,7 @@ const Home = () => {
   }, []);
 
   return (
-    <Page title="PapyMovie" description="Stop forgetting what you watch and get inspired!">
+    <Page title={t('metas.title')} description={t('metas.description')}>
       <Container isMobile={isMobile}>
         <Content isMobile={isMobile}>
           <Text
@@ -154,27 +149,25 @@ const Home = () => {
             fontSize={isMobile ? 30 : 46}
             marginBottom={36}
           >
-            Stop forgetting the movies you watch.
+            {t('header.title')}
           </Text>
 
           <Text textColor="#ffffff" fontSize={18} textAlign="center">
-            Store, share and get inspired
+            {t('header.subtitle')}
           </Text>
         </Content>
       </Container>
-
       <Goal isMobile={isMobile}>
-        <GoalTitle textAlign="center">our goals</GoalTitle>
+        <GoalTitle textAlign="center"> {t('subheader.title')}</GoalTitle>
         <Separator />
         <Text fontSize={18} textAlign="center">
-          We all love movies. Start saving the best you watched to never forget about them.
+          {t('subheader.subtitle')}
         </Text>
       </Goal>
-
       <div
         style={{
           display: 'flex',
-          width: isMobile ? '100%' : '50%',
+          width: isMobile ? '100%' : '70%',
           margin: '0 auto',
           height: isMobile ? '100%' : '290px',
           marginBottom: isMobile ? 32 : 0,
@@ -184,44 +177,43 @@ const Home = () => {
           <Link href="/movies">
             <Card isMobile={isMobile}>
               <Text marginBottom={24} textAlign="center" isBold fontSize={18}>
-                Save your movies
+                {t('features.title1')}
               </Text>
               <Icon name="file video" size="huge" />
 
               <Text width="70%" textAlign="center" marginTop={24} textColor="#a8aeb4">
-                Discover the trends and best movies of all time.{' '}
+                {t('features.content1')}
               </Text>
             </Card>
           </Link>
           <Link href="/movies">
             <Card isMobile={isMobile}>
               <Text marginBottom={24} textAlign="center" isBold fontSize={18}>
-                Get inspired
+                {t('features.title2')}
               </Text>
               <Icon name="idea" size="huge" />
 
               <Text width="70%" textAlign="center" marginTop={24} textColor="#a8aeb4">
-                Discover the trends and best movies of all time.{' '}
+                {t('features.content2')}
               </Text>
             </Card>
           </Link>
           <Link href="/users">
             <Card isMobile={isMobile}>
               <Text marginBottom={24} textAlign="center" isBold fontSize={18}>
-                Follow your friends
+                {t('features.title3')}
               </Text>
               <Icon name="users" size="huge" />
 
               <Text width="70%" textAlign="center" marginTop={24} textColor="#a8aeb4">
-                Get inspired by what other people have watched.
+                {t('features.content3')}
               </Text>
             </Card>
           </Link>
         </Box>
       </div>
-
       <Goal2 isMobile={isMobile}>
-        <GoalTitle>Latest rated movies</GoalTitle>
+        <GoalTitle> {t('latest_movies')}</GoalTitle>
 
         <Separator />
         <br />
@@ -232,7 +224,6 @@ const Home = () => {
               if (!item.movie) {
                 return;
               }
-              console.log('item', item);
 
               const { movie = {}, user = {} } = item || {};
               const { _id, description, themoviedbId, title, image, rating } = movie;
@@ -262,22 +253,17 @@ const Home = () => {
             })}
         </List>
       </Goal2>
-
-      {/* <footer className={styles.footer}>
-            <a
-              href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Powered by <img src="/vercel.svg" alt="Vercel Logo" className={styles.logo} />
-            </a>
-          </footer> */}
+      <footer className={styles.footer}>
+        Powered by
+        <Text marginLeft={4} isBold>
+          Maxus
+        </Text>
+      </footer>
     </Page>
   );
 };
 
 Home.getInitialProps = async (context) => {
-  console.log('context', context);
   // const session = await getSession(context);
 
   // const { res } = context;
@@ -287,8 +273,8 @@ Home.getInitialProps = async (context) => {
   //   res.end();
   // }
   return {
-    namespacesRequired: ['common'],
+    namespacesRequired: ['home'],
   };
 };
 
-export default withTranslation('common')(Home);
+export default withTranslation('home')(Home);

@@ -23,7 +23,6 @@ const Text = styled.div`
   text-align: ${(p) => p.textAlign || 'left'};
   text-transform: ${(p) => p.textTransform || 'none'};
   cursor: ${(p) => p.cursor || 'auto'};
-  // line-height: 1;
 
   ${(p) =>
     p.dotdotdot &&

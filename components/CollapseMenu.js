@@ -7,10 +7,13 @@ import styled from 'styled-components';
 import Link from 'next/link';
 import { signOut, signIn } from 'next-auth/client';
 import { useSession } from 'next-auth/client';
-
 import { useSpring, animated } from 'react-spring';
 
+import { i18n, withTranslation } from 'i18n';
+
 const CollapseMenu = (props) => {
+  const { t } = props;
+
   const [session] = useSession();
 
   const { open } = useSpring({ open: props.navbarState ? 0 : 1 });
@@ -31,35 +34,35 @@ const CollapseMenu = (props) => {
         <NavLinks>
           {!session && (
             <li>
-              <Link href="/">Home</Link>
+              <Link href="/">{t('header.home')}</Link>
             </li>
           )}
           <li>
-            <Link href="/movies">Movies</Link>
+            <Link href="/movies">{t('header.movies')}</Link>
           </li>
           <li>
-            <Link href="/community">Community</Link>
+            <Link href="/community">{t('header.community')}</Link>
           </li>
           <li>
-            <Link href="/users">Users</Link>
+            <Link href="/users">{t('header.users')}</Link>
           </li>
 
           {session ? (
             <>
               <li>
-                <Link href={`/users/${session && session.id}`}>My profile</Link>
+                <Link href={`/users/${session && session.id}`}>{t('header.my_profile')}</Link>
               </li>
               <hr />
 
               <li>
-                <a onClick={signOut}>Logout</a>
+                <a onClick={signOut}>{t('header.disconnect')}</a>
               </li>
             </>
           ) : (
             <>
               <hr />
               <li>
-                <a onClick={signIn}>Connect</a>
+                <a onClick={signIn}>{t('header.connect')}</a>
               </li>
             </>
           )}
@@ -70,7 +73,13 @@ const CollapseMenu = (props) => {
   return null;
 };
 
-export default CollapseMenu;
+CollapseMenu.getInitialProps = async () => {
+  return {
+    namespacesRequired: ['common'],
+  };
+};
+
+export default withTranslation('common')(CollapseMenu);
 
 const CollapseWrapper = styled(animated.div)`
   background: #2d3436;

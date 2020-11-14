@@ -6,6 +6,8 @@ import { Confirm, Button, Icon } from 'semantic-ui-react';
 import { useSession } from 'next-auth/client';
 import { signIn } from 'next-auth/client';
 
+import { i18n, withTranslation } from 'i18n';
+
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
 
@@ -32,7 +34,7 @@ const Description = styled.div`
 }`;
 
 const User = (props) => {
-  const { user } = props;
+  const { t, user } = props;
   const router = useRouter();
 
   const [session] = useSession();
@@ -119,9 +121,10 @@ const User = (props) => {
 
   return (
     <Page
-      title={`${isMyProfile ? 'My profile' : name} - PapyMovie`}
+      title={t('view.metas.title', { name })}
+      description={t('view.metas.description', { name })}
       url={`/users/${_id}`}
-      description={`Visit ${name}'s best movies - PapyMovie`}
+      previewImage={image}
     >
       <PageContainer>
         <Row>
@@ -132,9 +135,9 @@ const User = (props) => {
                 name={name}
                 imageUrl={image}
                 infos={[
-                  { amount: movies.length, title: 'Movies' },
-                  { amount: followersState.length, title: 'Followers' },
-                  { amount: followings.length, title: 'Following' },
+                  { amount: movies.length, title: t('movies') },
+                  { amount: followersState.length, title: t('followers') },
+                  { amount: followings.length, title: t('followings') },
                 ]}
               />
             </CardContainer>
@@ -145,29 +148,23 @@ const User = (props) => {
                 loading={isFollowRequestLoading}
                 color={isFollowing ? 'red' : 'blue'}
                 fluid
-                onClick={
-                  session
-                    ? handleClickFollow
-                    : () => {
-                        signIn({ callbackUrl: `${process.env.NEXTAUTH_URL}/movies` });
-                      }
-                }
+                onClick={session ? handleClickFollow : signIn}
               >
-                {isFollowing ? 'Unfollow' : 'Follow'}
+                {isFollowing ? t('unfollow') : t('follow')}
               </Button>
             )}
 
             {isMyProfile || moviesToWatch.length ? (
               <>
                 <Text marginTop={24} marginBottom={24} fontSize={24}>
-                  Watching list
+                  {t('view.watching_list')}
                   {moviesToWatch.length > 0 ? ` (${moviesToWatch.length})` : ''}
                 </Text>
 
                 {moviesToWatch && moviesToWatch.length === 0 && (
                   <EmptyState>
                     <Text fontSize={16} marginBottom={16}>
-                      No movies in the watching list
+                      {t('watching_list_no_result')}
                     </Text>
                   </EmptyState>
                 )}
@@ -193,11 +190,12 @@ const User = (props) => {
               </>
             ) : null}
           </Col>
+
           <Col xs={12} md={9}>
             <Text marginBottom={24} marginTop={isMobile ? 8 : 0} fontSize={isMobile ? 24 : 32}>
               {isMyProfile
-                ? 'My movies'
-                : `${user.name || user.email}'s movies ${
+                ? t('view.my_profile_my_movies')
+                : `${t('view.users_movies', { name: user.name })} ${
                     movies.length > 0 ? `(${movies.length})` : ''
                   }`}
             </Text>
@@ -205,7 +203,7 @@ const User = (props) => {
             {movies && movies.length === 0 && (
               <EmptyState>
                 <Text fontSize={16}>
-                  {isMyProfile ? 'You have not added movies yet' : `No movies.`}
+                  {isMyProfile ? t('view.my_profile_no_movies') : t('view.no_movies')}
                 </Text>
               </EmptyState>
             )}
@@ -260,7 +258,7 @@ const User = (props) => {
                                     return open(_id);
                                   }}
                                 >
-                                  Delete
+                                  {t('view.delete')}
                                 </Button>
                               </>
                             ) : null}
@@ -273,7 +271,7 @@ const User = (props) => {
             </List>
 
             <Text marginTop={24} marginBottom={16} fontSize={24}>
-              Followings
+              {t('followings')}
             </Text>
             <List>
               {followings &&
@@ -291,9 +289,9 @@ const User = (props) => {
                         name={name}
                         imageUrl={image}
                         infos={[
-                          { amount: movies.length, title: 'Movies' },
-                          { amount: followers.length, title: 'Followers' },
-                          { amount: followings.length, title: 'Following' },
+                          { amount: movies.length, title: t('movies') },
+                          { amount: followers.length, title: t('followers') },
+                          { amount: followings.length, title: t('followings') },
                         ]}
                       />
                     </CardContainer>
@@ -303,14 +301,12 @@ const User = (props) => {
             {followings && followings.length === 0 && (
               <EmptyState>
                 <Text fontSize={16}>
-                  {isMyProfile
-                    ? 'You do not follow anyone yet'
-                    : `This user does not follow anyone.`}
+                  {isMyProfile ? t('view.my_profile_no_followings') : t('view.no_followings')}
                 </Text>
               </EmptyState>
             )}
             <Text marginTop={24} marginBottom={16} fontSize={24}>
-              Followers
+              {t('followers')}
             </Text>
             <List>
               {followers &&
@@ -328,9 +324,9 @@ const User = (props) => {
                         name={name}
                         imageUrl={image}
                         infos={[
-                          { amount: movies.length, title: 'Movies' },
-                          { amount: followers.length, title: 'Followers' },
-                          { amount: followings.length, title: 'Following' },
+                          { amount: movies.length, title: t('movies') },
+                          { amount: followers.length, title: t('followers') },
+                          { amount: followings.length, title: t('followings') },
                         ]}
                       />
                     </CardContainer>
@@ -340,7 +336,7 @@ const User = (props) => {
             {followers && followers.length === 0 && (
               <EmptyState>
                 <Text fontSize={16}>
-                  {isMyProfile ? 'You do not have any followers' : `This user as no followers.`}
+                  {isMyProfile ? t('view.my_profile_no_followers') : t('view.no_followers')}
                 </Text>
               </EmptyState>
             )}
@@ -350,8 +346,8 @@ const User = (props) => {
           open={confirm}
           onCancel={close}
           onConfirm={handleDelete}
-          header="Delete movie"
-          content="Are you sure you want to delete this movie ?"
+          header={t('view.delete_movie_title')}
+          content={t('view.delete_movie_confirmation')}
         />
       </PageContainer>
     </Page>
@@ -363,9 +359,9 @@ async function fetchData(ctx) {
   const res = await fetch(`${process.env.NEXTAUTH_URL}/api/users/${userId}`);
   const { data } = await res.json();
 
-  return { user: data };
+  return { user: data, namespacesRequired: ['user'] };
 }
 
 User.getInitialProps = fetchData;
 
-export default User;
+export default withTranslation('user')(User);

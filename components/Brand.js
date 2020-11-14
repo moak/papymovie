@@ -3,15 +3,11 @@ import Link from 'next/link';
 import styled from 'styled-components';
 
 const Logo = styled.a`
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  font-size: 2rem;
+  font-size: 1.7rem;
   color: #ffffff;
-  font-weight: 400;
-  cursor: pointer;
-  position: relative;
-  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 2px;
+  height: auto;
 
   &:hover {
     text-decoration: none;

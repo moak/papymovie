@@ -7,15 +7,20 @@ import { signOut, signIn } from 'next-auth/client';
 import Link from 'next/link';
 import { useSession } from 'next-auth/client';
 
+import { i18n, withTranslation } from 'i18n';
+
 import Brand from './Brand';
 import BurgerMenu from './BurgerMenu';
 import CollapseMenu from './CollapseMenu';
-import { i18n, withTranslation } from 'i18n';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
 
-const NavBarContainer = styled(animated.nav)`
+const NavBarContainer = styled(({ isTransparent, ...props }) => (
+  <animated.nav
+    {...props} // eslint-disable-line react/jsx-props-no-spreading
+  />
+))`
   position: fixed;
   width: 100%;
   top: 0;
@@ -75,6 +80,9 @@ const SearchContainer = styled.div`
 `;
 
 const NavBarNew = (props) => {
+  const { t } = props;
+  const { language: userLanguage } = i18n;
+
   const [session, loading] = useSession();
   const [isTransparent, setIsTransparent] = useState(true);
 
@@ -124,8 +132,6 @@ const NavBarNew = (props) => {
     return () => window.removeEventListener('scroll', handleScroll);
   });
 
-  console.log('router.pathname', router.pathname);
-
   return (
     <>
       <NavBarContainer
@@ -152,32 +158,34 @@ const NavBarNew = (props) => {
                   style={{ fontSize: 16 }}
                   onChange={handleChangeSearch}
                   fluid
-                  placeholder="Search a movie..."
+                  placeholder={t('header.search')}
                   value={search || ''}
-                  // size=""
                 />
               </form>
             </SearchContainer>
           )}
 
-          <NavLinks style={linkAnimation}>
+          <NavLinks style={{ ...linkAnimation, width: 300 }}>
             {!isMobile && !isTablet && (
               <>
-                <Link href="/movies">Movies</Link>
-                <Link href="/community">Community</Link>
-                <Link href="/users">Users</Link>
-                {session && <Link href={`/users/${session && session.id}`}>My profile</Link>}
+                <Link href={`/${userLanguage}/movies`}>{t('header.movies')}</Link>
+                <Link href={`/${userLanguage}/community`}>{t('header.community')}</Link>
+                <Link href={`/${userLanguage}/users`}>{t('header.users')}</Link>
+                {session && (
+                  <Link href={`/users/${session && session.id}`}>{t('header.my_profile')}</Link>
+                )}
               </>
             )}
           </NavLinks>
-          <NavLinks style={linkAnimation}>
+
+          <NavLinks style={{ ...linkAnimation }}>
             <a>
               <span
                 onClick={(e) => {
                   e.preventDefault;
-
                   i18n.changeLanguage('fr');
                 }}
+                style={{ color: userLanguage === 'fr' ? '#ffffff' : 'grey' }}
               >
                 FR
               </span>{' '}
@@ -185,9 +193,9 @@ const NavBarNew = (props) => {
               <span
                 onClick={(e) => {
                   e.preventDefault;
-
                   i18n.changeLanguage('en');
                 }}
+                style={{ color: userLanguage === 'en' ? '#ffffff' : 'grey' }}
               >
                 EN
               </span>
@@ -203,12 +211,17 @@ const NavBarNew = (props) => {
                     size="small"
                     onClick={signOut}
                   >
-                    Signout
+                    {t('header.disconnect')}
                   </Button>
                 ) : (
                   <>
-                    <Button style={{ marginRight: 16 }} circular primary onClick={signIn}>
-                      Connect
+                    <Button
+                      style={{ marginRight: 16, width: 130 }}
+                      circular
+                      primary
+                      onClick={signIn}
+                    >
+                      {t('header.connect')}
                     </Button>
                   </>
                 )}
@@ -226,4 +239,10 @@ const NavBarNew = (props) => {
   );
 };
 
-export default NavBarNew;
+NavBarNew.getInitialProps = async () => {
+  return {
+    namespacesRequired: ['common'],
+  };
+};
+
+export default withTranslation('common')(NavBarNew);

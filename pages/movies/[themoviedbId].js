@@ -7,6 +7,8 @@ import moment from 'moment';
 import { useSession } from 'next-auth/client';
 import { signIn } from 'next-auth/client';
 
+import { i18n, withTranslation } from 'i18n';
+
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
 import Text from 'components/Text';
@@ -82,6 +84,7 @@ export const Infos = styled.div`
 
 const View = (props) => {
   const {
+    t,
     isFound,
     movie: {
       backdrop_path,
@@ -94,6 +97,8 @@ const View = (props) => {
       vote_average,
     } = {},
   } = props;
+
+  const { language: userLanguage } = i18n;
 
   const router = useRouter();
 
@@ -197,7 +202,7 @@ const View = (props) => {
     const fetchCreditMovie = async () => {
       try {
         const request = await fetch(
-          `https://api.themoviedb.org/3/movie/${themoviedbId}/credits?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
+          `https://api.themoviedb.org/3/movie/${themoviedbId}/credits?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${userLanguage}`,
         );
         const { cast } = await request.json();
 
@@ -323,12 +328,12 @@ const View = (props) => {
   }, [isSubmittingMovieToWatch]);
 
   if (!isFound) {
-    return <div>not found</div>;
+    return <div>{t('view.not_found')}</div>;
   }
 
   return (
     <Page
-      title={`${title} - Movie (${release_date.substring(0, 4)}) - PapyMovie`}
+      title={t('view.metas.title', { title, date: release_date.substring(0, 4) })}
       previewImage={`https://image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
       url={`/movies/${themoviedbId}`}
       description={overview ? truncate(overview, 30) : null}
@@ -416,11 +421,11 @@ const View = (props) => {
               <Text isBold marginTop={8} marginBottom={4} fontSize={24} textColor="#ffffff">
                 {isInMoviesToWatch ? (
                   <div>
-                    <span>Watching list</span>
+                    <span>{t('view.watching_list')}</span>
                     <Icon color="green" name="check" style={{ marginLeft: 8 }} />
                   </div>
                 ) : (
-                  'Save in watching list'
+                  t('view.save_watching_list')
                 )}
               </Text>
               <Button
@@ -430,15 +435,15 @@ const View = (props) => {
                 style={{ marginTop: 8, marginBottom: 8 }}
                 size="small"
               >
-                {isInMoviesToWatch ? 'Supprimer' : 'Ajouter'}
+                {isInMoviesToWatch ? t('view.delete') : t('view.add')}
               </Button>
 
               <Divider horizontal>
                 {userMovie ? (
                   <Icon style={{ fontSize: 25 }} color="green" name="check" />
                 ) : (
-                  <Text fontSize={16} textColor="#ffffff" isBold>
-                    OR
+                  <Text fontSize={20} textColor="#ffffff" isBold>
+                    {t('view.or')}
                   </Text>
                 )}
               </Divider>
@@ -452,7 +457,7 @@ const View = (props) => {
                       fontSize={isMobile ? (userMovie ? 16 : 24) : 24}
                       marginRight={8}
                     >
-                      {userMovie ? 'You have saved this movie' : 'Save this movie'}
+                      {userMovie ? t('view.my_profile_saved') : t('view.save')}
                     </Text>
                   </div>
                 </Text>
@@ -464,7 +469,7 @@ const View = (props) => {
               </div>
 
               <Text isBold marginTop={16} marginBottom={8} fontSize={14} textColor="#ffffff">
-                {userMovie ? 'Your rating:' : 'Rate this movie:'}
+                {userMovie ? t('view.my_profile_rating') : t('view.rate_movie')}
               </Text>
 
               <ReactStars
@@ -479,11 +484,11 @@ const View = (props) => {
 
               <Form onSubmit={session ? handleSubmitMovie : signIn}>
                 <Text isBold marginTop={16} marginBottom={8} fontSize={14} textColor="#ffffff">
-                  {userMovie ? 'Your description:' : 'Add a description'}
+                  {userMovie ? t('view.my_profile_description') : t('view.add_description')}
                 </Text>
 
                 <Form.TextArea
-                  placeholder="Write a personnal note for this movie"
+                  placeholder={t('view.description_placeholder')}
                   name="description"
                   value={form.description || ''}
                   onChange={handleChangeDescription}
@@ -495,11 +500,11 @@ const View = (props) => {
                   color="green"
                   style={{ marginTop: 10 }}
                 >
-                  {userMovie ? 'Edit' : 'Ajouter'}
+                  {userMovie ? t('view.edit') : t('view.add')}
                 </Button>
                 {errors.rating && (
                   <Text isBold textColor="#ffffff" marginBottom={8} marginTop={8} fontSize={14}>
-                    * Rating is required
+                    {t('view.rating_required')}
                   </Text>
                 )}
               </Form>
@@ -511,7 +516,7 @@ const View = (props) => {
           <>
             <div style={{ marginBottom: 80 }}>
               <Text marginTop={36} marginBottom={16} fontSize={32}>
-                Actors
+                {t('view.actors')}
               </Text>
               <List>
                 {actors.slice(0, 6).map((actor) => {
@@ -536,7 +541,7 @@ const View = (props) => {
         {similarMovies && similarMovies.length > 0 && (
           <div>
             <Text marginTop={36} marginBottom={16} fontSize={32}>
-              Similar movies
+              {t('view.similar_movies')}
             </Text>
             <List>
               {similarMovies.slice(0, 5).map((movie) => {
@@ -569,11 +574,12 @@ const View = (props) => {
 
 View.getInitialProps = async (context) => {
   const { query: { themoviedbId } = {} } = context;
+  const { language: userLanguage } = i18n;
 
   const promises = [
     // movie
     fetch(
-      `https://api.themoviedb.org/3/movie/${themoviedbId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
+      `https://api.themoviedb.org/3/movie/${themoviedbId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${userLanguage}`,
     ),
   ];
 
@@ -591,7 +597,7 @@ View.getInitialProps = async (context) => {
       return {
         movie,
         isFound: movie.success !== false,
-        namespacesRequired: ['common'],
+        namespacesRequired: ['movie'],
       };
     })
     .catch(function (error) {
@@ -599,4 +605,4 @@ View.getInitialProps = async (context) => {
     });
 };
 
-export default View;
+export default withTranslation('movie')(View);

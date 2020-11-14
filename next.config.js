@@ -1,14 +1,14 @@
 const { nextI18NextRewrites } = require('next-i18next/rewrites');
 
-const localeSubpaths = {};
+const localeSubpaths = {
+  fr: 'fr',
+  en: 'en',
+};
 
 module.exports = {
   rewrites: async () => nextI18NextRewrites(localeSubpaths),
   publicRuntimeConfig: {
     localeSubpaths,
-  },
-  images: {
-    domains: ['image.tmdb.org'],
   },
   env: {
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,

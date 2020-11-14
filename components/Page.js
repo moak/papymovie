@@ -1,5 +1,4 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { withTranslation } from 'i18n';
 import { Loader } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { useSession } from 'next-auth/client';
@@ -87,4 +86,4 @@ const Page = ({
   );
 };
 
-export default withTranslation('common')(Page);
+export default Page;

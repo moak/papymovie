@@ -1,7 +1,12 @@
 {
-  "app": "PapyMovieEN",
   "header": {
-    "login": "Login",
-    "search": "Search"
+    "home": "Home",
+    "connect": "Connect",
+    "disconnect": "Logout",
+    "search": "Search a movie..",
+    "movies": "Movies",
+    "community": "Community",
+    "users": "Users",
+    "my_profile": "My profile"
   }
 }

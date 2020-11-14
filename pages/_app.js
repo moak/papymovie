@@ -11,7 +11,7 @@ import * as gtag from 'utils/gtag';
 
 import { appWithTranslation } from 'i18n';
 
-const MyApp = ({ Component, pageProps }) => {
+const PappyMovieApp = ({ Component, pageProps }) => {
   const router = useRouter();
 
   useEffect(() => {
@@ -36,9 +36,9 @@ const MyApp = ({ Component, pageProps }) => {
   );
 };
 
-MyApp.getInitialProps = async (appContext) => {
+PappyMovieApp.getInitialProps = async (appContext) => {
   const appProps = await App.getInitialProps(appContext);
   return { ...appProps, namespacesRequired: ['common'] };
 };
 
-export default appWithTranslation(MyApp);
+export default appWithTranslation(PappyMovieApp);

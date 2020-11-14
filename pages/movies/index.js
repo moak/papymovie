@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { Label, Button, Select, Pagination } from 'semantic-ui-react';
-import { withTranslation } from 'i18n';
+import { i18n, withTranslation } from 'i18n';
 
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
@@ -60,6 +60,8 @@ export const Row = styled.div`
 const Movies = (props) => {
   const { t } = props;
 
+  const { language: userLanguage } = i18n;
+
   const [movies, setMovies] = useState(null);
   const [totalPages, setTotalPages] = useState(null);
   const [activePage, setActivePage] = useState(1);
@@ -97,7 +99,7 @@ const Movies = (props) => {
     const fetchGenres = async () => {
       try {
         const request = await fetch(
-          `https://api.themoviedb.org/3/genre/movie/list?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=fr`,
+          `https://api.themoviedb.org/3/genre/movie/list?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${userLanguage}`,
         );
         const { genres } = await request.json();
 
@@ -108,7 +110,7 @@ const Movies = (props) => {
     };
 
     fetchGenres();
-  }, []);
+  }, [userLanguage]);
 
   useEffect(async () => {
     let query = null;
@@ -117,7 +119,7 @@ const Movies = (props) => {
     const obj = {
       api_key: process.env.THEMOVIEDB_API_KEY,
       page: activePage,
-      language: 'fr',
+      language: userLanguage,
     };
 
     if (selectedGenres.length) {
@@ -148,7 +150,7 @@ const Movies = (props) => {
     setMovies(results);
     setTotalPages(total_pages);
     // }
-  }, [activePage, filter, yearStart, yearEnd, selectedGenres]);
+  }, [activePage, filter, yearStart, yearEnd, selectedGenres, userLanguage]);
 
   const handleClickGenre = useCallback(
     (genreId) => {
@@ -291,7 +293,7 @@ const Movies = (props) => {
                         imageUrl={`https://image.tmdb.org/t/p/w${
                           isMobile ? 200 : 300
                         }/${poster_path}`}
-                        href={`/movies/${id}`}
+                        href={`/${userLanguage}/movies/${id}`}
                         grade={vote_average}
                       />
                     </CardContainer>

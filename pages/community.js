@@ -39,13 +39,16 @@ const Community = (props) => {
             Community
           </Text>
         </Row>
-        {feed.map((feedItem) => {
-          return (
-            <div style={{ marginBottom: 16 }} key={feedItem._id}>
-              <CardFeed isMobile={isMobile} feedItem={feedItem} />
-            </div>
-          );
-        })}
+        {feed
+          .filter((item) => item.movie && item.user)
+          .map((feedItem) => {
+            console.log('feedItem', feedItem);
+            return (
+              <div style={{ marginBottom: 16 }} key={feedItem._id}>
+                <CardFeed isMobile={isMobile} feedItem={feedItem} />
+              </div>
+            );
+          })}
       </PageContainer>
     </Page>
   );

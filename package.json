@@ -21,7 +21,7 @@
     "moment": "^2.29.1",
     "mongodb": "^3.6.2",
     "mongoose": "^5.10.9",
-    "next": "9.5.5",
+    "next": "10.0.0",
     "next-auth": "^3.1.0",
     "next-i18next": "^6.0.3",
     "prettier": "^2.1.2",

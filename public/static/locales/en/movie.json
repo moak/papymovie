@@ -6,5 +6,30 @@
   "between": "Between",
   "and": "and",
   "information": "Information",
-  "all": "All"
+  "all": "All",
+
+  "view": {
+    "metas": {
+      "title": "{{title}} - Movie ({{date}}) - Papymovie"
+    },
+
+    "rating_required": "* Rating is required",
+    "actors": "Actors",
+    "similar_movies": "Similar movies",
+    "description": "Description:",
+    "my_profile_description": "Your description:",
+    "my_profile_rating": "Your rating:",
+    "my_profile_saved": "You have saved this movie",
+    "add_description": "Add a description",
+    "rate_movie": "Rate this movie:",
+    "save": "Save this movie",
+    "description_placeholder": "Write a personnal note for this movie",
+    "or": "OR",
+    "add": "Add",
+    "delete": "Delete",
+    "edit": "Modify",
+    "watching_list": "Watching list",
+    "save_watching_list": "Save in watching list",
+    "not_found": "Movie not found."
+  }
 }

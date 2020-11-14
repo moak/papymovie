@@ -1,7 +1,12 @@
 {
-  "app": "PapyMovieFR",
   "header": {
-    "login": "Login",
-    "search": "Search"
+    "home": "Accueil",
+    "connect": "Se connecter",
+    "disconnect": "Se connecter",
+    "search": "Chercher un film",
+    "movies": "Films",
+    "community": "Communauté",
+    "users": "Utilisateurs",
+    "my_profile": "Mon profil"
   }
 }

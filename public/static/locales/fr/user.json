@@ -1,0 +1,43 @@
+{
+  "movies": "Films",
+  "followers": "Followers",
+  "followings": "Following",
+  "follow": "Suivre",
+  "unfollow": "Ne plus suivre",
+
+  "list": {
+    "metas": {
+      "title": "Utilisateurs - PapyMovie",
+      "description": "Découvrez les films de vos amis ou personnes aiment vos gouts"
+    },
+    "title": "Utilisateurs",
+    "no_result": "Pas de résultat"
+  },
+
+  "view": {
+    "metas": {
+      "title": "{{name}} - PapyMovie",
+      "description": "Découvrer les meilleurs films de {{name}} - PapyMovie"
+    },
+    "watching_list": "A regarder",
+    "watching_list_no_result": "Pas de film dans la liste à regarder",
+
+    "my_profile": "Mon profil",
+    "my_profile_my_movies": "Mes films",
+    "my_profile_no_movies": "You n'avez pas encore ajouté de films",
+    "my_profile_no_followers": "Vous n'avez pas de followers",
+    "my_profile_no_followings": "Aucun followers",
+    "my_profile_no_notes": "Ajoutez une note..",
+
+    "users_movies": "Films de {{name}}",
+    "no_movies": "Pas de films.",
+    "no_result_watching_list": "Aucun résultat trouvé.",
+    "no_followers": "Cet utilisateur n'a pas de followers.",
+    "no_followings": "Cet utilisateur de follow personne.",
+    "no_notes": "Pas de note",
+
+    "delete": "Supprimer",
+    "delete_movie_title": "Supprimer film",
+    "delete_movie_confirmation": "Êtes-vous sur de vouloir supprimer ce film?"
+  }
+}
