@@ -246,10 +246,4 @@ const NavBarNew = (props) => {
   );
 };
 
-NavBarNew.getInitialProps = async () => {
-  return {
-    namespacesRequired: ['common'],
-  };
-};
-
 export default withTranslation('common')(NavBarNew);

@@ -93,7 +93,7 @@ const New = (props) => {
                       return (
                         <CardContainer
                           key={id}
-                          height={isMobile ? 260 : 400}
+                          height={isMobile ? 260 : isTablet ? 300 : 400}
                           percent={isMobile || isTablet ? 50 : 20}
                         >
                           <CardMovie
@@ -170,10 +170,6 @@ const New = (props) => {
       </PageContainer>
     </Page>
   );
-};
-
-New.getInitialProps = async () => {
-  return { namespacesRequired: ['common'] };
 };
 
 export default New;

@@ -1,6 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import dbConnect from 'utils/dbConnect';
+import Feed from 'models/Feed';
+
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
 import Text from 'components/Text';
@@ -42,7 +45,6 @@ const Community = (props) => {
         {feed
           .filter((item) => item.movie && item.user)
           .map((feedItem) => {
-            console.log('feedItem', feedItem);
             return (
               <div style={{ marginBottom: 16 }} key={feedItem._id}>
                 <CardFeed isMobile={isMobile} feedItem={feedItem} />
@@ -54,15 +56,14 @@ const Community = (props) => {
   );
 };
 
-Community.getInitialProps = async () => {
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/feed`);
+export async function getServerSideProps() {
+  await dbConnect();
 
-  const { data } = await res.json();
+  const feed = await Feed.find({ user: { $exists: true }, movie: { $exists: true } })
+    .populate('movie')
+    .populate('user');
 
-  return {
-    feed: data,
-    namespacesRequired: ['common'],
-  };
-};
+  return { props: { feed: JSON.parse(JSON.stringify(feed.reverse())) } };
+}
 
 export default Community;

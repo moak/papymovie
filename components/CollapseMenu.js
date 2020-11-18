@@ -73,12 +73,6 @@ const CollapseMenu = (props) => {
   return null;
 };
 
-CollapseMenu.getInitialProps = async () => {
-  return {
-    namespacesRequired: ['common'],
-  };
-};
-
 export default withTranslation('common')(CollapseMenu);
 
 const CollapseWrapper = styled(animated.div)`

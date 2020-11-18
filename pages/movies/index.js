@@ -283,8 +283,8 @@ const Movies = (props) => {
                   return (
                     <CardContainer
                       key={id}
-                      height={isMobile ? 260 : 400}
-                      percent={isMobile || isTablet ? 50 : 25}
+                      height={isMobile ? 260 : isTablet ? 300 : 400}
+                      percent={isMobile ? 50 : isTablet ? 33 : 25}
                     >
                       <CardMovie
                         isMobile={isMobile}
@@ -320,12 +320,6 @@ const Movies = (props) => {
       </PageContainer>
     </Page>
   );
-};
-
-Movies.getInitialProps = async () => {
-  return {
-    namespacesRequired: ['movie'],
-  };
 };
 
 export default withTranslation('movie')(Movies);

@@ -1,11 +1,11 @@
 {
   "metas": {
-    "title": "Bienvenue sur PapyMovie",
-    "description": "Arrêtons d'oublier les films que nous regardons"
+    "title": "PapyMovie | Arrêtons d'oublier les films que nous regardons",
+    "description": "Notez et sauvegardez vos meilleurs films. Découvrez des nouveaux films en suivant vos amis."
   },
   "header": {
     "title": "Arrêtons d'oublier les films que nous regardons.",
-    "subtitle": "Mémorise, partage et inspire les autres."
+    "subtitle": "Notez et sauvegardez vos meilleurs films."
   },
   "subheader": {
     "title": "notre but",

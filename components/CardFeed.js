@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import { useSession } from 'next-auth/client';
 import { Button, Label, Icon } from 'semantic-ui-react';
 import Link from 'next/link';
+import { signIn } from 'next-auth/client';
 
 import RoundedLabel from 'components/RoundedLabel';
 
@@ -252,17 +253,17 @@ const CardFeed = (props) => {
           )}
 
           <SocialButtons isMobile={isMobile}>
-            <Button onClick={handleClickLike} as="div" labelPosition="right">
-              <Button compact size="mini" color="green">
-                <Icon name={isLikingLoading ? 'loading' : 'thumbs up'} />
+            <Button onClick={session ? handleClickLike : signIn} as="div" labelPosition="right">
+              <Button compact size={isLikingLoading ? 'mini' : 'tiny'} color="green">
+                <Icon name={'thumbs up'} />
               </Button>
               <Label style={{ fontSize: 12 }} as="a" basic color="green" pointing="left">
                 {!!likesState && likesState.length}
               </Label>
             </Button>
-            <Button as="div" onClick={handleClickDislike} labelPosition="right">
-              <Button compact size="mini" color="red">
-                <Icon name={isDislikingLoading ? 'loading' : 'thumbs down'} />
+            <Button onClick={session ? handleClickDislike : signIn} as="div" labelPosition="right">
+              <Button compact size={isDislikingLoading ? 'mini' : 'tiny'} color="red">
+                <Icon name={'thumbs down'} />
               </Button>
               <Label style={{ fontSize: 12 }} as="a" basic color="red" pointing="left">
                 {!!dislikesState && dislikesState.length}

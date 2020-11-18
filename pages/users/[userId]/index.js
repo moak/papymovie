@@ -218,7 +218,7 @@ const User = (props) => {
                     <CardContainer
                       key={_id}
                       height={isMobile ? 330 : 400}
-                      percent={isMobile || isTablet ? 50 : 25}
+                      percent={isMobile ? 50 : isTablet ? 33 : 25}
                     >
                       <CardMovie
                         isMobile={isMobile}

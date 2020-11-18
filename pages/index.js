@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/router';
-import { getSession, useSession } from 'next-auth/client';
 import { Icon } from 'semantic-ui-react';
 import Link from 'next/link';
 import styled from 'styled-components';
@@ -8,10 +6,7 @@ import styled from 'styled-components';
 import dbConnect from 'utils/dbConnect';
 import Feed from 'models/Feed';
 
-import styles from 'styles/Home.module.css';
-
 import Page from 'components/Page';
-import PageContainer from 'components/PageContainer';
 import Text from 'components/Text';
 import CardContainer from 'components/CardContainer';
 import List from 'components/List';
@@ -23,6 +18,14 @@ import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
 // import useScroll from 'hooks/useScroll';
 
+const Footer = styled.div`
+width: 100%;
+height: 100px;
+border-top: 1px solid #eaeaea;
+display: flex;
+justify-content: center;
+align-items: center;
+}`;
 const Description = styled.div`
   height: 30px;
   text-overflow: ellipsis;
@@ -48,7 +51,7 @@ const Content = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: ${(p) => (p.isMobile ? 70 : 40)}%;
+  width: ${(p) => (p.isMobile ? 70 : 50)}%;
   margin-top: ${(p) => (p.isMobile ? 110 : 0)}px;
 }`;
 
@@ -167,7 +170,7 @@ const Home = (props) => {
               </Text>
               <Icon name="file video" size="huge" />
 
-              <Text width="80%" textAlign="center" marginTop={24} textColor="#a8aeb4">
+              <Text width="90%" textAlign="center" marginTop={24} textColor="#a8aeb4">
                 {t('features.content1')}
               </Text>
             </Card>
@@ -179,7 +182,7 @@ const Home = (props) => {
               </Text>
               <Icon name="idea" size="huge" />
 
-              <Text width="80%" textAlign="center" marginTop={24} textColor="#a8aeb4">
+              <Text width="90%" textAlign="center" marginTop={24} textColor="#a8aeb4">
                 {t('features.content2')}
               </Text>
             </Card>
@@ -191,7 +194,7 @@ const Home = (props) => {
               </Text>
               <Icon name="users" size="huge" />
 
-              <Text width="80%" textAlign="center" marginTop={24} textColor="#a8aeb4">
+              <Text width="90%" textAlign="center" marginTop={24} textColor="#a8aeb4">
                 {t('features.content3')}
               </Text>
             </Card>
@@ -211,13 +214,13 @@ const Home = (props) => {
               .slice(0, isMobile ? 6 : 5)
               .map((item) => {
                 const { movie = {}, user = {} } = item || {};
-                const { _id, description, themoviedbId, title, image, rating } = movie;
+                const { _id, themoviedbId, title, image, rating } = movie;
                 const { name, username } = user;
 
                 return (
                   <CardContainer
                     key={_id}
-                    height={isMobile ? 260 : 400}
+                    height={isMobile ? 280 : isTablet ? 300 : 400}
                     percent={isMobile || isTablet ? 50 : 20}
                   >
                     <CardMovie
@@ -238,12 +241,12 @@ const Home = (props) => {
               })}
         </List>
       </Goal2>
-      <footer className={styles.footer}>
+      <Footer>
         Powered by
         <Text marginLeft={4} isBold>
           Maxus
         </Text>
-      </footer>
+      </Footer>
     </Page>
   );
 };
@@ -253,7 +256,6 @@ export async function getServerSideProps() {
 
   const feed = await Feed.find({ user: { $exists: true }, movie: { $exists: true } })
     .sort({ created_at: -1 })
-    .limit(6)
     .populate('movie')
     .populate('user')
     .populate({
@@ -267,7 +269,7 @@ export async function getServerSideProps() {
       ],
     });
 
-  return { props: { latestMovies: JSON.parse(JSON.stringify(feed.reverse())) } };
+  return { props: { latestMovies: JSON.parse(JSON.stringify(feed)) } };
 }
 
 export default withTranslation('home')(Home);

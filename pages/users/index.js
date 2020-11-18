@@ -2,6 +2,9 @@ import React, { useEffect } from 'react';
 
 import { i18n, withTranslation } from 'i18n';
 
+import dbConnect from 'utils/dbConnect';
+import User from 'models/User';
+
 import useIsMobile from 'hooks/useIsMobile';
 
 import PageContainer from 'components/PageContainer';
@@ -16,6 +19,7 @@ const Users = (props) => {
   const { users, t } = props;
   const isMobile = useIsMobile();
 
+  console.log('vusers', users);
   useEffect(() => {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0;
@@ -62,11 +66,12 @@ const Users = (props) => {
   );
 };
 
-Users.getInitialProps = async () => {
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/users`);
+export async function getServerSideProps() {
+  await dbConnect();
 
-  const { data } = await res.json();
-  return { users: data, namespacesRequired: ['user'] };
-};
+  const users = await User.find({});
+
+  return { props: { users: JSON.parse(JSON.stringify(users)) } };
+}
 
 export default withTranslation('user')(Users);

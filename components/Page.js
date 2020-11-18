@@ -1,10 +1,8 @@
-import React, { useState, useCallback, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Loader } from 'semantic-ui-react';
 import styled from 'styled-components';
 import { useSession } from 'next-auth/client';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import usePrevious from 'hooks/usePrevious';
 
 import NavBarNew from 'components/NavBarNew';
 
@@ -23,32 +21,22 @@ const Page = ({
   description = 'Stop forgetting what you watch and get inspired!',
   previewImage,
   url = '',
+  withHeader = true,
 }) => {
   const [isNavBarOpen, setIsNavBarOpen] = useState(false);
   const [session, loading] = useSession();
-  const router = useRouter();
-  const previousSession = usePrevious(session);
 
   const handleNavbar = useCallback(() => {
     setIsNavBarOpen(!isNavBarOpen);
   }, [isNavBarOpen]);
 
-  // useEffect(() => {
-  //   if (!previousSession && session) {
-  //     router.push('/movies');
-  //   }
+  // return (
+  //   <>
+  //     {withHeader && <NavBarNew navbarState={isNavBarOpen} handleNavbar={handleNavbar} />}
+  //     {children}
+  //   </>
+  // );
 
-  //   if (previousSession && !session) {
-  //     router.push('/');
-  //   }
-  // }, [session]);
-
-  return (
-    <>
-      <NavBarNew navbarState={isNavBarOpen} handleNavbar={handleNavbar} />
-      {children}
-    </>
-  );
   return (
     <>
       {title && (
@@ -78,6 +66,7 @@ const Page = ({
           )}
         </Head>
       )}
+
       {loading ? (
         <LoaderContainer>
           <Loader active inline="centered" size="large" />
