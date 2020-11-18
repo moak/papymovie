@@ -1,8 +1,8 @@
 {
   "header": {
     "home": "Accueil",
-    "connect": "Se connecter",
-    "disconnect": "Se connecter",
+    "connect": "Connexion",
+    "disconnect": "Déconnexion",
     "search": "Chercher un film",
     "movies": "Films",
     "community": "Communauté",

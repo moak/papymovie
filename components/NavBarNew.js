@@ -75,7 +75,7 @@ const BurgerWrapper = styled.div`
 `;
 
 const SearchContainer = styled.div`
-  width: ${(p) => (p.isMobile ? 350 : 350)}px;
+  width: ${(p) => (p.isMobile ? 200 : 350)}px;
   margin: auto 0;
 `;
 
@@ -132,6 +132,10 @@ const NavBarNew = (props) => {
     return () => window.removeEventListener('scroll', handleScroll);
   });
 
+  if (loading) {
+    return null;
+  }
+
   return (
     <>
       <NavBarContainer
@@ -143,7 +147,9 @@ const NavBarNew = (props) => {
             <Brand isConnected={!!session} />
           )}
 
-          {(router.pathname !== '/' || (router.pathname === '/' && !isTransparent)) && (
+          {(router.pathname !== '/' ||
+            (router.pathname === '/' && !isTransparent) ||
+            (!isMobile && !isTablet)) && (
             <SearchContainer isMobile={isMobile}>
               <form onSubmit={submitSearch}>
                 <Input
@@ -165,44 +171,45 @@ const NavBarNew = (props) => {
             </SearchContainer>
           )}
 
-          <NavLinks style={{ ...linkAnimation, width: 300 }}>
-            {!isMobile && !isTablet && (
-              <>
-                <Link href={`/${userLanguage}/movies`}>{t('header.movies')}</Link>
-                <Link href={`/${userLanguage}/community`}>{t('header.community')}</Link>
-                <Link href={`/${userLanguage}/users`}>{t('header.users')}</Link>
-                {session && (
-                  <Link href={`/users/${session && session.id}`}>{t('header.my_profile')}</Link>
-                )}
-              </>
-            )}
-          </NavLinks>
+          {!isMobile && !isTablet && (
+            <NavLinks style={{ ...linkAnimation, width: 530 }}>
+              {!isMobile && !isTablet && (
+                <>
+                  <Link href={`/${userLanguage}/movies`}>{t('header.movies')}</Link>
+                  <Link href={`/${userLanguage}/community`}>{t('header.community')}</Link>
+                  <Link href={`/${userLanguage}/users`}>{t('header.users')}</Link>
+                  {session && (
+                    <Link href={`/users/${session && session.id}`}>{t('header.my_profile')}</Link>
+                  )}
+                </>
+              )}
+            </NavLinks>
+          )}
 
-          <NavLinks style={{ ...linkAnimation }}>
-            <a>
-              <span
-                onClick={(e) => {
-                  e.preventDefault;
-                  i18n.changeLanguage('fr');
-                }}
-                style={{ color: userLanguage === 'fr' ? '#ffffff' : 'grey' }}
-              >
-                FR
-              </span>{' '}
-              |{' '}
-              <span
-                onClick={(e) => {
-                  e.preventDefault;
-                  i18n.changeLanguage('en');
-                }}
-                style={{ color: userLanguage === 'en' ? '#ffffff' : 'grey' }}
-              >
-                EN
-              </span>
-            </a>
-
-            {!isMobile && !isTablet && (
-              <>
+          {!isMobile && !isTablet && (
+            <>
+              <NavLinks style={{ ...linkAnimation }}>
+                <a>
+                  <span
+                    onClick={(e) => {
+                      e.preventDefault;
+                      i18n.changeLanguage('fr');
+                    }}
+                    style={{ color: userLanguage === 'fr' ? '#ffffff' : 'grey' }}
+                  >
+                    FR
+                  </span>{' '}
+                  |{' '}
+                  <span
+                    onClick={(e) => {
+                      e.preventDefault;
+                      i18n.changeLanguage('en');
+                    }}
+                    style={{ color: userLanguage === 'en' ? '#ffffff' : 'grey' }}
+                  >
+                    EN
+                  </span>
+                </a>
                 {session ? (
                   <Button
                     style={{ marginRight: 16 }}
@@ -225,9 +232,9 @@ const NavBarNew = (props) => {
                     </Button>
                   </>
                 )}
-              </>
-            )}
-          </NavLinks>
+              </NavLinks>
+            </>
+          )}
 
           <BurgerWrapper>
             <BurgerMenu navbarState={props.navbarState} handleNavbar={props.handleNavbar} />

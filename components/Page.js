@@ -45,6 +45,12 @@ const Page = ({
 
   return (
     <>
+      <NavBarNew navbarState={isNavBarOpen} handleNavbar={handleNavbar} />
+      {children}
+    </>
+  );
+  return (
+    <>
       {title && (
         <Head>
           <meta charSet="utf-8" />

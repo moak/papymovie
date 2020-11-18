@@ -2,9 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { getSession, useSession } from 'next-auth/client';
 import { Icon } from 'semantic-ui-react';
-
 import Link from 'next/link';
 import styled from 'styled-components';
+
+import dbConnect from 'utils/dbConnect';
+import Feed from 'models/Feed';
 
 import styles from 'styles/Home.module.css';
 
@@ -116,26 +118,10 @@ const Separator = styled.div`
 }`;
 
 const Home = (props) => {
-  const { t } = props;
+  const { t, latestMovies } = props;
 
-  const [latestMovies, setLatestMovies] = useState([]);
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
-
-  useEffect(() => {
-    const fetchLatestMovies = async () => {
-      try {
-        const request = await fetch(`${process.env.NEXTAUTH_URL}/api/feed`);
-        const { data } = await request.json();
-
-        setLatestMovies(data);
-      } catch (error) {
-        console.log('error', error);
-      }
-    };
-
-    fetchLatestMovies();
-  }, []);
 
   return (
     <Page title={t('metas.title')} description={t('metas.description')}>
@@ -181,7 +167,7 @@ const Home = (props) => {
               </Text>
               <Icon name="file video" size="huge" />
 
-              <Text width="70%" textAlign="center" marginTop={24} textColor="#a8aeb4">
+              <Text width="80%" textAlign="center" marginTop={24} textColor="#a8aeb4">
                 {t('features.content1')}
               </Text>
             </Card>
@@ -193,7 +179,7 @@ const Home = (props) => {
               </Text>
               <Icon name="idea" size="huge" />
 
-              <Text width="70%" textAlign="center" marginTop={24} textColor="#a8aeb4">
+              <Text width="80%" textAlign="center" marginTop={24} textColor="#a8aeb4">
                 {t('features.content2')}
               </Text>
             </Card>
@@ -205,7 +191,7 @@ const Home = (props) => {
               </Text>
               <Icon name="users" size="huge" />
 
-              <Text width="70%" textAlign="center" marginTop={24} textColor="#a8aeb4">
+              <Text width="80%" textAlign="center" marginTop={24} textColor="#a8aeb4">
                 {t('features.content3')}
               </Text>
             </Card>
@@ -220,37 +206,36 @@ const Home = (props) => {
         <List>
           {latestMovies &&
             latestMovies.length > 0 &&
-            latestMovies.slice(0, isMobile ? 7 : 6).map((item) => {
-              if (!item.movie) {
-                return;
-              }
+            latestMovies
+              .filter((item) => item.movie && item.user)
+              .slice(0, isMobile ? 6 : 5)
+              .map((item) => {
+                const { movie = {}, user = {} } = item || {};
+                const { _id, description, themoviedbId, title, image, rating } = movie;
+                const { name, username } = user;
 
-              const { movie = {}, user = {} } = item || {};
-              const { _id, description, themoviedbId, title, image, rating } = movie;
-              const { name, username } = user;
-
-              return (
-                <CardContainer
-                  key={_id}
-                  height={isMobile ? 260 : 400}
-                  percent={isMobile || isTablet ? 50 : 20}
-                >
-                  <CardMovie
-                    isMobile={isMobile}
-                    title={title}
-                    imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
-                    href={`/movies/${themoviedbId}`}
-                    // imageHeight={70}
-                    userRating={rating}
-                    titleCentered
+                return (
+                  <CardContainer
+                    key={_id}
+                    height={isMobile ? 260 : 400}
+                    percent={isMobile || isTablet ? 50 : 20}
                   >
-                    <Box flexDirection="column" alignItems="center">
-                      <Description>{name || username}</Description>
-                    </Box>
-                  </CardMovie>
-                </CardContainer>
-              );
-            })}
+                    <CardMovie
+                      isMobile={isMobile}
+                      title={title}
+                      imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
+                      href={`/movies/${themoviedbId}`}
+                      // imageHeight={70}
+                      userRating={rating}
+                      titleCentered
+                    >
+                      <Box flexDirection="column" alignItems="center">
+                        <Description>{name || username}</Description>
+                      </Box>
+                    </CardMovie>
+                  </CardContainer>
+                );
+              })}
         </List>
       </Goal2>
       <footer className={styles.footer}>
@@ -263,18 +248,26 @@ const Home = (props) => {
   );
 };
 
-Home.getInitialProps = async (context) => {
-  // const session = await getSession(context);
+export async function getServerSideProps() {
+  await dbConnect();
 
-  // const { res } = context;
+  const feed = await Feed.find({ user: { $exists: true }, movie: { $exists: true } })
+    .sort({ created_at: -1 })
+    .limit(6)
+    .populate('movie')
+    .populate('user')
+    .populate({
+      path: 'comments',
+      populate: [
+        {
+          path: 'User',
+          model: 'User',
+          select: '_id username email image',
+        },
+      ],
+    });
 
-  // if (res && session) {
-  //   res.writeHead(301, { Location: '/movies' });
-  //   res.end();
-  // }
-  return {
-    namespacesRequired: ['home'],
-  };
-};
+  return { props: { latestMovies: JSON.parse(JSON.stringify(feed.reverse())) } };
+}
 
 export default withTranslation('home')(Home);
