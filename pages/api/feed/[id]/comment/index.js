@@ -1,8 +1,7 @@
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 
 import dbConnect from 'utils/dbConnect';
 import User from 'models/User';
-import Movie from 'models/Movie';
 import Feed from 'models/Feed';
 import Comment from 'models/Comment';
 
@@ -14,12 +13,12 @@ export default async (req, res) => {
     method,
   } = req;
 
-  const session = await getSession({ req });
+  const { session } = await getSession({ req });
 
   switch (method) {
     case 'POST':
       try {
-        const userCommentingId = session.id;
+        const userCommentingId = session.userId;
         const feedLikedId = id;
 
         const body = JSON.parse(req.body);
@@ -42,10 +41,8 @@ export default async (req, res) => {
             },
           ],
         });
-        const userCommenting = await User.findById(session.id);
+        const userCommenting = await User.findById(session.userId);
 
-        console.log('feedCommented', feedCommented);
-        console.log('userCommenting', userCommenting);
         if (!feedCommented || !userCommenting) {
           return res.status(404).send('not_found');
         }

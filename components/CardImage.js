@@ -26,7 +26,7 @@ const Image = styled.img`
 }`;
 
 const CardImage = (props) => {
-  const { imageUrl, href, imageHeight = 100, isMobile } = props;
+  const { imageUrl, href, isMobile } = props;
 
   const component = (
     <Container isClickable={!!href} isMobile={isMobile}>

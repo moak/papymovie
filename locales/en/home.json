@@ -1,0 +1,23 @@
+{
+  "metas": {
+    "title": "PapyMovie | Stop forgetting the movies you watch",
+    "description": "Start rating and storing your best movies. Discover new movies by following friends or people with same interest."
+  },
+  "header": {
+    "title": "Stop forgetting the movies you watch.",
+    "subtitle": "Start rating and storing your best movies."
+  },
+  "subheader": {
+    "title": "our goals",
+    "subtitle": "We all love movies. Start saving the best you watched to never forget about them."
+  },
+  "features": {
+    "title1": "Save your movies",
+    "content1": "Add your own mark and description to your favorite movies to never forget about them.",
+    "title2": "Get inspired",
+    "content2": "Filter, discover the trends and top rated movies of all time.",
+    "title3": "Follow your friends",
+    "content3": "Watch your friends movies or people share the same interests."
+  },
+  "latest_movies": "latest added movies"
+}

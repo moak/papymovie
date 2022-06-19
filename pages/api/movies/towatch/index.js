@@ -1,15 +1,13 @@
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 
 import dbConnect from 'utils/dbConnect';
-import Movie from 'models/Movie';
-import Feed from 'models/Feed';
 import User from 'models/User';
 
 dbConnect();
 
 export default async (req, res) => {
   const { method } = req;
-  const session = await getSession({ req });
+  const { session } = await getSession({ req });
 
   switch (method) {
     case 'POST':
@@ -18,7 +16,7 @@ export default async (req, res) => {
           res.status(400).json({ success: false, error: 'invalid' });
         }
 
-        const user = await User.findById(session.id);
+        const user = await User.findById(session.userId);
 
         const isInMoviesToWatch = !!user.moviesToWatch.find(
           (movieToWatch) => movieToWatch.themoviedbId === req.body.themoviedbId,
@@ -26,14 +24,14 @@ export default async (req, res) => {
 
         if (isInMoviesToWatch) {
           await User.findByIdAndUpdate(
-            { _id: session.id },
+            { _id: session.userId },
             { $pull: { moviesToWatch: { themoviedbId: req.body.themoviedbId } } },
             { new: true },
           );
           res.status(201).json({ success: true, isInMoviesToWatch });
         } else {
           await User.findByIdAndUpdate(
-            { _id: session.id },
+            { _id: session.userId },
             {
               $push: {
                 moviesToWatch: {

@@ -1,0 +1,34 @@
+{
+  "title": "Ajouter un firm",
+  "movies": "Films",
+  "filters": "Filtres",
+  "sort_by": "Trier par",
+  "between": "Entre",
+  "and": "et",
+  "information": "Information",
+  "all": "Tout",
+
+  "view": {
+    "metas": {
+      "title": "{{title}} - Film ({{date}}) - Papymovie"
+    },
+    "rating_required": "* Une note est obligatoire",
+    "actors": "Acteurs",
+    "similar_movies": "Films similaires",
+    "description": "Description:",
+    "my_profile_description": "Votre description:",
+    "my_profile_rating": "Votre note:",
+    "my_profile_saved": "Vous avez sauvegarder ce film",
+    "add_description": "Ajouter une description",
+    "rate_movie": "Notez ce film:",
+    "save": "Sauvez ce film'",
+    "description_placeholder": "Écrire une note à propos de ce film",
+    "or": "OU",
+    "add": "Ajouter",
+    "delete": "Supprimer",
+    "edit": "Éditer'",
+    "watching_list": "A regarder",
+    "save_watching_list": "Ajoutez dans la liste à regarder",
+    "not_found": "Film non trouvé."
+  }
+}

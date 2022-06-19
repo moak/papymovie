@@ -48,17 +48,18 @@ const InfosContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  background: #F3F3F3;
+  background: #f5f5f5;
   font-size: 14px;
   font-weight: 600;
   text-align: center;
+  padding: 5px;
 
 }`;
 
 const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }`;
 
@@ -127,10 +128,10 @@ const CardUser = (props) => {
 
           return (
             <InfoContainer key={title}>
-              <Text fontSize={16} isBold marginBottom={4}>
+              <Text fontSize={18} isBold>
                 {amount}
               </Text>
-              <Text>{title}</Text>
+              <Text fontSize={12}>{title}</Text>
             </InfoContainer>
           );
         })}

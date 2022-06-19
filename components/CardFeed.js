@@ -2,10 +2,9 @@ import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/client';
 import { Button, Label, Icon } from 'semantic-ui-react';
 import Link from 'next/link';
-import { signIn } from 'next-auth/client';
+import { signIn, useSession } from 'next-auth/react';
 
 import RoundedLabel from 'components/RoundedLabel';
 
@@ -72,7 +71,7 @@ const NameContainer = styled.div`
 const CardFeed = (props) => {
   const { feedItem, isMobile } = props;
   const router = useRouter();
-  const [session] = useSession();
+  const { data: session } = useSession();
 
   if (!feedItem.movie || !feedItem.user) {
     return null;

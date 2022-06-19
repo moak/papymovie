@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Icon } from 'semantic-ui-react';
 import Link from 'next/link';
 import styled from 'styled-components';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import dbConnect from 'utils/dbConnect';
 import Feed from 'models/Feed';
@@ -13,7 +15,6 @@ import List from 'components/List';
 import Box from 'components/Box';
 import CardMovie from 'components/CardMovie';
 
-import { withTranslation } from 'i18n';
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
 // import useScroll from 'hooks/useScroll';
@@ -43,7 +44,7 @@ const Container = styled.div`
   flex-direction: column;
   justify-content: ${(p) => (p.isMobile ? 'flex-start' : 'center')};
   align-items: center;
-  opacity: 0.7;
+  opacity: 0.9;
 }`;
 
 const Content = styled.div`
@@ -112,7 +113,7 @@ const GoalTitle = styled.div`
 }`;
 
 const Separator = styled.div`
-  width: 50px;
+  width: 120px;
   height: 2px;
   margin-right: auto;
   margin-left: auto;
@@ -121,7 +122,9 @@ const Separator = styled.div`
 }`;
 
 const Home = (props) => {
-  const { t, latestMovies } = props;
+  const { latestMovies } = props;
+
+  const { t } = useTranslation('home');
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
@@ -251,25 +254,22 @@ const Home = (props) => {
   );
 };
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { locale } = context;
+
   await dbConnect();
 
   const feed = await Feed.find({ user: { $exists: true }, movie: { $exists: true } })
     .sort({ created_at: -1 })
     .populate('movie')
-    .populate('user')
-    .populate({
-      path: 'comments',
-      populate: [
-        {
-          path: 'User',
-          model: 'User',
-          select: '_id username email image',
-        },
-      ],
-    });
+    .populate('user');
 
-  return { props: { latestMovies: JSON.parse(JSON.stringify(feed)) } };
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common', 'home'])),
+      latestMovies: JSON.parse(JSON.stringify(feed)),
+    },
+  };
 }
 
-export default withTranslation('home')(Home);
+export default Home;

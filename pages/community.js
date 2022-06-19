@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import dbConnect from 'utils/dbConnect';
 import Feed from 'models/Feed';
@@ -27,6 +29,7 @@ export const Row = styled.div`
 
 const Community = (props) => {
   const { feed } = props;
+  const { t } = useTranslation('community');
 
   const isMobile = useIsMobile();
 
@@ -39,7 +42,7 @@ const Community = (props) => {
       <PageContainer maxWidth={1024}>
         <Row justifyContent="space-between">
           <Text isBold marginBottom={24} fontSize={32}>
-            Community
+            {t('community:title')}
           </Text>
         </Row>
         {feed
@@ -56,14 +59,21 @@ const Community = (props) => {
   );
 };
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { locale } = context;
+
   await dbConnect();
 
   const feed = await Feed.find({ user: { $exists: true }, movie: { $exists: true } })
     .populate('movie')
     .populate('user');
 
-  return { props: { feed: JSON.parse(JSON.stringify(feed.reverse())) } };
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common', 'community'])),
+      feed: JSON.parse(JSON.stringify(feed.reverse())),
+    },
+  };
 }
 
 export default Community;

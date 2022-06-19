@@ -1,8 +1,7 @@
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 
 import dbConnect from 'utils/dbConnect';
 import User from 'models/User';
-import Movie from 'models/Movie';
 
 dbConnect();
 
@@ -12,12 +11,12 @@ export default async (req, res) => {
     method,
   } = req;
 
-  const session = await getSession({ req });
+  const { session } = await getSession({ req });
 
   switch (method) {
     case 'GET':
       try {
-        const userFollowingId = session.id;
+        const userFollowingId = session.userId;
         const userFollowedId = id;
 
         if (userFollowingId === userFollowedId) {
@@ -48,6 +47,7 @@ export default async (req, res) => {
             ).exec(),
           ];
 
+          // eslint-disable-next-line no-undef
           Promise.all(promises).then((values) =>
             res.send({ success: true, data: values[0].followers }),
           );
@@ -72,6 +72,7 @@ export default async (req, res) => {
               { new: true, upsert: true },
             ).exec(),
           ];
+          // eslint-disable-next-line no-undef
           Promise.all(promises).then((values) => {
             return res.send({ success: true, data: values[0].followers });
           });

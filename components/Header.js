@@ -1,13 +1,14 @@
-import React, { useState, useEffect, useRef } from 'react';
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
-import { useSpring, animated, config } from 'react-spring';
+import { useTranslation } from 'next-i18next';
+import Link from 'next/link';
+
+import { useSpring, animated } from 'react-spring';
 import { Button, Input } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
-import { signOut, signIn } from 'next-auth/client';
-import Link from 'next/link';
-import { useSession } from 'next-auth/client';
-
-import { i18n, withTranslation } from 'i18n';
+import { signOut, signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 
 import Brand from './Brand';
 import BurgerMenu from './BurgerMenu';
@@ -16,7 +17,7 @@ import CollapseMenu from './CollapseMenu';
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
 
-const NavBarContainer = styled(({ isTransparent, ...props }) => (
+const HeaderContainer = styled(({ isTransparent, ...props }) => (
   <animated.nav
     {...props} // eslint-disable-line react/jsx-props-no-spreading
   />
@@ -79,11 +80,11 @@ const SearchContainer = styled.div`
   margin: auto 0;
 `;
 
-const NavBarNew = (props) => {
-  const { t } = props;
-  const { language: userLanguage } = i18n;
+const Header = (props) => {
+  const { t, lang: userLanguage } = useTranslation('common');
 
-  const [session, loading] = useSession();
+  const { data: session } = useSession();
+
   const [isTransparent, setIsTransparent] = useState(true);
 
   const isMobile = useIsMobile();
@@ -93,14 +94,32 @@ const NavBarNew = (props) => {
 
   const [search, setSearch] = useState(router.query.search || '');
 
-  const handleChangeSearch = (e) => {
-    setSearch(e.target.value);
-  };
+  const languages = [
+    { lang: 'fr', display: 'FR' },
+    { lang: 'en', display: 'EN' },
+  ];
 
-  const submitSearch = (e) => {
-    e.preventDefault();
-    router.push(`/search?search=${search}`);
-  };
+  const handleChangeSearch = useCallback((e) => {
+    setSearch(e.target.value);
+  }, []);
+
+  const submitSearch = useCallback(
+    (e) => {
+      e.preventDefault();
+      router.push(`/search?search=${search}`);
+    },
+    [search],
+  );
+
+  const logout = useCallback(() => {
+    signOut({
+      callbackUrl: `${window.location.origin}`,
+    });
+  }, []);
+
+  const connect = useCallback(() => {
+    signIn(null, { callbackUrl: `${window.location.origin}/community` });
+  }, []);
 
   const linkAnimation = useSpring({
     // from: { transform: 'translate3d(0, 30px, 0)', opacity: 0 },
@@ -132,13 +151,13 @@ const NavBarNew = (props) => {
     return () => window.removeEventListener('scroll', handleScroll);
   });
 
-  if (loading) {
-    return null;
-  }
+  const handleLocaleChange = (data) => {
+    router.replace(router.pathname, router.pathname, { locale: data });
+  };
 
   return (
     <>
-      <NavBarContainer
+      <HeaderContainer
         style={barAnimation}
         isTransparent={router.pathname === '/' && isTransparent}
       >
@@ -175,11 +194,13 @@ const NavBarNew = (props) => {
             <NavLinks style={{ ...linkAnimation, width: 530 }}>
               {!isMobile && !isTablet && (
                 <>
-                  <Link href={`/${userLanguage}/movies`}>{t('header.movies')}</Link>
-                  <Link href={`/${userLanguage}/community`}>{t('header.community')}</Link>
-                  <Link href={`/${userLanguage}/users`}>{t('header.users')}</Link>
+                  <Link href="/movies">{t('header.movies')}</Link>
+                  <Link href="/community">{t('header.community')}</Link>
+                  <Link href="/users">{t('header.users')}</Link>
                   {session && (
-                    <Link href={`/users/${session && session.id}`}>{t('header.my_profile')}</Link>
+                    <Link href={`/users/${session && session.session.userId}`}>
+                      {t('header.my_profile')}
+                    </Link>
                   )}
                 </>
               )}
@@ -189,34 +210,32 @@ const NavBarNew = (props) => {
           {!isMobile && !isTablet && (
             <>
               <NavLinks style={{ ...linkAnimation }}>
-                <a>
-                  <span
-                    onClick={(e) => {
-                      e.preventDefault;
-                      i18n.changeLanguage('fr');
-                    }}
-                    style={{ color: userLanguage === 'fr' ? '#ffffff' : 'grey' }}
-                  >
-                    FR
-                  </span>{' '}
-                  |{' '}
-                  <span
-                    onClick={(e) => {
-                      e.preventDefault;
-                      i18n.changeLanguage('en');
-                    }}
-                    style={{ color: userLanguage === 'en' ? '#ffffff' : 'grey' }}
-                  >
-                    EN
-                  </span>
-                </a>
+                {languages.map((language, index) => (
+                  <React.Fragment key={language.display}>
+                    {index > 0 && '|'}
+
+                    <span // eslint-disable-line jsx-a11y/click-events-have-key-events
+                      onClick={() => handleLocaleChange(language.lang)}
+                      style={{
+                        cursor: 'pointer',
+                        color: userLanguage === language ? '#ffffff' : 'grey',
+                      }}
+                    >
+                      {language.display}
+                    </span>
+                  </React.Fragment>
+                ))}
+
+                {/* <span style={{ color: userLanguage === 'fr' ? '#ffffff' : 'grey' }}>FR</span> |{' '}
+                  <span style={{ color: userLanguage === 'en' ? '#ffffff' : 'grey' }}>EN</span>
+                </a> */}
                 {session ? (
                   <Button
                     style={{ marginRight: 16 }}
                     color="red"
                     circular
                     size="small"
-                    onClick={signOut}
+                    onClick={logout}
                   >
                     {t('header.disconnect')}
                   </Button>
@@ -226,7 +245,7 @@ const NavBarNew = (props) => {
                       style={{ marginRight: 16, width: 130 }}
                       circular
                       primary
-                      onClick={signIn}
+                      onClick={connect}
                     >
                       {t('header.connect')}
                     </Button>
@@ -240,10 +259,10 @@ const NavBarNew = (props) => {
             <BurgerMenu navbarState={props.navbarState} handleNavbar={props.handleNavbar} />
           </BurgerWrapper>
         </FlexContainer>
-      </NavBarContainer>
+      </HeaderContainer>
       <CollapseMenu navbarState={props.navbarState} handleNavbar={props.handleNavbar} />
     </>
   );
 };
 
-export default withTranslation('common')(NavBarNew);
+export default Header;

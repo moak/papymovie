@@ -1,0 +1,12 @@
+{
+  "header": {
+    "home": "Accueil",
+    "connect": "Connexion",
+    "disconnect": "Déconnexion",
+    "search": "Chercher un film",
+    "movies": "Films",
+    "community": "Communauté",
+    "users": "Utilisateurs",
+    "my_profile": "Mon profil"
+  }
+}

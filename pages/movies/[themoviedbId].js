@@ -4,10 +4,10 @@ import ReactStars from 'react-stars';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import moment from 'moment';
-import { useSession } from 'next-auth/client';
-import { signIn } from 'next-auth/client';
-
-import { i18n, withTranslation } from 'i18n';
+import { useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
@@ -84,8 +84,7 @@ export const Infos = styled.div`
 
 const View = (props) => {
   const {
-    t,
-    isFound,
+    movie,
     movie: {
       backdrop_path,
       poster_path,
@@ -98,14 +97,16 @@ const View = (props) => {
     } = {},
   } = props;
 
-  const { language: userLanguage } = i18n;
+  const { locale } = useRouter();
+
+  const { t } = useTranslation('movie');
 
   const router = useRouter();
 
   const { themoviedbId } = router.query;
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
-  const [session] = useSession();
+  const { data: session } = useSession();
 
   const [user, setUser] = useState(null);
   const [actors, setActors] = useState([]);
@@ -117,6 +118,7 @@ const View = (props) => {
 
   const [isInMoviesToWatch, setIsInMoviesToWatch] = useState(false);
 
+  console.log('isSubmittingMovie', isSubmittingMovie);
   const [form, setForm] = useState({
     themoviedbId,
     title,
@@ -139,13 +141,14 @@ const View = (props) => {
 
   const handleSubmitMovie = (e) => {
     e.preventDefault();
-
+    console.log('handleSubmitMovie ');
     let errs = validate();
     setErrors(errs);
     setIsSubmittingMovie(true);
   };
 
   const handleSubmitMovieToWatch = (e) => {
+    console.log('handleSubmitMovieToWatch');
     e.preventDefault();
     setIsSubmittingMovieToWatch(true);
   };
@@ -175,7 +178,7 @@ const View = (props) => {
         body: JSON.stringify(form),
       });
 
-      router.push(`/users/${session.id}`);
+      router.push(`/users/${session.session.userId}`);
     } catch (error) {
       console.log(error);
     }
@@ -185,7 +188,7 @@ const View = (props) => {
     const fetchSimilarMovies = async () => {
       try {
         const request = await fetch(
-          `https://api.themoviedb.org/3/movie/${themoviedbId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${userLanguage}`,
+          `https://api.themoviedb.org/3/movie/${themoviedbId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`,
         );
         const { results } = await request.json();
 
@@ -202,7 +205,7 @@ const View = (props) => {
     const fetchCreditMovie = async () => {
       try {
         const request = await fetch(
-          `https://api.themoviedb.org/3/movie/${themoviedbId}/credits?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${userLanguage}`,
+          `https://api.themoviedb.org/3/movie/${themoviedbId}/credits?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`,
         );
         const { cast } = await request.json();
 
@@ -220,7 +223,9 @@ const View = (props) => {
   useEffect(() => {
     const fetchLoggedUser = async () => {
       try {
-        const request = await fetch(`${process.env.NEXTAUTH_URL}/api/users/${session.id}`);
+        const request = await fetch(
+          `${process.env.NEXTAUTH_URL}/api/users/${session.session.userId}`,
+        );
         const { data } = await request.json();
 
         setUser(data);
@@ -250,8 +255,7 @@ const View = (props) => {
   useEffect(() => {
     if (user) {
       setIsInMoviesToWatch(
-        user &&
-          user.moviesToWatch.find((movieToWatch) => movieToWatch.themoviedbId === themoviedbId),
+        user?.moviesToWatch.find((movieToWatch) => movieToWatch.themoviedbId === themoviedbId),
       );
     }
   }, [themoviedbId, user]);
@@ -290,16 +294,38 @@ const View = (props) => {
 
   const editMovie = async () => {
     try {
-      await fetch(`${process.env.NEXTAUTH_URL}/api/users/${session.id}/movies/${userMovie._id}`, {
-        method: 'PUT',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
+      await fetch(
+        `${process.env.NEXTAUTH_URL}/api/users/${session.session.userId}/movies/${userMovie._id}`,
+        {
+          method: 'PUT',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(form),
         },
-        body: JSON.stringify(form),
-      });
+      );
 
-      router.push(`/users/${session.id}`);
+      router.push(`/users/${session.session.userId}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const deleteMovie = async () => {
+    try {
+      await fetch(
+        `${process.env.NEXTAUTH_URL}/api/users/${session.session.userId}/movies/${userMovie._id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      router.push(`/users/${session.session.userId}`);
     } catch (error) {
       console.log(error);
     }
@@ -327,8 +353,8 @@ const View = (props) => {
     }
   }, [isSubmittingMovieToWatch]);
 
-  if (!isFound) {
-    return <div>{t('view.not_found')}</div>;
+  if (!movie) {
+    return null;
   }
 
   return (
@@ -482,32 +508,42 @@ const View = (props) => {
                 half={false}
               />
 
-              <Form onSubmit={session ? handleSubmitMovie : signIn}>
-                <Text isBold marginTop={16} marginBottom={8} fontSize={14} textColor="#ffffff">
-                  {userMovie ? t('view.my_profile_description') : t('view.add_description')}
-                </Text>
+              <Text isBold marginTop={16} marginBottom={8} fontSize={14} textColor="#ffffff">
+                {userMovie ? t('view.my_profile_description') : t('view.add_description')}
+              </Text>
 
-                <Form.TextArea
-                  placeholder={t('view.description_placeholder')}
-                  name="description"
-                  value={form.description || ''}
-                  onChange={handleChangeDescription}
-                  style={{ width: isMobile ? null : 600, fontSize: 16 }}
-                />
+              <Form.TextArea
+                placeholder={t('view.description_placeholder')}
+                name="description"
+                value={form.description || ''}
+                onChange={handleChangeDescription}
+                style={{ width: isMobile ? null : 600, fontSize: 16 }}
+              />
+              <Button
+                onClick={handleSubmitMovie}
+                size="small"
+                loading={!!isSubmittingMovie}
+                color="green"
+                style={{ marginTop: 10 }}
+              >
+                {userMovie ? t('view.edit') : t('view.add')}
+              </Button>
+              {errors.rating && (
+                <Text isBold textColor="#ffffff" marginBottom={8} marginTop={8} fontSize={14}>
+                  {t('view.rating_required')}
+                </Text>
+              )}
+
+              {userMovie ? (
                 <Button
+                  color={'red'}
+                  onClick={deleteMovie}
+                  style={{ marginTop: 8, marginBottom: 8 }}
                   size="small"
-                  loading={!!isSubmittingMovie}
-                  color="green"
-                  style={{ marginTop: 10 }}
                 >
-                  {userMovie ? t('view.edit') : t('view.add')}
+                  {t('view.delete')}
                 </Button>
-                {errors.rating && (
-                  <Text isBold textColor="#ffffff" marginBottom={8} marginTop={8} fontSize={14}>
-                    {t('view.rating_required')}
-                  </Text>
-                )}
-              </Form>
+              ) : null}
             </Right>
           </SubContainer>
         </ContentContainer>
@@ -572,37 +608,23 @@ const View = (props) => {
   );
 };
 
-View.getInitialProps = async (context) => {
-  const { query: { themoviedbId } = {} } = context;
-  const { language: userLanguage } = i18n;
+export async function getServerSideProps(context) {
+  const {
+    query: { themoviedbId },
+    locale,
+  } = context;
 
-  const promises = [
-    // movie
-    fetch(
-      `https://api.themoviedb.org/3/movie/${themoviedbId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${userLanguage}`,
-    ),
-  ];
+  const url = `https://api.themoviedb.org/3/movie/${themoviedbId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`;
 
-  return Promise.all(promises)
-    .then((responses) => {
-      return Promise.all(
-        responses.map((response) => {
-          return response.json();
-        }),
-      );
-    })
-    .then((data) => {
-      const [movie = {}] = data;
+  const res = await fetch(url);
+  const data = await res.json();
 
-      return {
-        movie,
-        isFound: movie.success !== false,
-        namespacesRequired: ['movie'],
-      };
-    })
-    .catch(function (error) {
-      console.log(error);
-    });
-};
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common', 'movie'])),
+      movie: data,
+    },
+  };
+}
 
-export default withTranslation('movie')(View);
+export default View;

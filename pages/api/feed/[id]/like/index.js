@@ -1,8 +1,6 @@
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 
 import dbConnect from '/utils/dbConnect';
-import User from '/models/User';
-import Movie from '/models/Movie';
 import Feed from '/models/Feed';
 
 dbConnect();
@@ -13,12 +11,12 @@ export default async (req, res) => {
     method,
   } = req;
 
-  const session = await getSession({ req });
+  const { session } = await getSession({ req });
 
   switch (method) {
     case 'POST':
       try {
-        const userLikingId = session.id;
+        const userLikingId = session.userId;
         const feedLikedId = id;
 
         if (!userLikingId) {
@@ -44,6 +42,7 @@ export default async (req, res) => {
             ).exec(),
           ];
 
+          // eslint-disable-next-line no-undef
           Promise.all(promises).then((values) =>
             res.send({
               success: true,
@@ -68,6 +67,7 @@ export default async (req, res) => {
             Feed.findOneAndUpdate({ _id: feedLikedId }, query, { new: true, upsert: true }).exec(),
           ];
 
+          // eslint-disable-next-line no-undef
           Promise.all(promises).then((values) => {
             return res.send({
               success: true,

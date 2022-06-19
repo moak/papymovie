@@ -21,7 +21,7 @@ const PaginationContainer = styled.div`
   justify-content: center;
 }`;
 
-const New = (props) => {
+const New = () => {
   const router = useRouter();
 
   const [movies, setMovies] = useState(null);
@@ -36,8 +36,8 @@ const New = (props) => {
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 
-  useEffect(async () => {
-    if (router.query.search) {
+  useEffect(() => {
+    const searchMovie = async () => {
       setIsLoading(true);
       const moviesQuery = await fetch(
         `https://api.themoviedb.org/3/search/movie?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&query=${router.query.search}&page=${activePageMovies}&language=fr`,
@@ -56,6 +56,9 @@ const New = (props) => {
       setSeries(seriesResults);
       setTotalPagesMovies(moviesTotalPage);
       setTotalPagesSeries(seriesTotalPage);
+    };
+    if (router.query.search) {
+      searchMovie();
     }
   }, [router, activePageMovies]);
 

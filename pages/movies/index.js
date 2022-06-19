@@ -2,7 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { Label, Button, Select, Pagination } from 'semantic-ui-react';
-import { i18n, withTranslation } from 'i18n';
+import { useTranslation } from 'next-i18next';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
@@ -20,7 +21,7 @@ const PaginationContainer = styled.div`
   margin: 32px 0;
   display: flex;
   justify-content: center;
-}`;
+`;
 
 export const LeftColumn = styled.div`
   display: flex;
@@ -57,10 +58,8 @@ export const Row = styled.div`
   position: relative;
 `;
 
-const Movies = (props) => {
-  const { t } = props;
-
-  const { language: userLanguage } = i18n;
+const Movies = () => {
+  const { t, lang: userLanguage } = useTranslation('movie');
 
   const [movies, setMovies] = useState(null);
   const [totalPages, setTotalPages] = useState(null);
@@ -77,6 +76,8 @@ const Movies = (props) => {
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
+  // const isMobile = false;
+  // const isTablet = false;
 
   const filters = [
     { key: 'discover', value: 'discover', text: 'Popular' },
@@ -112,44 +113,47 @@ const Movies = (props) => {
     fetchGenres();
   }, [userLanguage]);
 
-  useEffect(async () => {
-    let query = null;
-    let endPoint = null;
+  useEffect(() => {
+    const process2 = async () => {
+      let query = null;
+      let endPoint = null;
 
-    const obj = {
-      api_key: process.env.THEMOVIEDB_API_KEY,
-      page: activePage,
-      language: userLanguage,
+      const obj = {
+        api_key: process.env.THEMOVIEDB_API_KEY,
+        page: activePage,
+        language: userLanguage,
+      };
+
+      if (selectedGenres.length) {
+        obj.with_genres = selectedGenres;
+      }
+
+      if (yearStart && yearEnd) {
+        obj['release_date.gte'] = `${yearStart}-01-01`;
+        obj['release_date.lte'] = `${yearEnd}-01-01`;
+      }
+
+      if (filter === 'discover') {
+        endPoint = 'discover/movie';
+      }
+
+      if (filter === 'top_rated') {
+        endPoint = 'movie/top_rated';
+      }
+      if (filter === 'upcoming') {
+        endPoint = 'movie/upcoming';
+      }
+
+      query = `https://api.themoviedb.org/3/${endPoint}?${objectToQueryString(obj)}`;
+
+      const res = await fetch(query);
+
+      const { results, total_pages } = await res.json();
+      setMovies(results);
+      setTotalPages(total_pages);
     };
 
-    if (selectedGenres.length) {
-      obj.with_genres = selectedGenres;
-    }
-
-    if (yearStart && yearEnd) {
-      obj['release_date.gte'] = `${yearStart}-01-01`;
-      obj['release_date.lte'] = `${yearEnd}-01-01`;
-    }
-
-    if (filter === 'discover') {
-      endPoint = 'discover/movie';
-    }
-
-    if (filter === 'top_rated') {
-      endPoint = 'movie/top_rated';
-    }
-    if (filter === 'upcoming') {
-      endPoint = 'movie/upcoming';
-    }
-
-    query = `https://api.themoviedb.org/3/${endPoint}?${objectToQueryString(obj)}`;
-
-    const res = await fetch(query);
-
-    const { results, total_pages } = await res.json();
-    setMovies(results);
-    setTotalPages(total_pages);
-    // }
+    process2();
   }, [activePage, filter, yearStart, yearEnd, selectedGenres, userLanguage]);
 
   const handleClickGenre = useCallback(
@@ -164,7 +168,6 @@ const Movies = (props) => {
         newGenres.splice(selectedIndex, 1);
       }
 
-      console.log('newGenres', newGenres);
       setSelectedGenres(newGenres);
     },
     [selectedGenres],
@@ -278,7 +281,7 @@ const Movies = (props) => {
             {movies && (
               <List>
                 {movies.map((movie) => {
-                  const { id, title, poster_path, vote_average, vote_count, release_date } = movie;
+                  const { id, title, poster_path, vote_average, release_date } = movie;
 
                   return (
                     <CardContainer
@@ -293,7 +296,7 @@ const Movies = (props) => {
                         imageUrl={`https://image.tmdb.org/t/p/w${
                           isMobile ? 200 : 300
                         }/${poster_path}`}
-                        href={`/${userLanguage}/movies/${id}`}
+                        href={`/movies/${id}`}
                         grade={vote_average}
                       />
                     </CardContainer>
@@ -322,4 +325,14 @@ const Movies = (props) => {
   );
 };
 
-export default withTranslation('movie')(Movies);
+export async function getServerSideProps(context) {
+  const { locale } = context;
+
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common', 'movie'])),
+    },
+  };
+}
+
+export default Movies;

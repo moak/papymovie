@@ -3,10 +3,11 @@ import { useRouter } from 'next/router';
 import { Col, Row } from 'react-styled-flexboxgrid';
 import styled from 'styled-components';
 import { Confirm, Button, Icon } from 'semantic-ui-react';
-import { useSession } from 'next-auth/client';
-import { signIn } from 'next-auth/client';
+import { useSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import { i18n, withTranslation } from 'i18n';
+import { useTranslation } from 'next-i18next';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
@@ -33,13 +34,14 @@ const Description = styled.div`
   overflow: hidden;
 }`;
 
-const User = (props) => {
-  const { t, user } = props;
+const User = () => {
+  const { t } = useTranslation('user');
+
   const router = useRouter();
 
-  const [session] = useSession();
-  const [userState, setUserState] = useState(user);
-  const [followersState, setFollowersState] = useState(user.followers);
+  const { data: session } = useSession();
+  const [user, setUser] = useState();
+  const [followersState, setFollowersState] = useState([]);
   const [isFollowRequestLoading, setIsFollowRequestLoading] = useState(false);
 
   const { userId } = router.query;
@@ -68,12 +70,16 @@ const User = (props) => {
     }
   }, [isDeleting]);
 
-  useEffect(async () => {
-    const { user } = await fetchData({ query: { userId: userId } });
-    setUserState(user);
+  useEffect(() => {
+    const fetchUser = async () => {
+      const url = `${process.env.NEXTAUTH_URL}/api/users/${userId}`;
+      const res = await fetch(url);
+      const { data } = await res.json();
 
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0;
+      setUser(data);
+    };
+
+    fetchUser();
   }, [userId]);
 
   useEffect(() => {
@@ -88,8 +94,8 @@ const User = (props) => {
       await fetch(`${process.env.NEXTAUTH_URL}/api/movies/${movieId}`, {
         method: 'Delete',
       });
-      const { user } = await fetchData({ query: { userId: session.id } });
-      setUserState(user);
+      // const { user } = await fetchData({ query: { userId: session.id } });
+      // setUser(user);
     } catch (error) {
       console.log(error);
     }
@@ -117,7 +123,16 @@ const User = (props) => {
     close();
   };
 
-  const { _id, name, image, movies, followings, followers, moviesToWatch } = userState;
+  console.log('user', user);
+  const {
+    _id,
+    name,
+    image,
+    movies = [],
+    followings = [],
+    followers = [],
+    moviesToWatch = [],
+  } = user || {};
 
   return (
     <Page
@@ -170,8 +185,7 @@ const User = (props) => {
                 )}
 
                 <List>
-                  {moviesToWatch &&
-                    moviesToWatch.length > 0 &&
+                  {moviesToWatch?.length &&
                     moviesToWatch.map((movieToWatch) => {
                       const { _id, title, themoviedbId, image } = movieToWatch;
 
@@ -195,7 +209,7 @@ const User = (props) => {
             <Text marginBottom={24} marginTop={isMobile ? 8 : 0} fontSize={isMobile ? 24 : 32}>
               {isMyProfile
                 ? t('view.my_profile_my_movies')
-                : `${t('view.users_movies', { name: user.name })} ${
+                : `${t('view.users_movies', { name: user?.name })} ${
                     movies.length > 0 ? `(${movies.length})` : ''
                   }`}
             </Text>
@@ -309,31 +323,31 @@ const User = (props) => {
               {t('followers')}
             </Text>
             <List>
-              {followers &&
-                followers.map((follower) => {
-                  const { _id, name, followings, followers, movies, image } = follower;
-                  return (
-                    <CardContainer
-                      key={_id}
-                      height={isMobile ? 280 : 350}
-                      percent={isMobile ? 100 : 33}
-                    >
-                      <CardUser
-                        isMobile={isMobile}
-                        href={`/users/${_id}`}
-                        name={name}
-                        imageUrl={image}
-                        infos={[
-                          { amount: movies.length, title: t('movies') },
-                          { amount: followers.length, title: t('followers') },
-                          { amount: followings.length, title: t('followings') },
-                        ]}
-                      />
-                    </CardContainer>
-                  );
-                })}
+              {followers?.map((follower) => {
+                console.log('follower', follower);
+                const { _id, name, followings, followers, movies, image } = follower;
+                return (
+                  <CardContainer
+                    key={_id}
+                    height={isMobile ? 280 : 350}
+                    percent={isMobile ? 100 : 33}
+                  >
+                    <CardUser
+                      isMobile={isMobile}
+                      href={`/users/${_id}`}
+                      name={name}
+                      imageUrl={image}
+                      infos={[
+                        { amount: movies.length, title: t('movies') },
+                        { amount: followers.length, title: t('followers') },
+                        { amount: followings.length, title: t('followings') },
+                      ]}
+                    />
+                  </CardContainer>
+                );
+              })}
             </List>
-            {followers && followers.length === 0 && (
+            {followers?.length === 0 && (
               <EmptyState>
                 <Text fontSize={16}>
                   {isMyProfile ? t('view.my_profile_no_followers') : t('view.no_followers')}
@@ -354,14 +368,14 @@ const User = (props) => {
   );
 };
 
-async function fetchData(ctx) {
-  const { query: { userId } = {} } = ctx;
-  const res = await fetch(`${process.env.NEXTAUTH_URL}/api/users/${userId}`);
-  const { data } = await res.json();
+export async function getServerSideProps(context) {
+  const { locale } = context;
 
-  return { user: data, namespacesRequired: ['user'] };
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common', 'user'])),
+    },
+  };
 }
 
-User.getInitialProps = fetchData;
-
-export default withTranslation('user')(User);
+export default User;

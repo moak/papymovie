@@ -1,4 +1,4 @@
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 
 import dbConnect from 'utils/dbConnect';
 import Movie from 'models/Movie';
@@ -13,7 +13,7 @@ export default async (req, res) => {
     method,
   } = req;
 
-  const session = await getSession({ req });
+  const { session } = await getSession({ req });
 
   switch (method) {
     case 'GET':
@@ -49,15 +49,21 @@ export default async (req, res) => {
       break;
     case 'DELETE':
       try {
+        console.log('heyyyyyyyyyyyyyy');
         const deletedMovie = await Movie.deleteOne({ _id: id });
 
         if (!deletedMovie) {
           return res.status(400).json({ success: false });
         }
 
-        User.findOneAndUpdate({ _id: session.id }, { $pull: { movies: id } }, { new: true }).exec(),
+        User.findOneAndUpdate(
+          { _id: session.userId },
+          { $pull: { movies: id } },
+          { new: true },
+        ).exec(),
           res.status(200).json({ success: true, data: {} });
       } catch (error) {
+        console.log(error);
         res.status(400).json({ success: false });
       }
       break;

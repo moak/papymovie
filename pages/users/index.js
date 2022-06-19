@@ -1,11 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
-import { i18n, withTranslation } from 'i18n';
+import { useTranslation } from 'next-i18next';
 
 import dbConnect from 'utils/dbConnect';
 import User from 'models/User';
-
-import useIsMobile from 'hooks/useIsMobile';
 
 import PageContainer from 'components/PageContainer';
 import Page from 'components/Page';
@@ -16,14 +15,11 @@ import CardContainer from 'components/CardContainer';
 import List from 'components/List';
 
 const Users = (props) => {
-  const { users, t } = props;
-  const isMobile = useIsMobile();
+  const { users } = props;
 
-  console.log('vusers', users);
-  useEffect(() => {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0;
-  }, []);
+  const { t } = useTranslation('user');
+
+  const isMobile = false;
 
   return (
     <Page title={t('list.metas.title')} description={t('list.metas.description')} url="/users">
@@ -66,12 +62,21 @@ const Users = (props) => {
   );
 };
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
+  const { locale } = context;
+
+  // const session = await getSession({ req });
+
   await dbConnect();
 
   const users = await User.find({});
 
-  return { props: { users: JSON.parse(JSON.stringify(users)) } };
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common', 'user'])),
+      users: JSON.parse(JSON.stringify(users)),
+    },
+  };
 }
 
-export default withTranslation('user')(Users);
+export default Users;

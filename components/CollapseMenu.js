@@ -5,16 +5,16 @@
 import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
-import { signOut, signIn } from 'next-auth/client';
-import { useSession } from 'next-auth/client';
+import { signOut, signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useSpring, animated } from 'react-spring';
 
-import { i18n, withTranslation } from 'i18n';
+import { useTranslation } from 'next-i18next';
 
 const CollapseMenu = (props) => {
-  const { t } = props;
+  const { t } = useTranslation('common');
 
-  const [session] = useSession();
+  const { data: session } = useSession();
 
   const { open } = useSpring({ open: props.navbarState ? 0 : 1 });
 
@@ -50,7 +50,7 @@ const CollapseMenu = (props) => {
           {session ? (
             <>
               <li>
-                <Link href={`/users/${session && session.id}`}>{t('header.my_profile')}</Link>
+                <Link href={`/users/${session?.id}`}>{t('header.my_profile')}</Link>
               </li>
               <hr />
 
@@ -73,7 +73,7 @@ const CollapseMenu = (props) => {
   return null;
 };
 
-export default withTranslation('common')(CollapseMenu);
+export default CollapseMenu;
 
 const CollapseWrapper = styled(animated.div)`
   background: #2d3436;

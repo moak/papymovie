@@ -1,10 +1,9 @@
 import React, { useState, useCallback } from 'react';
 import { Loader } from 'semantic-ui-react';
 import styled from 'styled-components';
-import { useSession } from 'next-auth/client';
 import Head from 'next/head';
 
-import NavBarNew from 'components/NavBarNew';
+import Header from './Header';
 
 const LoaderContainer = styled.div`
   position: fixed;
@@ -21,21 +20,13 @@ const Page = ({
   description = 'Stop forgetting what you watch and get inspired!',
   previewImage,
   url = '',
-  withHeader = true,
 }) => {
   const [isNavBarOpen, setIsNavBarOpen] = useState(false);
-  const [session, loading] = useSession();
 
+  const loading = false;
   const handleNavbar = useCallback(() => {
     setIsNavBarOpen(!isNavBarOpen);
   }, [isNavBarOpen]);
-
-  // return (
-  //   <>
-  //     {withHeader && <NavBarNew navbarState={isNavBarOpen} handleNavbar={handleNavbar} />}
-  //     {children}
-  //   </>
-  // );
 
   return (
     <>
@@ -73,7 +64,7 @@ const Page = ({
         </LoaderContainer>
       ) : (
         <>
-          <NavBarNew navbarState={isNavBarOpen} handleNavbar={handleNavbar} />
+          <Header navbarState={isNavBarOpen} handleNavbar={handleNavbar} />
           {children}
         </>
       )}

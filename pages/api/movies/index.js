@@ -1,4 +1,4 @@
-import { getSession } from 'next-auth/client';
+import { getSession } from 'next-auth/react';
 
 import dbConnect from 'utils/dbConnect';
 import Movie from 'models/Movie';
@@ -9,12 +9,13 @@ dbConnect();
 
 export default async (req, res) => {
   const { method } = req;
-  const session = await getSession({ req });
+  const { session } = await getSession({ req });
 
+  console.log('session in post', session);
   switch (method) {
     case 'GET':
       try {
-        const movies = await Movie.find({ user: session.id });
+        const movies = await Movie.find({ user: session.userId });
 
         res.status(200).json({ success: true, data: movies.reverse() });
       } catch (error) {
@@ -25,12 +26,12 @@ export default async (req, res) => {
       break;
     case 'POST':
       try {
-        const movie = await Movie.create({ ...req.body, user: session.id });
+        const movie = await Movie.create({ ...req.body, user: session.userId });
 
-        await Feed.create({ action: 'add', movie, user: session.id });
+        await Feed.create({ action: 'add', movie, user: session.userId });
 
         await User.findByIdAndUpdate(
-          { _id: session.id },
+          { _id: session.userId },
           { $push: { movies: movie._id } },
           { new: true },
         );

@@ -44,7 +44,6 @@ const ContentContainer = styled.div`
   flex-direction: column;
   padding: ${(p) => (p.isMobile ? 8 : 12)}px;
   background-color: #ffffff;
-  // width: ${(p) => (p.isMobile ? 100 : 100)}%;
 }`;
 
 const GradeContainerDesktop = styled.div`
@@ -120,20 +119,6 @@ const CardMovie = (props) => {
             </Text>
           </TitleContainer>
           {subtitle && <Text dotdotdot>{subtitle}</Text>}
-
-          {/* {isMobile ? (
-            <GradeContainerMobile>
-              <RoundedLabel
-                width="30px"
-                height="30px"
-                borderWith={2}
-                rounded
-                color={getColorFromMark(userRating)}
-              >
-                {userRating}
-              </RoundedLabel>
-            </GradeContainerMobile>
-          ) : null} */}
 
           {children}
         </ContentContainer>

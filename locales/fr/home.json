@@ -1,0 +1,23 @@
+{
+  "metas": {
+    "title": "PapyMovie | Arrêtons d'oublier les films que nous regardons",
+    "description": "Notez et sauvegardez vos meilleurs films. Découvrez des nouveaux films en suivant vos amis."
+  },
+  "header": {
+    "title": "Arrêtons d'oublier les films que nous regardons.",
+    "subtitle": "Notez et sauvegardez vos meilleurs films."
+  },
+  "subheader": {
+    "title": "notre but",
+    "subtitle": "Nous aimons tous les films. Mémorisez vos meilleurs films pour ne plus jamais les oublier."
+  },
+  "features": {
+    "title1": "Sauvegardez",
+    "content1": "Ajoutez votre propre notre et description de vos films préférés.",
+    "title2": "Soyez inspirés",
+    "content2": "Filtrez, découvrez les tendances et les meilleurs films de tous les temps.",
+    "title3": "Suivez vos amis friends",
+    "content3": "Visionnez les films de vos amis ou personnes partageant les mêmes gouts que vous."
+  },
+  "latest_movies": "Derniers films ajoutés"
+}

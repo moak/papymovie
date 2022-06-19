@@ -1,0 +1,15 @@
+{
+  "locales": ["en", "fr"],
+  "defaultLocale": "en",
+  "pages": {
+    "/": ["home"],
+    "*": ["common", "home"],
+    "/about": ["about"],
+    "/naked": ["common"],
+    "/home": ["common", "home"],
+    "/users": ["user"],
+    "/users/[userId]": ["user"],
+    "/community": ["community"],
+    "/movies": ["movie"]
+  }
+}
