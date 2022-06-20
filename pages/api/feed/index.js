@@ -1,10 +1,10 @@
 import dbConnect from 'utils/dbConnect';
 import Feed from 'models/Feed';
 
-dbConnect();
-
 export default async (req, res) => {
   const { method } = req;
+
+  await dbConnect();
 
   switch (method) {
     case 'GET':

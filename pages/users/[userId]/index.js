@@ -46,7 +46,7 @@ const User = () => {
 
   const { userId } = router.query;
 
-  const isMyProfile = userId === (session && session.id);
+  const isMyProfile = userId === session?.user?.id;
 
   const isFollowing = isMyProfile
     ? false
@@ -140,6 +140,7 @@ const User = () => {
       description={t('view.metas.description', { name })}
       url={`/users/${_id}`}
       previewImage={image}
+      isLoading={!user}
     >
       <PageContainer>
         <Row>
@@ -179,27 +180,28 @@ const User = () => {
                 {moviesToWatch && moviesToWatch.length === 0 && (
                   <EmptyState>
                     <Text fontSize={16} marginBottom={16}>
-                      {t('watching_list_no_result')}
+                      {t('view.watching_list_no_result')}
                     </Text>
                   </EmptyState>
                 )}
 
                 <List>
-                  {moviesToWatch?.length &&
-                    moviesToWatch.map((movieToWatch) => {
-                      const { _id, title, themoviedbId, image } = movieToWatch;
+                  {moviesToWatch?.length
+                    ? moviesToWatch.map((movieToWatch) => {
+                        const { _id, title, themoviedbId, image } = movieToWatch;
 
-                      return (
-                        <CardContainer key={_id} height={isMobile ? 200 : 180} percent={50}>
-                          <CardImage
-                            isMobile
-                            title={title}
-                            imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
-                            href={`/movies/${themoviedbId}`}
-                          />
-                        </CardContainer>
-                      );
-                    })}
+                        return (
+                          <CardContainer key={_id} height={isMobile ? 200 : 180} percent={50}>
+                            <CardImage
+                              isMobile
+                              title={title}
+                              imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
+                              href={`/movies/${themoviedbId}`}
+                            />
+                          </CardContainer>
+                        );
+                      })
+                    : null}
                 </List>
               </>
             ) : null}

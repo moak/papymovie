@@ -4,13 +4,13 @@ import dbConnect from 'utils/dbConnect';
 import Movie from 'models/Movie';
 import User from 'models/User';
 
-dbConnect();
-
 export default async (req, res) => {
   const {
     query: { id, movieId },
     method,
   } = req;
+
+  await dbConnect();
 
   const { session } = await getSession({ req });
 

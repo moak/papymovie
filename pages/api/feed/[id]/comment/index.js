@@ -5,13 +5,13 @@ import User from 'models/User';
 import Feed from 'models/Feed';
 import Comment from 'models/Comment';
 
-dbConnect();
-
 export default async (req, res) => {
   const {
     query: { id },
     method,
   } = req;
+
+  await dbConnect();
 
   const { session } = await getSession({ req });
 

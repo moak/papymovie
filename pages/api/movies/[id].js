@@ -5,13 +5,13 @@ import Movie from 'models/Movie';
 import Feed from 'models/Feed';
 import User from 'models/User';
 
-dbConnect();
-
 export default async (req, res) => {
   const {
     query: { id },
     method,
   } = req;
+
+  await dbConnect();
 
   const { session } = await getSession({ req });
 

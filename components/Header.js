@@ -17,6 +17,7 @@ import CollapseMenu from './CollapseMenu';
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
 
+// eslint-disable-next-line no-unused-vars
 const HeaderContainer = styled(({ isTransparent, ...props }) => (
   <animated.nav
     {...props} // eslint-disable-line react/jsx-props-no-spreading
@@ -152,7 +153,9 @@ const Header = (props) => {
   });
 
   const handleLocaleChange = (data) => {
-    router.replace(router.pathname, router.pathname, { locale: data });
+    console.log('router', router);
+    console.log('router.pathname', router.pathname);
+    router.replace(router.asPath, router.asPath, { locale: data });
   };
 
   return (
@@ -226,9 +229,6 @@ const Header = (props) => {
                   </React.Fragment>
                 ))}
 
-                {/* <span style={{ color: userLanguage === 'fr' ? '#ffffff' : 'grey' }}>FR</span> |{' '}
-                  <span style={{ color: userLanguage === 'en' ? '#ffffff' : 'grey' }}>EN</span>
-                </a> */}
                 {session ? (
                   <Button
                     style={{ marginRight: 16 }}

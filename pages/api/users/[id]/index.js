@@ -2,13 +2,13 @@ import dbConnect from 'utils/dbConnect';
 
 import User from 'models/User';
 
-dbConnect();
-
 export default async (req, res) => {
   const {
     query: { id },
     method,
   } = req;
+
+  await dbConnect();
 
   switch (method) {
     case 'GET':
@@ -19,17 +19,17 @@ export default async (req, res) => {
           .populate('followings');
 
         if (!user) {
-          return res.status(400).json({ success: false });
+          return res.status(400).json({ success: false, error: 'user_not_found' });
         }
 
         res.status(200).json({ success: true, data: user });
       } catch (error) {
-        res.status(400).json({ success: false, error });
+        res.status(400).json({ success: false, error: 'catch' });
       }
       break;
 
     default:
-      res.status(400).json({ success: false });
+      res.status(400).json({ success: false, error: 'default' });
       break;
   }
 };

@@ -1,9 +1,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-import User from './User';
-import Movie from './Movie';
-
 const FeedSchema = new mongoose.Schema({
   user: {
     type: Schema.Types.ObjectId,

@@ -20,17 +20,17 @@ const Page = ({
   description = 'Stop forgetting what you watch and get inspired!',
   previewImage,
   url = '',
+  isLoading = false,
 }) => {
   const [isNavBarOpen, setIsNavBarOpen] = useState(false);
 
-  const loading = false;
   const handleNavbar = useCallback(() => {
     setIsNavBarOpen(!isNavBarOpen);
   }, [isNavBarOpen]);
 
   return (
     <>
-      {title && (
+      {title && !isLoading ? (
         <Head>
           <meta charSet="utf-8" />
           <link rel="icon" href="/favicon.ico" />
@@ -56,9 +56,9 @@ const Page = ({
             </>
           )}
         </Head>
-      )}
+      ) : null}
 
-      {loading ? (
+      {isLoading ? (
         <LoaderContainer>
           <Loader active inline="centered" size="large" />
         </LoaderContainer>
