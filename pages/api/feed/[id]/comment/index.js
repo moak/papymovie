@@ -15,6 +15,7 @@ export default async (req, res) => {
 
   const { session } = await getSession({ req });
 
+  console.log('hey');
   switch (method) {
     case 'POST':
       try {
