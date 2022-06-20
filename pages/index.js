@@ -264,6 +264,7 @@ export async function getServerSideProps(context) {
     .populate('movie')
     .populate('user');
 
+  console.log('wtf');
   return {
     props: {
       ...(await serverSideTranslations(locale, ['common', 'home'])),
