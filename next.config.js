@@ -4,8 +4,6 @@ const { i18n } = require('./next-i18next.config');
 //   enabled: process.env.ANALYZE === 'true',
 // });
 
-console.log(' process.env', process.env);
-console.log(' process.env', process.env);
 module.exports = {
   eslint: {
     // Warning: This allows production builds to successfully complete even if

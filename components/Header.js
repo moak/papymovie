@@ -153,8 +153,6 @@ const Header = (props) => {
   });
 
   const handleLocaleChange = (data) => {
-    console.log('router', router);
-    console.log('router.pathname', router.pathname);
     router.replace(router.asPath, router.asPath, { locale: data });
   };
 

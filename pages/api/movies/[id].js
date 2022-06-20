@@ -49,7 +49,6 @@ export default async (req, res) => {
       break;
     case 'DELETE':
       try {
-        console.log('heyyyyyyyyyyyyyy');
         const deletedMovie = await Movie.deleteOne({ _id: id });
 
         if (!deletedMovie) {

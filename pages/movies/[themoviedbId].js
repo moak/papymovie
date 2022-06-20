@@ -118,7 +118,6 @@ const View = (props) => {
 
   const [isInMoviesToWatch, setIsInMoviesToWatch] = useState(false);
 
-  console.log('isSubmittingMovie', isSubmittingMovie);
   const [form, setForm] = useState({
     themoviedbId,
     title,
@@ -141,14 +140,12 @@ const View = (props) => {
 
   const handleSubmitMovie = (e) => {
     e.preventDefault();
-    console.log('handleSubmitMovie ');
     let errs = validate();
     setErrors(errs);
     setIsSubmittingMovie(true);
   };
 
   const handleSubmitMovieToWatch = (e) => {
-    console.log('handleSubmitMovieToWatch');
     e.preventDefault();
     setIsSubmittingMovieToWatch(true);
   };
