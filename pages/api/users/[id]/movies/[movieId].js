@@ -55,6 +55,10 @@ export default async (req, res) => {
       break;
     case 'DELETE':
       try {
+        if (!session) {
+          return res.status(400).json({ success: false });
+        }
+
         const deletedMovie = await Movie.deleteOne({ _id: movieId });
 
         if (!deletedMovie) {

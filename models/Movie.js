@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 import User from './User';
 
-const MovieSchema = new mongoose.Schema({
+const MovieSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',
@@ -31,7 +31,6 @@ const MovieSchema = new mongoose.Schema({
     required: false,
   },
   created_at: { type: Date, default: new Date().toUTCString() },
-
   updated_at: { type: Date, default: new Date().toUTCString() },
 });
 
