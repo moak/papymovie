@@ -85,7 +85,7 @@ const CardMovie = (props) => {
             e.target.src = 'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png';
           }}
           width="100%"
-          height="100%"
+          height="320"
           src={imageUrl}
           style={{ borderRadius: 10 }}
         />

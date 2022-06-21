@@ -17,11 +17,13 @@ module.exports = {
     GITHUB_ID: process.env.GITHUB_ID,
     GITHUB_SECRET: process.env.GITHUB_SECRET,
 
+    GOOGLE_ID: process.env.GOOGLE_ID,
+    GOOGLE_SECRET: process.env.GOOGLE_SECRET,
+
     THEMOVIEDB_API_KEY: process.env.THEMOVIEDB_API_KEY,
+
     MONGODB_URI: process.env.MONGODB_URI,
     MONGODB_DB: process.env.MONGODB_DB,
-
-    FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
 
     GA_TRACKING_ID: process.env.GA_TRACKING_ID,
     SECRET: process.env.SECRET,

@@ -94,24 +94,26 @@ const New = () => {
                     {movies.map((movie) => {
                       const { id, title, poster_path, release_date, vote_average } = movie;
 
-                      return (
-                        <CardContainer
-                          key={id}
-                          height={isMobile ? 280 : isTablet ? 300 : 400}
-                          percent={isMobile || isTablet ? 50 : 20}
-                        >
-                          <CardMovie
-                            isMobile={isMobile}
-                            title={title}
-                            subtitle={moment(release_date).format('MMM, YYYY')}
-                            imageUrl={`https://image.tmdb.org/t/p/w${
-                              isMobile ? 200 : 300
-                            }/${poster_path}`}
-                            href={`/movies/${id}`}
-                            grade={vote_average}
-                          />
-                        </CardContainer>
-                      );
+                      if (poster_path) {
+                        return (
+                          <CardContainer
+                            key={id}
+                            height={isMobile ? 280 : isTablet ? 300 : 400}
+                            percent={isMobile || isTablet ? 50 : 20}
+                          >
+                            <CardMovie
+                              isMobile={isMobile}
+                              title={title}
+                              subtitle={moment(release_date).format('MMM, YYYY')}
+                              imageUrl={`https://image.tmdb.org/t/p/w${
+                                isMobile ? 200 : 300
+                              }/${poster_path}`}
+                              href={`/movies/${id}`}
+                              grade={vote_average}
+                            />
+                          </CardContainer>
+                        );
+                      }
                     })}
                   </List>
                 )}
