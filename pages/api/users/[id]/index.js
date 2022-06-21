@@ -1,6 +1,7 @@
 import dbConnect from 'utils/dbConnect';
 
 import User from 'models/User';
+import Movie from 'models/Movie';
 
 export default async (req, res) => {
   const {

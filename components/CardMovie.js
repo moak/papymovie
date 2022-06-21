@@ -16,7 +16,7 @@ const Container = styled.div`
 }`;
 
 const ImageContainer = styled.div`
-  height: ${(p) => (p.isMobile ? '200px' : '100%')};
+  height: ${(p) => (p.isMobile ? '220px' : '100%')};
   position: relative;
   width: ${(p) => (p.isMobile ? 100 : 100)}%;
   min-width: ${(p) => (p.isMobile ? 40 : 100)}%;

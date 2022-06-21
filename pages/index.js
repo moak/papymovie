@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Icon } from 'semantic-ui-react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/react';
 
 import dbConnect from 'utils/dbConnect';
 import Feed from 'models/Feed';
@@ -125,9 +127,17 @@ const Home = (props) => {
   const { latestMovies } = props;
 
   const { t } = useTranslation('home');
+  const router = useRouter();
+  const { data: session } = useSession();
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
+
+  useEffect(() => {
+    if (session) {
+      router.push('community');
+    }
+  }, [session]);
 
   return (
     <Page title={t('metas.title')} description={t('metas.description')}>
@@ -224,7 +234,7 @@ const Home = (props) => {
                   <CardContainer
                     key={_id}
                     height={isMobile ? 280 : isTablet ? 300 : 400}
-                    percent={isMobile || isTablet ? 50 : 20}
+                    percent={isMobile || isTablet ? 50 : 40}
                   >
                     <CardMovie
                       isMobile={isMobile}

@@ -4,6 +4,7 @@ import moment from 'moment';
 import { Label, Button, Select, Pagination } from 'semantic-ui-react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useRouter } from 'next/router';
 
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
@@ -59,8 +60,11 @@ export const Row = styled.div`
 `;
 
 const Movies = () => {
-  const { t, lang: userLanguage } = useTranslation('movie');
+  const { t } = useTranslation('movie');
 
+  const router = useRouter();
+
+  console.log('router', router);
   const [movies, setMovies] = useState(null);
   const [totalPages, setTotalPages] = useState(null);
   const [activePage, setActivePage] = useState(1);
@@ -87,7 +91,7 @@ const Movies = () => {
 
   const yearsOptions = [{ key: 'all', value: undefined, text: 'all' }];
 
-  for (let i = 2020; i >= 1850; i--) {
+  for (let i = 2022; i >= 1850; i--) {
     yearsOptions.push({ key: i, value: i, text: i });
   }
 
@@ -100,7 +104,7 @@ const Movies = () => {
     const fetchGenres = async () => {
       try {
         const request = await fetch(
-          `https://api.themoviedb.org/3/genre/movie/list?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${userLanguage}`,
+          `https://api.themoviedb.org/3/genre/movie/list?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${router.locale}`,
         );
         const { genres } = await request.json();
 
@@ -111,7 +115,7 @@ const Movies = () => {
     };
 
     fetchGenres();
-  }, [userLanguage]);
+  }, [router.locale]);
 
   useEffect(() => {
     const process2 = async () => {
@@ -121,7 +125,7 @@ const Movies = () => {
       const obj = {
         api_key: process.env.THEMOVIEDB_API_KEY,
         page: activePage,
-        language: userLanguage,
+        language: router.locale,
       };
 
       if (selectedGenres.length) {
@@ -154,7 +158,7 @@ const Movies = () => {
     };
 
     process2();
-  }, [activePage, filter, yearStart, yearEnd, selectedGenres, userLanguage]);
+  }, [activePage, filter, yearStart, yearEnd, selectedGenres, router.locale]);
 
   const handleClickGenre = useCallback(
     (genreId) => {
@@ -286,7 +290,7 @@ const Movies = () => {
                   return (
                     <CardContainer
                       key={id}
-                      height={isMobile ? 260 : isTablet ? 300 : 400}
+                      height={isMobile ? 280 : isTablet ? 300 : 400}
                       percent={isMobile ? 50 : isTablet ? 33 : 25}
                     >
                       <CardMovie

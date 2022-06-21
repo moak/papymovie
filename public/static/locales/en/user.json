@@ -20,7 +20,7 @@
       "description": "Discover {{name}}'s best movies - PapyMovie"
     },
     "watching_list": "Watching list",
-    "watching_list_no_result": "No movies in the watching list",
+    "watching_list_no_result": "Your watching list is empty",
 
     "my_profile": "My profile",
     "my_profile_my_movies": "My movies",

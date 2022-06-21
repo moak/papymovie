@@ -29,7 +29,7 @@ export const Row = styled.div`
 
 const Community = (props) => {
   const { feed } = props;
-  const { t } = useTranslation('community');
+  const { t } = useTranslation('common');
 
   const isMobile = useIsMobile();
 
@@ -42,7 +42,7 @@ const Community = (props) => {
       <PageContainer maxWidth={1024}>
         <Row justifyContent="space-between">
           <Text isBold marginBottom={24} fontSize={32}>
-            {t('community:title')}
+            {t('header.community')}
           </Text>
         </Row>
         {feed

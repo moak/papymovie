@@ -50,7 +50,7 @@ const CollapseMenu = (props) => {
           {session ? (
             <>
               <li>
-                <Link href={`/users/${session?.id}`}>{t('header.my_profile')}</Link>
+                <Link href={`/users/${session?.user?.id}`}>{t('header.my_profile')}</Link>
               </li>
               <hr />
 

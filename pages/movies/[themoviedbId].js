@@ -175,7 +175,7 @@ const View = (props) => {
         body: JSON.stringify(form),
       });
 
-      router.push(`/users/${session.session.userId}`);
+      router.push(`/users/${session.user.id}`);
     } catch (error) {
       console.log(error);
     }
@@ -220,9 +220,7 @@ const View = (props) => {
   useEffect(() => {
     const fetchLoggedUser = async () => {
       try {
-        const request = await fetch(
-          `${process.env.NEXTAUTH_URL}/api/users/${session.session.userId}`,
-        );
+        const request = await fetch(`${process.env.NEXTAUTH_URL}/api/users/${session.user.id}`);
         const { data } = await request.json();
 
         setUser(data);
@@ -284,15 +282,13 @@ const View = (props) => {
       setIsSubmittingMovieToWatch(false);
     } catch (error) {
       setIsSubmittingMovieToWatch(false);
-      console.log('error', error);
-      console.log(error);
     }
   };
 
   const editMovie = async () => {
     try {
       await fetch(
-        `${process.env.NEXTAUTH_URL}/api/users/${session.session.userId}/movies/${userMovie._id}`,
+        `${process.env.NEXTAUTH_URL}/api/users/${session.user.id}/movies/${userMovie._id}`,
         {
           method: 'PUT',
           headers: {
@@ -303,7 +299,7 @@ const View = (props) => {
         },
       );
 
-      router.push(`/users/${session.session.userId}`);
+      router.push(`/users/${session.user.id}`);
     } catch (error) {
       console.log(error);
     }
@@ -312,7 +308,7 @@ const View = (props) => {
   const deleteMovie = async () => {
     try {
       await fetch(
-        `${process.env.NEXTAUTH_URL}/api/users/${session.session.userId}/movies/${userMovie._id}`,
+        `${process.env.NEXTAUTH_URL}/api/users/${session.user.id}/movies/${userMovie._id}`,
         {
           method: 'DELETE',
           headers: {
@@ -322,7 +318,7 @@ const View = (props) => {
         },
       );
 
-      router.push(`/users/${session.session.userId}`);
+      router.push(`/users/${session.user.id}`);
     } catch (error) {
       console.log(error);
     }
@@ -354,6 +350,7 @@ const View = (props) => {
     return null;
   }
 
+  console.log('session', session);
   return (
     <Page
       title={t('view.metas.title', { title, date: release_date.substring(0, 4) })}
@@ -441,7 +438,7 @@ const View = (props) => {
 
               <Divider />
 
-              <Text isBold marginTop={8} marginBottom={4} fontSize={24} textColor="#ffffff">
+              <Text isBold marginTop={8} marginBottom={4} fontSize={18} textColor="#ffffff">
                 {isInMoviesToWatch ? (
                   <div>
                     <span>{t('view.watching_list')}</span>
@@ -517,7 +514,7 @@ const View = (props) => {
                 style={{ width: isMobile ? null : 600, fontSize: 16 }}
               />
               <Button
-                onClick={handleSubmitMovie}
+                onClick={session ? handleSubmitMovie : signIn}
                 size="small"
                 loading={!!isSubmittingMovie}
                 color="green"
@@ -583,7 +580,7 @@ const View = (props) => {
                 return (
                   <CardContainer
                     key={id}
-                    height={isMobile ? 260 : isTablet ? 300 : 400}
+                    height={isMobile ? 280 : isTablet ? 300 : 400}
                     percent={isMobile || isTablet ? 50 : 20}
                   >
                     <CardMovie

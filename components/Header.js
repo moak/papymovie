@@ -82,7 +82,7 @@ const SearchContainer = styled.div`
 `;
 
 const Header = (props) => {
-  const { t, lang: userLanguage } = useTranslation('common');
+  const { t } = useTranslation('common');
 
   const { data: session } = useSession();
 
@@ -199,7 +199,7 @@ const Header = (props) => {
                   <Link href="/community">{t('header.community')}</Link>
                   <Link href="/users">{t('header.users')}</Link>
                   {session && (
-                    <Link href={`/users/${session && session.session.userId}`}>
+                    <Link href={`/users/${session && session?.user?.id}`}>
                       {t('header.my_profile')}
                     </Link>
                   )}
@@ -213,13 +213,23 @@ const Header = (props) => {
               <NavLinks style={{ ...linkAnimation }}>
                 {languages.map((language, index) => (
                   <React.Fragment key={language.display}>
-                    {index > 0 && '|'}
+                    {index > 0 && (
+                      <span
+                        style={{
+                          margin: '0 6px',
+                          color: '#ffffff',
+                        }}
+                      >
+                        |
+                      </span>
+                    )}
 
                     <span // eslint-disable-line jsx-a11y/click-events-have-key-events
                       onClick={() => handleLocaleChange(language.lang)}
                       style={{
                         cursor: 'pointer',
-                        color: userLanguage === language ? '#ffffff' : 'grey',
+                        color: router.locale === language.lang ? '#ffffff' : 'grey',
+                        marginRight: index + 1 === languages.length ? 20 : 0,
                       }}
                     >
                       {language.display}

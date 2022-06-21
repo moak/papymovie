@@ -50,7 +50,9 @@ const User = () => {
 
   const isFollowing = isMyProfile
     ? false
-    : !!followersState.find((follower) => (follower || follower._id) === (session && session.id));
+    : !!followersState.find(
+        (follower) => (follower || follower?._id) === (session && session?.user?.id),
+      );
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
@@ -70,15 +72,21 @@ const User = () => {
     }
   }, [isDeleting]);
 
+  const fetchUser = async () => {
+    const url = `${process.env.NEXTAUTH_URL}/api/users/${userId}`;
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+      },
+    });
+    const { data } = await res.json();
+
+    setUser(data);
+  };
+
   useEffect(() => {
-    const fetchUser = async () => {
-      const url = `${process.env.NEXTAUTH_URL}/api/users/${userId}`;
-      const res = await fetch(url);
-      const { data } = await res.json();
-
-      setUser(data);
-    };
-
     fetchUser();
   }, [userId]);
 
@@ -94,8 +102,8 @@ const User = () => {
       await fetch(`${process.env.NEXTAUTH_URL}/api/movies/${movieId}`, {
         method: 'Delete',
       });
-      // const { user } = await fetchData({ query: { userId: session.id } });
-      // setUser(user);
+
+      fetchUser();
     } catch (error) {
       console.log(error);
     }
@@ -123,7 +131,6 @@ const User = () => {
     close();
   };
 
-  console.log('user', user);
   const {
     _id,
     name,
@@ -172,16 +179,14 @@ const User = () => {
 
             {isMyProfile || moviesToWatch.length ? (
               <>
-                <Text marginTop={24} marginBottom={24} fontSize={24}>
+                <Text marginTop={24} fontSize={18}>
                   {t('view.watching_list')}
                   {moviesToWatch.length > 0 ? ` (${moviesToWatch.length})` : ''}
                 </Text>
 
                 {moviesToWatch && moviesToWatch.length === 0 && (
                   <EmptyState>
-                    <Text fontSize={16} marginBottom={16}>
-                      {t('view.watching_list_no_result')}
-                    </Text>
+                    <Text fontSize={14}>{t('view.watching_list_no_result')}</Text>
                   </EmptyState>
                 )}
 
@@ -286,7 +291,7 @@ const User = () => {
                 })}
             </List>
 
-            <Text marginTop={24} marginBottom={16} fontSize={24}>
+            <Text marginTop={24} fontSize={18}>
               {t('followings')}
             </Text>
             <List>
@@ -321,7 +326,7 @@ const User = () => {
                 </Text>
               </EmptyState>
             )}
-            <Text marginTop={24} marginBottom={16} fontSize={24}>
+            <Text marginTop={24} fontSize={18}>
               {t('followers')}
             </Text>
             <List>

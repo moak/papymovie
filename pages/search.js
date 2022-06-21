@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import moment from 'moment';
 import { Pagination, Loader } from 'semantic-ui-react';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
@@ -96,7 +97,7 @@ const New = () => {
                       return (
                         <CardContainer
                           key={id}
-                          height={isMobile ? 260 : isTablet ? 300 : 400}
+                          height={isMobile ? 280 : isTablet ? 300 : 400}
                           percent={isMobile || isTablet ? 50 : 20}
                         >
                           <CardMovie
@@ -174,5 +175,15 @@ const New = () => {
     </Page>
   );
 };
+
+export async function getServerSideProps(context) {
+  const { locale } = context;
+
+  return {
+    props: {
+      ...(await serverSideTranslations(locale, ['common'])),
+    },
+  };
+}
 
 export default New;
