@@ -3,6 +3,7 @@ const { Schema } = mongoose;
 
 import User from './User';
 import Movie from './Movie';
+import Comment from './Comment';
 
 const FeedSchema = new mongoose.Schema({
   user: {
@@ -29,6 +30,12 @@ const FeedSchema = new mongoose.Schema({
     {
       type: Schema.Types.ObjectId,
       ref: 'User',
+    },
+  ],
+  comments: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Comment',
     },
   ],
   created_at: { type: Date, default: new Date().toUTCString() },

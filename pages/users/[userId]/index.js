@@ -179,7 +179,7 @@ const User = () => {
 
             {isMyProfile || moviesToWatch.length ? (
               <>
-                <Text marginTop={24} fontSize={18}>
+                <Text marginTop={24} marginBottom={8} fontSize={18}>
                   {t('view.watching_list')}
                   {moviesToWatch.length > 0 ? ` (${moviesToWatch.length})` : ''}
                 </Text>

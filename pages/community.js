@@ -29,8 +29,8 @@ export const Row = styled.div`
 
 const Community = (props) => {
   const { feed } = props;
-  const { t } = useTranslation('common');
 
+  const { t } = useTranslation('common');
   const isMobile = useIsMobile();
 
   return (
@@ -64,9 +64,18 @@ export async function getServerSideProps(context) {
 
   await dbConnect();
 
-  const feed = await Feed.find({ user: { $exists: true }, movie: { $exists: true } })
+  const feed = await Feed.find()
     .populate('movie')
-    .populate('user');
+    .populate('user')
+    .populate({
+      path: 'comments',
+      populate: [
+        {
+          path: 'user',
+          model: 'User',
+        },
+      ],
+    });
 
   return {
     props: {

@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+import User from './User';
+import Movie from './Movie';
+
 const CommentSchema = new Schema(
   {
-    updated_at: Date,
-    created_at: Date,
     deleted: Boolean,
     content: String,
     user: {
@@ -15,6 +16,9 @@ const CommentSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'Movie',
     },
+
+    created_at: { type: Date, default: new Date().toUTCString() },
+    updated_at: { type: Date, default: new Date().toUTCString() },
   },
   {
     usePushEach: true,

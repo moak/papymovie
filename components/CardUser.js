@@ -117,7 +117,7 @@ const CardUser = (props) => {
           src={imageUrl}
         />
         <NameContainer>
-          <Text textAlign="center" isBold fontSize={16}>
+          <Text textAlign="center" isBold fontSize={16} marginBottom={-4}>
             {name}
           </Text>
         </NameContainer>

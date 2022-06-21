@@ -27,7 +27,7 @@ export default async (req, res) => {
           return res.send({ success: false, test: 3 });
         }
 
-        if (!body.comment) {
+        if (!body.content) {
           return res.send({ success: false, test: 2 });
         }
 
@@ -50,7 +50,7 @@ export default async (req, res) => {
         const newComment = new Comment({
           user: userCommenting,
           movie: feedCommented.movie,
-          content: body.comment,
+          content: body.content,
           created_at: new Date().toUTCString(),
         });
 
@@ -73,6 +73,30 @@ export default async (req, res) => {
         });
       } catch (error) {
         console.log('error', error);
+        res.status(400).json({ success: false, error });
+      }
+      break;
+
+    case 'GET':
+      try {
+        const feedLikedId = id;
+
+        const feedCommented = await Feed.findById(feedLikedId).populate({
+          path: 'comments',
+          populate: [
+            {
+              path: 'user',
+              model: 'User',
+              select: '_id username email image',
+            },
+          ],
+        });
+
+        return res.send({
+          success: true,
+          data: feedCommented,
+        });
+      } catch (error) {
         res.status(400).json({ success: false, error });
       }
       break;

@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import { Button, Label, Icon } from 'semantic-ui-react';
+import { Button, Label, Icon, Header, Comment, Form, TextArea } from 'semantic-ui-react';
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 
@@ -16,6 +16,7 @@ import Text from './Text';
 const SocialButtons = styled.div`
   display: flex;
   justify-content: ${(p) => (p.isMobile ? 'center' : 'start')};
+  margin-bottom: 12px;
 }`;
 
 const Wrapper = styled.div`
@@ -54,7 +55,6 @@ const UserImage = styled.img`
 
 const MovieImage = styled.img`
   border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
 }`;
 
 const DetailsContainer = styled.div`
@@ -73,6 +73,10 @@ const CardFeed = (props) => {
   const router = useRouter();
   const { data: session } = useSession();
 
+  const [feedItemState, setFeedItem] = useState(feedItem);
+  const [pendingComment, setPendingComment] = useState('');
+
+  console.log('feedItemState', feedItemState);
   if (!feedItem.movie || !feedItem.user) {
     return null;
   }
@@ -84,7 +88,8 @@ const CardFeed = (props) => {
     dislikes = [],
     user: { _id: userId, image: userImage, name: userName } = {},
     movie: { image: movieImage, title, rating, themoviedbId } = {},
-  } = feedItem;
+    comments,
+  } = feedItemState;
 
   const [isLikingLoading, setIsLikingLoading] = useState(false);
   const [isDislikingLoading, setIsDislikingLoading] = useState(false);
@@ -119,6 +124,28 @@ const CardFeed = (props) => {
     }
   }, []);
 
+  const handleClickComment = useCallback(async () => {
+    try {
+      await fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/comment`, {
+        method: 'Post',
+        body: JSON.stringify({
+          content: pendingComment,
+        }),
+      });
+
+      setPendingComment('');
+
+      const request = await fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/comment`, {
+        method: 'GET',
+      });
+
+      const { data } = await request.json();
+      setFeedItem({ ...feedItem, comments: data.comments });
+    } catch (error) {
+      console.log(error);
+    }
+  }, [pendingComment]);
+
   const handleClickDislike = useCallback(async (e) => {
     e.preventDefault();
 
@@ -142,6 +169,10 @@ const CardFeed = (props) => {
     } catch (error) {
       console.log(error);
     }
+  }, []);
+
+  const handleChangeComment = useCallback((event) => {
+    setPendingComment(event.target.value);
   }, []);
 
   const component = (
@@ -250,7 +281,6 @@ const CardFeed = (props) => {
               </div>
             </>
           )}
-
           <SocialButtons isMobile={isMobile}>
             <Button onClick={session ? handleClickLike : signIn} as="div" labelPosition="right">
               <Button compact size={isLikingLoading ? 'mini' : 'tiny'} color="green">
@@ -269,6 +299,45 @@ const CardFeed = (props) => {
               </Label>
             </Button>
           </SocialButtons>
+
+          {comments?.length > 0 ? (
+            <Comment.Group>
+              {comments.map((comment, index) => {
+                return (
+                  <Comment key={index}>
+                    <Comment.Avatar src={comment.user.image} />
+                    <Comment.Content>
+                      <Comment.Author as="a">{comment.user.name}</Comment.Author>
+                      <Comment.Metadata>
+                        <div>{moment(comment.updated_at).fromNow()}</div>
+                      </Comment.Metadata>
+                      <Comment.Text>{comment.content}</Comment.Text>
+                    </Comment.Content>
+                  </Comment>
+                );
+              })}
+            </Comment.Group>
+          ) : null}
+
+          <Form style={{ fontSize: '1.2rem' }}>
+            <TextArea
+              style={{ fontSize: '16px' }}
+              value={pendingComment}
+              onChange={handleChangeComment}
+              disabled={!session}
+              placeholder={'Write a comment'}
+            />
+            <Button
+              size="tiny"
+              style={{ marginTop: '12px' }}
+              labelPosition="left"
+              icon="edit"
+              content="Add comment"
+              primary
+              disabled={!session}
+              onClick={handleClickComment}
+            />
+          </Form>
         </DetailsContainer>
       </Container>
       <MovieContainer isMobile={isMobile}>
@@ -282,7 +351,7 @@ const CardFeed = (props) => {
             e.target.src = 'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png';
           }}
           width="100%"
-          height="100%"
+          height="200"
           src={`https://image.tmdb.org/t/p/w300/${movieImage}`}
         />
       </MovieContainer>
