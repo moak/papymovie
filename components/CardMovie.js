@@ -9,16 +9,15 @@ import getColorFromMark from 'utils/getColorFromMark';
 
 const Container = styled.div`
   display: flex;
-  flex-direction: ${(p) => (p.isMobile ? 'column' : 'column')};
+  flex-direction: column;
   overflow: visible;
   width: 100%;
   height: 100%;
 }`;
 
 const ImageContainer = styled.div`
-  height: ${(p) => (p.isMobile ? '220px' : '100%')};
+  height: ${(p) => p.height};
   position: relative;
-  width: ${(p) => (p.isMobile ? 100 : 100)}%;
   min-width: ${(p) => (p.isMobile ? 40 : 100)}%;
 }`;
 
@@ -72,11 +71,17 @@ const CardMovie = (props) => {
     imageHeight,
     isMobile,
     titleCentered,
+    height,
   } = props;
 
   const component = (
-    <Container isMobile={isMobile}>
-      <ImageContainer isClickable={!!href} imageHeight={imageHeight} isMobile={isMobile}>
+    <Container>
+      <ImageContainer
+        height={height}
+        isClickable={!!href}
+        imageHeight={imageHeight}
+        isMobile={isMobile}
+      >
         <Image
           isMobile={isMobile}
           isClickable={!!href}
@@ -85,7 +90,7 @@ const CardMovie = (props) => {
             e.target.src = 'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png';
           }}
           width="100%"
-          height="320"
+          height="100%"
           src={imageUrl}
           style={{ borderRadius: 10 }}
         />

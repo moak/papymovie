@@ -287,12 +287,9 @@ const Movies = () => {
                 {movies.map((movie) => {
                   const { id, title, poster_path, vote_average, release_date } = movie;
 
+                  console.log('poster_path');
                   return (
-                    <CardContainer
-                      key={id}
-                      height={isMobile ? 280 : isTablet ? 300 : 400}
-                      percent={isMobile ? 50 : isTablet ? 33 : 25}
-                    >
+                    <CardContainer key={id} percent={isMobile ? 50 : isTablet ? 33 : 25}>
                       <CardMovie
                         isMobile={isMobile}
                         title={title}
@@ -302,6 +299,7 @@ const Movies = () => {
                         }/${poster_path}`}
                         href={`/movies/${id}`}
                         grade={vote_average}
+                        height={isMobile ? '230px' : '340px'}
                       />
                     </CardContainer>
                   );

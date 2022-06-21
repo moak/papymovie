@@ -542,9 +542,9 @@ const View = (props) => {
           </SubContainer>
         </ContentContainer>
 
-        {!isMobile && !isTablet && actors && actors.length > 0 && (
+        {actors && actors.length > 0 && (
           <>
-            <div style={{ marginBottom: 80 }}>
+            <div>
               <Text marginTop={36} marginBottom={16} fontSize={32}>
                 {t('view.actors')}
               </Text>
@@ -553,11 +553,12 @@ const View = (props) => {
                   const { id, name, profile_path, character } = actor;
 
                   return (
-                    <CardContainer key={id} height={170} percent={13}>
+                    <CardContainer key={id} percent={isMobile ? 33 : 15}>
                       <CardMovie
                         title={name}
                         subtitle={character}
                         imageUrl={`https://image.tmdb.org/t/p/w138_and_h175_face/${profile_path}`}
+                        height={isMobile ? '120px' : '220px'}
                       />
                     </CardContainer>
                   );

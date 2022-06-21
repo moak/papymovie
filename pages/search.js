@@ -96,11 +96,7 @@ const New = () => {
 
                       if (poster_path) {
                         return (
-                          <CardContainer
-                            key={id}
-                            height={isMobile ? 280 : isTablet ? 300 : 400}
-                            percent={isMobile || isTablet ? 50 : 20}
-                          >
+                          <CardContainer key={id} percent={isMobile || isTablet ? 50 : 20}>
                             <CardMovie
                               isMobile={isMobile}
                               title={title}
@@ -110,6 +106,7 @@ const New = () => {
                               }/${poster_path}`}
                               href={`/movies/${id}`}
                               grade={vote_average}
+                              height={isMobile ? '230px' : '340px'}
                             />
                           </CardContainer>
                         );
@@ -143,17 +140,20 @@ const New = () => {
                     {series.map((serie) => {
                       const { id, name, poster_path, first_air_date, vote_average } = serie;
 
-                      return (
-                        <CardContainer key={id} percent={isMobile ? 100 : isTablet ? 50 : 25}>
-                          <CardMovie
-                            title={name}
-                            subtitle={moment(first_air_date).format('MMM, YYYY')}
-                            imageUrl={`https://image.tmdb.org/t/p/w300/${poster_path}`}
-                            href={null}
-                            grade={vote_average}
-                          />
-                        </CardContainer>
-                      );
+                      if (poster_path) {
+                        return (
+                          <CardContainer key={id} percent={isMobile ? 100 : isTablet ? 50 : 25}>
+                            <CardMovie
+                              title={name}
+                              subtitle={moment(first_air_date).format('MMM, YYYY')}
+                              imageUrl={`https://image.tmdb.org/t/p/w300/${poster_path}`}
+                              href={null}
+                              grade={vote_average}
+                              height={isMobile ? '230px' : '340px'}
+                            />
+                          </CardContainer>
+                        );
+                      }
                     })}
                   </List>
                 )}
