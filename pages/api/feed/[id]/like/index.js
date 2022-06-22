@@ -62,7 +62,6 @@ export default async (req, res) => {
               dislikes: userLikingId,
             };
           }
-          console.log('query', query);
           promises = [
             Feed.findOneAndUpdate({ _id: feedLikedId }, query, { new: true, upsert: true }).exec(),
           ];

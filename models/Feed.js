@@ -41,4 +41,4 @@ const FeedSchema = new mongoose.Schema({
   created_at: { type: Date, default: new Date().toUTCString() },
 });
 
-module.exports = mongoose.models.Feed || mongoose.model('Feed', FeedSchema);
+module.exports = mongoose.models?.Feed || mongoose.model('Feed', FeedSchema);

@@ -142,7 +142,7 @@ const New = () => {
 
                       if (poster_path) {
                         return (
-                          <CardContainer key={id} percent={isMobile ? 100 : isTablet ? 50 : 25}>
+                          <CardContainer key={id} percent={isMobile || isTablet ? 50 : 20}>
                             <CardMovie
                               title={name}
                               subtitle={moment(first_air_date).format('MMM, YYYY')}

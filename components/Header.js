@@ -77,7 +77,7 @@ const BurgerWrapper = styled.div`
 `;
 
 const SearchContainer = styled.div`
-  width: ${(p) => (p.isMobile ? 200 : 350)}px;
+  width: ${(p) => (p.isMobile ? 200 : 320)}px;
   margin: auto 0;
 `;
 
@@ -181,7 +181,7 @@ const Header = (props) => {
                           onClick: submitSearch,
                         }
                   }
-                  style={{ fontSize: 16 }}
+                  style={{ fontSize: 16, height: 38 }}
                   onChange={handleChangeSearch}
                   fluid
                   placeholder={t('header.search')}
@@ -192,7 +192,7 @@ const Header = (props) => {
           )}
 
           {!isMobile && !isTablet && (
-            <NavLinks style={{ ...linkAnimation, width: 530 }}>
+            <NavLinks style={{ ...linkAnimation, width: 550 }}>
               {!isMobile && !isTablet && (
                 <>
                   <Link href="/movies">{t('header.movies')}</Link>

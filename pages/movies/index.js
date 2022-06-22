@@ -64,7 +64,6 @@ const Movies = () => {
 
   const router = useRouter();
 
-  console.log('router', router);
   const [movies, setMovies] = useState(null);
   const [totalPages, setTotalPages] = useState(null);
   const [activePage, setActivePage] = useState(1);
@@ -287,7 +286,6 @@ const Movies = () => {
                 {movies.map((movie) => {
                   const { id, title, poster_path, vote_average, release_date } = movie;
 
-                  console.log('poster_path');
                   return (
                     <CardContainer key={id} percent={isMobile ? 50 : isTablet ? 33 : 25}>
                       <CardMovie

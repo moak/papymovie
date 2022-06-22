@@ -39,12 +39,16 @@ export default async (req, res) => {
               { _id: userFollowedId },
               { $pull: { followers: userFollowingId } },
               { new: true },
-            ).exec(),
+            )
+              .populate('followers')
+              .exec(),
             User.findOneAndUpdate(
               { _id: userFollowingId },
               { $pull: { followings: userFollowedId } },
               { new: true },
-            ).exec(),
+            )
+              .populate('followers')
+              .exec(),
           ];
 
           // eslint-disable-next-line no-undef
@@ -61,7 +65,9 @@ export default async (req, res) => {
                 },
               },
               { new: true, upsert: true },
-            ).exec(),
+            )
+              .populate('followers')
+              .exec(),
             User.findOneAndUpdate(
               { _id: userFollowingId },
               {
@@ -70,7 +76,9 @@ export default async (req, res) => {
                 },
               },
               { new: true, upsert: true },
-            ).exec(),
+            )
+              .populate('followers')
+              .exec(),
           ];
           // eslint-disable-next-line no-undef
           Promise.all(promises).then((values) => {

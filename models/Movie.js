@@ -34,4 +34,4 @@ const MovieSchema = new Schema({
   updated_at: { type: Date, default: new Date().toUTCString() },
 });
 
-module.exports = mongoose.models.Movie || mongoose.model('Movie', MovieSchema);
+module.exports = mongoose.models?.Movie || mongoose.model('Movie', MovieSchema);

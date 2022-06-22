@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { useRouter } from 'next/router';
-import { Button, Label, Icon, Header, Comment, Form, TextArea } from 'semantic-ui-react';
+import { Button, Label, Icon, Comment, Form, TextArea } from 'semantic-ui-react';
 import Link from 'next/link';
 import { signIn, useSession } from 'next-auth/react';
 
@@ -76,7 +76,6 @@ const CardFeed = (props) => {
   const [feedItemState, setFeedItem] = useState(feedItem);
   const [pendingComment, setPendingComment] = useState('');
 
-  console.log('feedItemState', feedItemState);
   if (!feedItem.movie || !feedItem.user) {
     return null;
   }
@@ -321,7 +320,7 @@ const CardFeed = (props) => {
 
           <Form style={{ fontSize: '1.2rem' }}>
             <TextArea
-              style={{ fontSize: '16px' }}
+              style={{ fontSize: isMobile ? '16px' : '14px', resize: 'none', padding: '10px' }}
               value={pendingComment}
               onChange={handleChangeComment}
               disabled={!session}

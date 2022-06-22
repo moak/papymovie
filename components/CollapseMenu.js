@@ -8,15 +8,26 @@ import Link from 'next/link';
 import { signOut, signIn } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 import { useSpring, animated } from 'react-spring';
+import { useRouter } from 'next/router';
 
 import { useTranslation } from 'next-i18next';
+
+const languages = [
+  { lang: 'fr', display: 'FR' },
+  { lang: 'en', display: 'EN' },
+];
 
 const CollapseMenu = (props) => {
   const { t } = useTranslation('common');
 
+  const router = useRouter();
   const { data: session } = useSession();
 
   const { open } = useSpring({ open: props.navbarState ? 0 : 1 });
+
+  const handleLocaleChange = (data) => {
+    router.replace(router.asPath, router.asPath, { locale: data });
+  };
 
   if (props.navbarState === true) {
     return (
@@ -66,6 +77,38 @@ const CollapseMenu = (props) => {
               </li>
             </>
           )}
+          <hr />
+
+          <li>
+            {languages.map((language, index) => (
+              <React.Fragment key={language.display}>
+                {index > 0 && (
+                  <span
+                    style={{
+                      fontSize: 18,
+
+                      margin: '0 6px',
+                      color: '#ffffff',
+                    }}
+                  >
+                    |
+                  </span>
+                )}
+
+                <span // eslint-disable-line jsx-a11y/click-events-have-key-events
+                  onClick={() => handleLocaleChange(language.lang)}
+                  style={{
+                    fontSize: 18,
+                    cursor: 'pointer',
+                    color: router.locale === language.lang ? '#ffffff' : 'grey',
+                    marginRight: index + 1 === languages.length ? 20 : 0,
+                  }}
+                >
+                  {language.display}
+                </span>
+              </React.Fragment>
+            ))}
+          </li>
         </NavLinks>
       </CollapseWrapper>
     );

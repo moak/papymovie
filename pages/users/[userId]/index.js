@@ -119,6 +119,10 @@ const User = () => {
 
       const { data } = await request.json();
 
+      setUser({
+        ...user,
+        followers: data,
+      });
       setFollowersState(data);
       setIsFollowRequestLoading(false);
     } catch (error) {
@@ -158,8 +162,11 @@ const User = () => {
                 name={name}
                 imageUrl={image}
                 infos={[
-                  { amount: movies.length, title: t('movies') },
-                  { amount: followersState.length, title: t('followers') },
+                  { amount: movies?.length, title: t('movies') },
+                  {
+                    amount: user?.followers.length,
+                    title: t('followers'),
+                  },
                   { amount: followings.length, title: t('followings') },
                 ]}
               />
@@ -236,11 +243,7 @@ const User = () => {
                   const { _id, description, themoviedbId, title, image, rating } = movie;
 
                   return (
-                    <CardContainer
-                      key={_id}
-                      height={isMobile ? 330 : 400}
-                      percent={isMobile ? 50 : isTablet ? 33 : 25}
-                    >
+                    <CardContainer key={_id} percent={isMobile ? 50 : isTablet ? 33 : 25}>
                       <CardMovie
                         isMobile={isMobile}
                         title={title}
@@ -252,9 +255,9 @@ const User = () => {
                         titleCentered
                       >
                         <Box flexDirection="column" alignItems="center">
-                          <Description>
+                          <Text dotdotdot width={`100%`}>
                             {isMobile ? description || 'No notes' : description || 'Add a note...'}
-                          </Description>
+                          </Text>
 
                           <ActionsContainer>
                             {isMyProfile ? (
@@ -291,7 +294,7 @@ const User = () => {
                 })}
             </List>
 
-            <Text marginTop={24} fontSize={18}>
+            <Text marginTop={24} marginBottom={12} fontSize={18}>
               {t('followings')}
             </Text>
             <List>
@@ -326,12 +329,11 @@ const User = () => {
                 </Text>
               </EmptyState>
             )}
-            <Text marginTop={24} fontSize={18}>
+            <Text marginTop={24} marginBottom={12} fontSize={18}>
               {t('followers')}
             </Text>
             <List>
               {followers?.map((follower) => {
-                console.log('follower', follower);
                 const { _id, name, followings, followers, movies, image } = follower;
                 return (
                   <CardContainer

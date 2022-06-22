@@ -6,6 +6,8 @@ import { useTranslation } from 'next-i18next';
 import dbConnect from 'utils/dbConnect';
 import User from 'models/User';
 
+import useIsMobile from 'hooks/useIsMobile';
+
 import PageContainer from 'components/PageContainer';
 import Page from 'components/Page';
 import Text from 'components/Text';
@@ -19,8 +21,9 @@ const Users = (props) => {
 
   const { t } = useTranslation('user');
 
-  const isMobile = false;
+  const isMobile = useIsMobile();
 
+  console.log('isMobile', isMobile);
   return (
     <Page title={t('list.metas.title')} description={t('list.metas.description')} url="/users">
       <PageContainer>

@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
+import { useSession, getSession } from 'next-auth/react';
 
 import dbConnect from 'utils/dbConnect';
 import Feed from 'models/Feed';
@@ -29,7 +29,8 @@ display: flex;
 justify-content: center;
 align-items: center;
 }`;
-const Description = styled.div`
+
+const Description = styled.a`
   height: 30px;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -124,23 +125,34 @@ const Separator = styled.div`
 }`;
 
 const Home = (props) => {
-  const { latestMovies } = props;
+  const { latestMovies = [], other } = props;
 
   const { t } = useTranslation('home');
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
 
+  const isLoading = status === 'loading';
+  const isAuthenticated = status === 'authenticated';
+
   useEffect(() => {
-    if (session) {
+    if (other || session || isAuthenticated) {
       router.push('community');
     }
-  }, [session]);
+  }, [session, isAuthenticated]);
+
+  useEffect(() => {
+    window.history.scrollRestoration = 'manual';
+  }, []);
 
   return (
-    <Page title={t('metas.title')} description={t('metas.description')}>
+    <Page
+      title={t('metas.title')}
+      description={t('metas.description')}
+      isLoading={isLoading || !!other}
+    >
       <Container isMobile={isMobile}>
         <Content isMobile={isMobile}>
           <Text
@@ -220,8 +232,7 @@ const Home = (props) => {
         <Separator />
         <br />
         <List>
-          {latestMovies &&
-            latestMovies.length > 0 &&
+          {latestMovies?.length > 0 &&
             latestMovies
               .filter((item) => item.movie && item.user)
               .slice(0, isMobile ? 6 : 5)
@@ -231,19 +242,15 @@ const Home = (props) => {
                 const { name, username } = user;
 
                 return (
-                  <CardContainer
-                    key={_id}
-                    height={isMobile ? 280 : isTablet ? 300 : 400}
-                    percent={isMobile || isTablet ? 50 : 40}
-                  >
+                  <CardContainer key={_id} percent={isMobile || isTablet ? 50 : 20}>
                     <CardMovie
                       isMobile={isMobile}
                       title={title}
                       imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
                       href={`/movies/${themoviedbId}`}
-                      // imageHeight={70}
                       userRating={rating}
                       titleCentered
+                      height={isMobile ? '230px' : '340px'}
                     >
                       <Box flexDirection="column" alignItems="center">
                         <Description>{name || username}</Description>
@@ -278,6 +285,7 @@ export async function getServerSideProps(context) {
     props: {
       ...(await serverSideTranslations(locale, ['common', 'home'])),
       latestMovies: JSON.parse(JSON.stringify(feed)),
+      other: await getSession(context),
     },
   };
 }

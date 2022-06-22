@@ -10,6 +10,7 @@ const Grade = styled.div`
   align-items: center;
   justify-content: center;
   border: ${(p) => `${p.borderWith || 0}px solid #333333`};
+  margin-top: ${(p) => `${p.marginTop || 0}px`};
   font-size: 11px;
   font-weight: 500;
 }`;

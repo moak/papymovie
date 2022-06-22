@@ -59,9 +59,12 @@ const Page = ({
       ) : null}
 
       {isLoading ? (
-        <LoaderContainer>
-          <Loader active inline="centered" size="large" />
-        </LoaderContainer>
+        <>
+          <Header navbarState={isNavBarOpen} handleNavbar={handleNavbar} />
+          <LoaderContainer>
+            <Loader active inline="centered" size="large" />
+          </LoaderContainer>
+        </>
       ) : (
         <>
           <Header navbarState={isNavBarOpen} handleNavbar={handleNavbar} />

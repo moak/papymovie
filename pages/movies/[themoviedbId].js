@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Icon, Divider } from 'semantic-ui-react';
+import { Form, Button, Icon, Divider, TextArea } from 'semantic-ui-react';
 import ReactStars from 'react-stars';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
@@ -350,10 +350,9 @@ const View = (props) => {
     return null;
   }
 
-  console.log('session', session);
   return (
     <Page
-      title={t('view.metas.title', { title, date: release_date.substring(0, 4) })}
+      title={t('view.metas.title', { title, date: release_date?.substring(0, 4) })}
       previewImage={`https://image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
       url={`/movies/${themoviedbId}`}
       description={overview ? truncate(overview, 100) : null}
@@ -395,9 +394,9 @@ const View = (props) => {
                 >
                   {title}
                 </Text>
-                {!isMobile && release_date.substring(0, 4) && (
+                {!isMobile && release_date?.substring(0, 4) && (
                   <Text isBold fontSize={16} marginLeft={4} textColor="#ffffff">
-                    ({release_date.substring(0, 4)})
+                    ({release_date?.substring(0, 4)})
                   </Text>
                 )}
               </Box>
@@ -414,9 +413,9 @@ const View = (props) => {
                     {vote_average}
                   </RoundedLabel>
 
-                  {release_date.substring(0, 4) && (
+                  {release_date?.substring(0, 4) && (
                     <Text isBold fontSize={16} marginLeft={8} textColor="#ffffff">
-                      ({release_date.substring(0, 4)})
+                      ({release_date?.substring(0, 4)})
                     </Text>
                   )}
                 </Box>
@@ -438,38 +437,8 @@ const View = (props) => {
 
               <Divider />
 
-              <Text isBold marginTop={8} marginBottom={4} fontSize={18} textColor="#ffffff">
-                {isInMoviesToWatch ? (
-                  <div>
-                    <span>{t('view.watching_list')}</span>
-                    <Icon color="green" name="check" style={{ marginLeft: 8 }} />
-                  </div>
-                ) : (
-                  t('view.save_watching_list')
-                )}
-              </Text>
-              <Button
-                color={isInMoviesToWatch ? 'red' : 'blue'}
-                onClick={session ? handleSubmitMovieToWatch : signIn}
-                loading={isSubmittingMovieToWatch}
-                style={{ marginTop: 8, marginBottom: 8 }}
-                size="small"
-              >
-                {isInMoviesToWatch ? t('view.delete') : t('view.add')}
-              </Button>
-
-              <Divider horizontal>
-                {userMovie ? (
-                  <Icon style={{ fontSize: 25 }} color="green" name="check" />
-                ) : (
-                  <Text fontSize={20} textColor="#ffffff" isBold>
-                    {t('view.or')}
-                  </Text>
-                )}
-              </Divider>
-
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Text isBold fontSize={24} textColor="#ffffff">
+                <Text isBold fontSize={24} textColor="#ffffff" marginRight={12}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Text
                       textColor="#ffffff"
@@ -481,16 +450,32 @@ const View = (props) => {
                     </Text>
                   </div>
                 </Text>
-                {userMovie && (
-                  <RoundedLabel borderWith={2} rounded color={getColorFromMark(form.rating)}>
-                    {form.rating}
-                  </RoundedLabel>
-                )}
               </div>
 
-              <Text isBold marginTop={16} marginBottom={8} fontSize={14} textColor="#ffffff">
-                {userMovie ? t('view.my_profile_rating') : t('view.rate_movie')}
-              </Text>
+              <div style={{ display: 'flex', alignItems: 'center' }}>
+                <Text
+                  isBold
+                  marginTop={16}
+                  marginBottom={8}
+                  marginRight={4}
+                  fontSize={14}
+                  textColor="#ffffff"
+                >
+                  {userMovie ? t('view.my_profile_rating') : t('view.rate_movie')}
+                </Text>
+                {form.rating ? (
+                  <RoundedLabel
+                    marginTop={6}
+                    width="30px"
+                    height="30px"
+                    borderWith={2}
+                    rounded
+                    color={getColorFromMark(form.rating)}
+                  >
+                    {form.rating}
+                  </RoundedLabel>
+                ) : null}
+              </div>
 
               <ReactStars
                 count={10}
@@ -506,13 +491,15 @@ const View = (props) => {
                 {userMovie ? t('view.my_profile_description') : t('view.add_description')}
               </Text>
 
-              <Form.TextArea
-                placeholder={t('view.description_placeholder')}
-                name="description"
-                value={form.description || ''}
-                onChange={handleChangeDescription}
-                style={{ width: isMobile ? null : 600, fontSize: 16 }}
-              />
+              <Form>
+                <TextArea
+                  placeholder={t('view.description_placeholder')}
+                  name="description"
+                  value={form.description || ''}
+                  onChange={handleChangeDescription}
+                  style={{ width: isMobile ? null : 600, fontSize: isMobile ? 16 : 14 }}
+                />
+              </Form>
               <Button
                 onClick={session ? handleSubmitMovie : signIn}
                 size="small"
@@ -538,6 +525,36 @@ const View = (props) => {
                   {t('view.delete')}
                 </Button>
               ) : null}
+
+              <Divider horizontal>
+                {userMovie ? (
+                  <Icon style={{ fontSize: 25 }} color="green" name="check" />
+                ) : (
+                  <Text fontSize={20} textColor="#ffffff" isBold>
+                    {t('view.or')}
+                  </Text>
+                )}
+              </Divider>
+
+              <Text isBold marginTop={8} marginBottom={4} fontSize={18} textColor="#ffffff">
+                {isInMoviesToWatch ? (
+                  <div>
+                    <span>{t('view.watching_list')}</span>
+                    <Icon color="green" name="check" style={{ marginLeft: 8 }} />
+                  </div>
+                ) : (
+                  t('view.save_watching_list')
+                )}
+              </Text>
+              <Button
+                color={isInMoviesToWatch ? 'red' : 'blue'}
+                onClick={session ? handleSubmitMovieToWatch : signIn}
+                loading={isSubmittingMovieToWatch}
+                style={{ marginTop: 8, marginBottom: 8 }}
+                size="small"
+              >
+                {isInMoviesToWatch ? t('view.delete') : t('view.add')}
+              </Button>
             </Right>
           </SubContainer>
         </ContentContainer>
@@ -585,7 +602,6 @@ const View = (props) => {
                     percent={isMobile || isTablet ? 50 : 20}
                   >
                     <CardMovie
-                      // isMobile={isMobile}
                       title={title}
                       subtitle={moment(release_date).format('MMM, YYYY')}
                       imageUrl={`https://image.tmdb.org/t/p/w300/${poster_path}`}
