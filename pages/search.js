@@ -23,8 +23,6 @@ const PaginationContainer = styled.div`
 }`;
 
 const New = () => {
-  const router = useRouter();
-
   const [movies, setMovies] = useState(null);
   const [totalPagesMovies, setTotalPagesMovies] = useState(0);
   const [activePageMovies, setActivePageMovies] = useState(1);
@@ -36,18 +34,19 @@ const New = () => {
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
+  const router = useRouter();
 
   useEffect(() => {
     const searchMovie = async () => {
       setIsLoading(true);
       const moviesQuery = await fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&query=${router.query.search}&page=${activePageMovies}&language=fr`,
+        `https://api.themoviedb.org/3/search/movie?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&query=${router.query.search}&page=${activePageMovies}&language=${router.locale}`,
       );
 
       const { results: moviesResults, total_pages: moviesTotalPage } = await moviesQuery.json();
 
       const seriesQuery = await fetch(
-        `https://api.themoviedb.org/3/search/tv?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&query=${router.query.search}&page=${activePageSeries}&language=fr`,
+        `https://api.themoviedb.org/3/search/tv?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&query=${router.query.search}&page=${activePageSeries}&language=${router.locale}`,
       );
 
       const { results: seriesResults, total_pages: seriesTotalPage } = await seriesQuery.json();
@@ -58,6 +57,7 @@ const New = () => {
       setTotalPagesMovies(moviesTotalPage);
       setTotalPagesSeries(seriesTotalPage);
     };
+
     if (router.query.search) {
       searchMovie();
     }
@@ -83,7 +83,7 @@ const New = () => {
         ) : (
           <>
             <Text isBold marginBottom={24} fontSize={32}>
-              Movies:
+              Results for: {router.query.search}
             </Text>
             {movies && movies.length === 0 && series && series.length === 0 ? (
               <EmptyState>No results found for {router.query.search}.</EmptyState>
@@ -129,7 +129,7 @@ const New = () => {
               </>
             )}
             <Text isBold marginTop={24} marginBottom={24} fontSize={32}>
-              Series:
+              Series
             </Text>
             {series && series.length === 0 ? (
               <EmptyState>No results found for {router.query.search}.</EmptyState>

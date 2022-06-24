@@ -14,6 +14,7 @@ const LoaderContainer = styled.div`
   transform: -moz-translate(-50%, -50%);
   transform: -ms-translate(-50%, -50%);
 `;
+
 const Page = ({
   children,
   title = 'PapyMovie',

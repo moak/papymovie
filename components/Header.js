@@ -13,6 +13,7 @@ import { useSession } from 'next-auth/react';
 import Brand from './Brand';
 import BurgerMenu from './BurgerMenu';
 import CollapseMenu from './CollapseMenu';
+import SearchBar from './SearchBar';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
@@ -76,11 +77,6 @@ const BurgerWrapper = styled.div`
   }
 `;
 
-const SearchContainer = styled.div`
-  width: ${(p) => (p.isMobile ? 200 : 320)}px;
-  margin: auto 0;
-`;
-
 const Header = (props) => {
   const { t } = useTranslation('common');
 
@@ -100,13 +96,15 @@ const Header = (props) => {
     { lang: 'en', display: 'EN' },
   ];
 
-  const handleChangeSearch = useCallback((e) => {
-    setSearch(e.target.value);
+  const handleChangeSearch = useCallback((value) => {
+    setSearch(value);
   }, []);
 
   const submitSearch = useCallback(
     (e) => {
-      e.preventDefault();
+      if (e) {
+        e.preventDefault();
+      }
       router.push(`/search?search=${search}`);
     },
     [search],
@@ -163,33 +161,19 @@ const Header = (props) => {
         isTransparent={router.pathname === '/' && isTransparent}
       >
         <FlexContainer>
-          {(((!isMobile || router.pathname == '/') && isTransparent) || !isMobile) && (
-            <Brand isConnected={!!session} />
-          )}
+          {isMobile ? null : <Brand isConnected={!!session} />}
 
-          {(router.pathname !== '/' ||
-            (router.pathname === '/' && !isTransparent) ||
-            (!isMobile && !isTablet)) && (
-            <SearchContainer isMobile={isMobile}>
-              <form onSubmit={submitSearch}>
-                <Input
-                  action={
-                    isMobile
-                      ? null
-                      : {
-                          icon: 'search',
-                          onClick: submitSearch,
-                        }
-                  }
-                  style={{ fontSize: 16, height: 38 }}
-                  onChange={handleChangeSearch}
-                  fluid
-                  placeholder={t('header.search')}
-                  value={search || ''}
-                />
-              </form>
-            </SearchContainer>
-          )}
+          <form onSubmit={submitSearch}>
+            <SearchBar
+              isMobile={isMobile}
+              onDelete={() => {
+                router.push(`/movies`);
+              }}
+              placeholder={t('header.search')}
+              onChange={handleChangeSearch}
+              value={search || ''}
+            />
+          </form>
 
           {!isMobile && !isTablet && (
             <NavLinks style={{ ...linkAnimation, width: 550 }}>

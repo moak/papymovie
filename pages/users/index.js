@@ -23,7 +23,6 @@ const Users = (props) => {
 
   const isMobile = useIsMobile();
 
-  console.log('isMobile', isMobile);
   return (
     <Page title={t('list.metas.title')} description={t('list.metas.description')} url="/users">
       <PageContainer>

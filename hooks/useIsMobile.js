@@ -3,9 +3,11 @@ import useWindowSize from './useWindowSize';
 const DEFAULT_BREAKPOINT = 728;
 
 const useIsMobile = (breakpoint) => {
-  const windowSize = useWindowSize('width');
+  const windowSize = useWindowSize('width') || 400;
 
-  return windowSize < (breakpoint || DEFAULT_BREAKPOINT);
+  const isMobile = windowSize < (breakpoint || DEFAULT_BREAKPOINT);
+
+  return isMobile;
 };
 
 export default useIsMobile;

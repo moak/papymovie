@@ -20,12 +20,10 @@ export default NextAuth({
       console.log({ url, baseUrl });
       // Allows relative callback URLs
       if (url.startsWith('/')) {
-        console.log('1');
         return `${baseUrl}${url}`;
       }
       // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) {
-        console.log('2');
         return `${baseUrl}/community`;
       }
       return baseUrl;
