@@ -16,6 +16,20 @@ export default NextAuth({
 
       return session;
     },
+    async redirect({ url, baseUrl }) {
+      console.log({ url, baseUrl });
+      // Allows relative callback URLs
+      if (url.startsWith('/')) {
+        console.log('1');
+        return `${baseUrl}${url}`;
+      }
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) {
+        console.log('2');
+        return `${baseUrl}/community`;
+      }
+      return baseUrl;
+    },
   },
   providers: [
     GitHubProvider({
@@ -28,6 +42,10 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_SECRET,
     }),
   ],
+
+  pages: {
+    signIn: '/signin',
+  },
 
   secret: process.env.SECRET,
 });

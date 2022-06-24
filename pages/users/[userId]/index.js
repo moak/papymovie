@@ -27,13 +27,6 @@ const ActionsContainer = styled.div`
   display: flex;
 }`;
 
-const Description = styled.div`
-  height: 30px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  overflow: hidden;
-}`;
-
 const User = () => {
   const { t } = useTranslation('user');
 
