@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import dynamic from 'next/dynamic';
 
 import dbConnect from 'utils/dbConnect';
 import Feed from 'models/Feed';
@@ -85,4 +86,5 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default Community;
+// export default Community;
+export default dynamic(() => Promise.resolve(Community), { ssr: false });

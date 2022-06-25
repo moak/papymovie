@@ -12,12 +12,73 @@ import { useRouter } from 'next/router';
 
 import { useTranslation } from 'next-i18next';
 
+const Separator = styled.div`
+  width: 100%;
+  background-color: #7d7d7d;
+  height: 1px;
+  margin: 4px 0;
+}`;
+
+const CollapseWrapper = styled(animated.div)`
+  background: #2d3436;
+  position: fixed;
+  top: 4.5rem;
+  left: 0;
+  right: 0;
+`;
+
+const NavLinks = styled.ul`
+  list-style-type: none;
+  padding: 2rem 1rem 2rem 2rem;
+
+  & li {
+    transition: all 300ms linear 0s;
+  }
+
+  & a,
+  div {
+    font-size: 1.4rem;
+    line-height: 2;
+    color: #dfe6e9;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+
+    &:hover {
+      color: #fdcb6e;
+    }
+  }
+`;
+
 const languages = [
   { lang: 'fr', display: 'FR' },
   { lang: 'en', display: 'EN' },
 ];
 
+const ClosableLink = (props) => {
+  const { handleNavbar, display, currentPath, closablePath } = props;
+
+  const isCurrent = currentPath === closablePath;
+
+  return (
+    <Link href={closablePath}>
+      <div
+        style={{ color: isCurrent ? '#fdcb6e' : '#dfe6e9' }}
+        onClick={() => {
+          if (currentPath === closablePath) {
+            handleNavbar(false);
+          }
+        }}
+      >
+        {display}
+      </div>
+    </Link>
+  );
+};
+
 const CollapseMenu = (props) => {
+  const { handleNavbar } = props;
+
   const { t } = useTranslation('common');
 
   const router = useRouter();
@@ -45,25 +106,50 @@ const CollapseMenu = (props) => {
         <NavLinks>
           {!session && (
             <li>
-              <Link href="/">{t('header.home')}</Link>
+              <ClosableLink
+                display={t('header.home')}
+                handleNavbar={handleNavbar}
+                currentPath={router.pathname}
+                closablePath="/"
+              />
             </li>
           )}
           <li>
-            <Link href="/movies">{t('header.movies')}</Link>
+            <ClosableLink
+              display={t('header.movies')}
+              handleNavbar={handleNavbar}
+              currentPath={router.pathname}
+              closablePath="/movies"
+            />
           </li>
           <li>
-            <Link href="/community">{t('header.community')}</Link>
+            <ClosableLink
+              display={t('header.community')}
+              handleNavbar={handleNavbar}
+              currentPath={router.pathname}
+              closablePath="/community"
+            />
           </li>
           <li>
-            <Link href="/users">{t('header.users')}</Link>
+            <ClosableLink
+              display={t('header.users')}
+              handleNavbar={handleNavbar}
+              currentPath={router.pathname}
+              closablePath="/users"
+            />
           </li>
 
           {session ? (
             <>
               <li>
-                <Link href={`/users/${session?.user?.id}`}>{t('header.my_profile')}</Link>
+                <ClosableLink
+                  display={t('header.my_profile')}
+                  handleNavbar={handleNavbar}
+                  currentPath={router.pathname}
+                  closablePath={`/users/${session?.user?.id}`}
+                />
               </li>
-              <hr />
+              <Separator />
 
               <li>
                 <a onClick={signOut}>{t('header.disconnect')}</a>
@@ -71,22 +157,27 @@ const CollapseMenu = (props) => {
             </>
           ) : (
             <>
-              <hr />
+              <Separator />
               <li>
-                <a onClick={signIn}>{t('header.connect')}</a>
+                <ClosableLink
+                  display={t('header.connect')}
+                  handleNavbar={handleNavbar}
+                  currentPath={router.pathname}
+                  closablePath={`/signin`}
+                  onClick={signIn}
+                />
               </li>
             </>
           )}
-          <hr />
+          <Separator />
 
-          <li>
+          <li style={{ marginTop: 8 }}>
             {languages.map((language, index) => (
               <React.Fragment key={language.display}>
                 {index > 0 && (
                   <span
                     style={{
                       fontSize: 18,
-
                       margin: '0 6px',
                       color: '#ffffff',
                     }}
@@ -117,35 +208,3 @@ const CollapseMenu = (props) => {
 };
 
 export default CollapseMenu;
-
-const CollapseWrapper = styled(animated.div)`
-  background: #2d3436;
-  position: fixed;
-  top: 4.5rem;
-  left: 0;
-  right: 0;
-`;
-
-const NavLinks = styled.ul`
-  list-style-type: none;
-  padding: 2rem 1rem 2rem 2rem;
-
-  & li {
-    transition: all 300ms linear 0s;
-  }
-
-  & a,
-  div {
-    font-size: 1.4rem;
-    line-height: 2;
-    color: #dfe6e9;
-    text-transform: uppercase;
-    text-decoration: none;
-    cursor: pointer;
-
-    &:hover {
-      color: #fdcb6e;
-      border-bottom: 1px solid #fdcb6e;
-    }
-  }
-`;

@@ -139,7 +139,7 @@ const Home = (props) => {
 
   useEffect(() => {
     if (other || session || isAuthenticated) {
-      router.push('community');
+      router.push('movies');
     }
   }, [session, isAuthenticated]);
 

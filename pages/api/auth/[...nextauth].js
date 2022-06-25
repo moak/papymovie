@@ -24,20 +24,19 @@ export default NextAuth({
       }
       // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) {
-        return `${baseUrl}/community`;
+        return `${baseUrl}/movies`;
       }
       return baseUrl;
     },
   },
   providers: [
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID,
-      clientSecret: process.env.GITHUB_SECRET,
-    }),
-
     GoogleProvider({
       clientId: process.env.GOOGLE_ID,
       clientSecret: process.env.GOOGLE_SECRET,
+    }),
+    GitHubProvider({
+      clientId: process.env.GITHUB_ID,
+      clientSecret: process.env.GITHUB_SECRET,
     }),
   ],
 

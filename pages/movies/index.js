@@ -5,6 +5,7 @@ import { Label, Button, Select, Pagination } from 'semantic-ui-react';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 
 import Page from 'components/Page';
 import PageContainer from 'components/PageContainer';
@@ -335,4 +336,5 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default Movies;
+// export default Movies;
+export default dynamic(() => Promise.resolve(Movies), { ssr: false });

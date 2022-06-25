@@ -1,4 +1,6 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
+
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { useTranslation } from 'next-i18next';
@@ -67,8 +69,6 @@ const Users = (props) => {
 export async function getServerSideProps(context) {
   const { locale } = context;
 
-  // const session = await getSession({ req });
-
   await dbConnect();
 
   const users = await User.find({});
@@ -81,4 +81,5 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default Users;
+// export default Users;
+export default dynamic(() => Promise.resolve(Users), { ssr: false });

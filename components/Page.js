@@ -25,9 +25,16 @@ const Page = ({
 }) => {
   const [isNavBarOpen, setIsNavBarOpen] = useState(false);
 
-  const handleNavbar = useCallback(() => {
-    setIsNavBarOpen(!isNavBarOpen);
-  }, [isNavBarOpen]);
+  const handleNavbar = useCallback(
+    (value) => {
+      if (typeof value === 'string') {
+        setIsNavBarOpen(value);
+      } else {
+        setIsNavBarOpen(!isNavBarOpen);
+      }
+    },
+    [isNavBarOpen],
+  );
 
   return (
     <>

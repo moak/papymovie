@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
 import { useSpring, animated } from 'react-spring';
 import { Button, Input } from 'semantic-ui-react';
@@ -117,7 +118,7 @@ const Header = (props) => {
   }, []);
 
   const connect = useCallback(() => {
-    signIn(null, { callbackUrl: `${window.location.origin}/community` });
+    signIn(null, { callbackUrl: `${window.location.origin}/movies` });
   }, []);
 
   const linkAnimation = useSpring({
@@ -257,4 +258,5 @@ const Header = (props) => {
   );
 };
 
-export default Header;
+// export default Header;
+export default dynamic(() => Promise.resolve(Header), { ssr: false });

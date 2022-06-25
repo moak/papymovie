@@ -123,6 +123,10 @@ const CardFeed = (props) => {
     }
   }, []);
 
+  const connect = useCallback(() => {
+    signIn(null, { callbackUrl: `${window.location.origin}/community` });
+  }, []);
+
   const handleClickComment = useCallback(async () => {
     try {
       await fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/comment`, {
@@ -323,7 +327,6 @@ const CardFeed = (props) => {
               style={{ fontSize: isMobile ? '16px' : '14px', resize: 'none', padding: '10px' }}
               value={pendingComment}
               onChange={handleChangeComment}
-              disabled={!session}
               placeholder={'Write a comment'}
             />
             <Button
@@ -333,8 +336,7 @@ const CardFeed = (props) => {
               icon="edit"
               content="Add comment"
               primary
-              disabled={!session}
-              onClick={handleClickComment}
+              onClick={session ? handleClickComment : connect}
             />
           </Form>
         </DetailsContainer>

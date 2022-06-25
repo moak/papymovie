@@ -1,12 +1,6 @@
-import useWindowSize from './useWindowSize';
+import { isMobile } from 'react-device-detect';
 
-const DEFAULT_BREAKPOINT = 728;
-
-const useIsMobile = (breakpoint) => {
-  const windowSize = useWindowSize('width') || 400;
-
-  const isMobile = windowSize < (breakpoint || DEFAULT_BREAKPOINT);
-
+const useIsMobile = () => {
   return isMobile;
 };
 
