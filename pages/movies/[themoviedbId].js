@@ -431,7 +431,7 @@ const View = (props) => {
               <Divider />
 
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Text textColor={theme.white} isBold fontSize={24} marginRight={12}>
+                <Text textColor={theme.white} isBold fontSize={26} marginRight={12}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Text
                       textColor={theme.white}
@@ -555,7 +555,7 @@ const View = (props) => {
         {actors && actors.length > 0 && (
           <>
             <div>
-              <Text textColor={theme.white} marginTop={36} marginBottom={16} fontSize={32}>
+              <Text textColor={theme.white} marginTop={36} marginBottom={16} fontSize={26}>
                 {t('view.actors')}
               </Text>
               <List>
@@ -582,7 +582,7 @@ const View = (props) => {
 
         {similarMovies && similarMovies.length > 0 && (
           <div>
-            <Text textColor={theme.white} marginTop={36} marginBottom={16} fontSize={32}>
+            <Text textColor={theme.white} marginTop={36} marginBottom={16} fontSize={26}>
               {t('view.similar_movies')}
             </Text>
             <List>

@@ -20,19 +20,18 @@ import CardMovie from 'components/CardMovie';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
-// import useScroll from 'hooks/useScroll';
 
 const Footer = styled.div`
 width: 100%;
 height: 100px;
-border-top: 1px solid #eaeaea;
+border-top: 1px solid ${(p) => p.borderColor};
 display: flex;
 justify-content: center;
 align-items: center;
 }`;
 
-const Description = styled.a`
-  height: 30px;
+const Description = styled.div`
+  height: 16px;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
@@ -67,7 +66,7 @@ const Card = styled.div`
   text-align: left;
   color: inherit;
   text-decoration: none;
-  border: ${(p) => (p.isMobile ? 0 : 1)}px solid #eaeaea;
+  border: ${(p) => (p.isMobile ? 0 : 1)}px solid ${(p) => p.border};
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
   display: flex;
@@ -126,7 +125,6 @@ const Separator = styled.div`
 }`;
 
 const Home = (props) => {
-  console.log('ehey');
   const { latestMovies = [], other, toggleTheme, theme } = props;
 
   const { t } = useTranslation('home');
@@ -194,7 +192,7 @@ const Home = (props) => {
         >
           <Box marginBottom={32} flexDirection={isMobile ? 'column' : 'row'}>
             <Link href="/movies">
-              <Card isMobile={isMobile}>
+              <Card border={theme.borderColor} isMobile={isMobile}>
                 <Text
                   textColor={theme.text}
                   marginBottom={24}
@@ -212,7 +210,7 @@ const Home = (props) => {
               </Card>
             </Link>
             <Link href="/movies">
-              <Card isMobile={isMobile}>
+              <Card border={theme.borderColor} isMobile={isMobile}>
                 <Text
                   textColor={theme.text}
                   marginBottom={24}
@@ -230,7 +228,7 @@ const Home = (props) => {
               </Card>
             </Link>
             <Link href="/users">
-              <Card isMobile={isMobile}>
+              <Card border={theme.borderColor} isMobile={isMobile}>
                 <Text
                   textColor={theme.text}
                   marginBottom={24}
@@ -285,9 +283,9 @@ const Home = (props) => {
                 })}
           </List>
         </Goal2>
-        <Footer>
+        <Footer borderColor={theme.borderColor}>
           Powered by
-          <Text marginLeft={4} isBold>
+          <Text textColor={theme.text} marginLeft={4} isBold>
             Maxus
           </Text>
         </Footer>

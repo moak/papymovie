@@ -36,7 +36,7 @@ export const LeftColumn = styled.div`
 const RightColumn = styled.div`
   background-color: ${(p) => p.background || '#f5f5f5'};
   width: 280px;
-  border: 1px solid rgb(224, 230, 233);
+  border: 1px solid ${(p) => p.borderColor || '#f5f5f5'};
   border-radius: 10px;
   padding: 16px 16px 16px 16px;
   top: 90px;
@@ -209,7 +209,7 @@ const Movies = (props) => {
     >
       <PageContainer background={theme.background} maxWidth="1300">
         <Row justifyContent="space-between">
-          <Text textColor={theme.text} isBold marginBottom={24} fontSize={32}>
+          <Text textColor={theme.text} isBold marginBottom={24} fontSize={26}>
             {t('movies')}
           </Text>
           {isMobile && (
@@ -224,7 +224,7 @@ const Movies = (props) => {
 
         <Row flexDirection={isMobile ? 'column' : 'row'}>
           {(!isMobile || (isMobile && isFiltersVisible)) && (
-            <RightColumn background={theme.background}>
+            <RightColumn background={theme.background} borderColor={theme.borderColor}>
               <Text textColor={theme.text} isBold fontSize={16} marginBottom={16}>
                 {t('filters')}
               </Text>

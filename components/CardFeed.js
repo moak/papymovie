@@ -76,7 +76,6 @@ const CardFeed = (props) => {
   const [feedItemState, setFeedItem] = useState(feedItem);
   const [pendingComment, setPendingComment] = useState('');
 
-  console.log('cardfeed theme', theme);
   if (!feedItem.movie || !feedItem.user) {
     return null;
   }
@@ -179,7 +178,6 @@ const CardFeed = (props) => {
     setPendingComment(event.target.value);
   }, []);
 
-  console.log('themethemethemetheme', theme);
   const component = (
     <Wrapper theme={theme}>
       <Container isMobile={isMobile}>

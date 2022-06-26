@@ -11,8 +11,9 @@ const Text = styled.div`
 
   font-size: ${(p) => p.fontSize || 14}px;
   color: ${(p) => p.textColor || 'black'};
-  font-weight: ${(p) => (p.isBold ? 500 : 400)};
+  font-weight: ${(p) => (p.isBold ? 600 : 400)};
 
+  padding: ${(p) => p.padding || 0}px;
   margin-top: ${(p) => p.marginTop || 0}px;
   margin-bottom: ${(p) => p.marginBottom || 0}px;
   margin-left: ${(p) => p.marginLeft || 0}px;

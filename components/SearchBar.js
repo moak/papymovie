@@ -12,7 +12,7 @@ const Container = styled.div`
   align-items: center;
   flex: 0 1 auto;
   height: 32px;
-  width: 215px;
+  width: ${(p) => p.width}px;
 `;
 
 const Input = styled.input`
@@ -31,7 +31,8 @@ const Input = styled.input`
 
 const IconOuterWrapper = styled.div`
   position: absolute;
-  width: 215px;
+  width: ${(p) => p.width}px;
+
   height: 32px;
   display: flex;
   flex-direction: column;
@@ -88,7 +89,7 @@ const RightSearchIcon = styled(SearchIcon)`
 `;
 
 const SearchContainer = (props) => {
-  const { placeholder, onChange, value, onDelete, isMobile } = props;
+  const { placeholder, onChange, value, onDelete, isMobile, width } = props;
 
   const [query, setQuery] = useState(value || placeholder);
   const [isFocused, setIsFocused] = useState(false);
@@ -135,7 +136,7 @@ const SearchContainer = (props) => {
   };
 
   return (
-    <Container>
+    <Container width={width}>
       <Input
         spellcheck="false"
         fontSize={isMobile ? 16 : 14}
@@ -158,7 +159,8 @@ const SearchContainer = (props) => {
           <LeftSearchIcon>
             <Icon size="large" name="search" />
           </LeftSearchIcon>
-          <IconOuterWrapper onClick={handleOnClick}>
+
+          <IconOuterWrapper onClick={handleOnClick} width={width}>
             <IconInnerWrapper>
               <SearchIcon />
               <Span>{query}</Span>

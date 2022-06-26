@@ -13,7 +13,6 @@ const PappyMovieApp = ({ Component, pageProps: { session, ...pageProps } }) => {
   const [theme, setTheme] = useState('light');
 
   const toggleTheme = () => {
-    console.log('toggleTheme');
     theme == 'light' ? setTheme('dark') : setTheme('light');
   };
   const themeContext = useTheme(theme);
@@ -24,7 +23,6 @@ const PappyMovieApp = ({ Component, pageProps: { session, ...pageProps } }) => {
     toggleTheme,
   };
 
-  console.log('theme', theme);
   return (
     <SessionProvider session={session}>
       <ThemeProvider theme={themeContext}>

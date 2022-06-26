@@ -34,7 +34,7 @@ const Users = (props) => {
       url="/users"
     >
       <PageContainer>
-        <Text textColor={theme.text} isBold marginBottom={24} fontSize={32}>
+        <Text textColor={theme.text} isBold marginBottom={24} fontSize={26}>
           {t('list.title')}
         </Text>
 

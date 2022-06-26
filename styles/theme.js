@@ -1,17 +1,21 @@
 import { createGlobalStyle } from 'styled-components';
 
+const greyLight = '#f4f4f4';
+
 export const lightTheme = {
   body: '#FFF',
   text: 'black',
   textLight: 'grey',
   headerBackground: '#fff',
-  borderColor: '#d8d7d7',
+  borderColor: '#e9e7e7',
   background: '#fff',
   like: '#5789cd',
   dislike: 'red',
   confirm: 'green',
 
   white: '#fff',
+  greyLight,
+  hover: greyLight,
 };
 
 export const darkTheme = {
@@ -19,19 +23,20 @@ export const darkTheme = {
   text: '#FFF',
   textLight: '#fff',
   headerBackground: '#2a2929',
-  borderColor: 'grey',
+  borderColor: '#555555',
   background: '#2a2929',
   like: '#5789cd',
   dislike: 'red',
   confirm: 'green',
+  greyLight,
 
   white: '#fff',
+  hover: 'grey',
 };
 
 export const GlobalStyles = createGlobalStyle`
   body {
     background: ${({ theme, ...props }) => {
-      console.log('test', props);
       return theme?.body;
     }};
     color: ${({ theme }) => theme?.text};

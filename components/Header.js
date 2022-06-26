@@ -15,12 +15,12 @@ import BurgerMenu from './BurgerMenu';
 import CollapseMenu from './CollapseMenu';
 import SearchBar from './SearchBar';
 import ToggleTheme from './ToggleTheme';
+import HeaderActions from './HeaderActions';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
 import { useTheme } from 'styles/theme';
 
-console.log(useTheme);
 // eslint-disable-next-line no-unused-vars
 const HeaderContainer = styled(({ isTransparent, ...props }) => (
   <animated.nav
@@ -49,7 +49,10 @@ const ToggleThemeContainer = styled.div`
   display: inline;
 `;
 
-const NavLinks = styled(animated.ul)`
+const NavLinks = styled(animated.div)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   justify-self: end;
   list-style-type: none;
   margin: auto 0;
@@ -86,7 +89,6 @@ const BurgerWrapper = styled.div`
 const Header = (props) => {
   const { toggleTheme, theme } = props;
 
-  console.log('props header', props);
   const { t } = useTranslation('common');
 
   const { data: session } = useSession();
@@ -147,7 +149,7 @@ const Header = (props) => {
   });
 
   const handleScroll = () => {
-    if (window.scrollY <= 70) {
+    if (window.scrollY <= 0) {
       setIsTransparent(true);
     } else {
       setIsTransparent(false);
@@ -162,9 +164,6 @@ const Header = (props) => {
   const handleLocaleChange = (data) => {
     router.replace(router.asPath, router.asPath, { locale: data });
   };
-
-  console.log('themeContext', theme);
-  console.log('theme', theme);
 
   return (
     <>
@@ -182,6 +181,7 @@ const Header = (props) => {
           )}
           <form onSubmit={submitSearch}>
             <SearchBar
+              width={isMobile ? 230 : 350}
               isMobile={isMobile}
               onDelete={() => {
                 router.push(`/movies`);
@@ -191,29 +191,7 @@ const Header = (props) => {
               value={search || ''}
             />
           </form>
-          {!isMobile && !isTablet && (
-            <NavLinks
-              color={isTransparent && router.pathname === '/' ? 'white' : theme.text}
-              style={{ ...linkAnimation, width: 550 }}
-            >
-              {!isMobile && !isTablet && (
-                <>
-                  <Link href="/movies">{t('header.movies')}</Link>
-                  <Link href="/community">{t('header.community')}</Link>
-                  <Link href="/users">{t('header.users')}</Link>
 
-                  {session && (
-                    <Link href={`/users/${session && session?.user?.id}`}>
-                      {t('header.my_profile')}
-                    </Link>
-                  )}
-                  <ToggleThemeContainer>
-                    <ToggleTheme toggleTheme={toggleTheme} />
-                  </ToggleThemeContainer>
-                </>
-              )}
-            </NavLinks>
-          )}
           {!isMobile && !isTablet && (
             <>
               <NavLinks style={{ ...linkAnimation }}>
@@ -272,6 +250,17 @@ const Header = (props) => {
             <BurgerMenu navbarState={props.navbarState} handleNavbar={props.handleNavbar} />
           </BurgerWrapper>
         </FlexContainer>
+        {!isMobile && !isTablet && (
+          <>
+            <HeaderActions
+              isLanding={router.pathname === '/'}
+              isTransparent={isTransparent}
+              theme={theme}
+              toggleTheme={toggleTheme}
+              session={session}
+            />
+          </>
+        )}
       </HeaderContainer>
       <CollapseMenu
         theme={theme}

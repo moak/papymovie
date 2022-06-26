@@ -34,9 +34,6 @@ const Community = (props) => {
   const { t } = useTranslation('common');
   const isMobile = useIsMobile();
 
-  console.log('other', other);
-  console.log('theme community props', props);
-  console.log('theme community commmm', theme);
   return (
     <Page
       title="Community - PapyMovie"
@@ -47,7 +44,7 @@ const Community = (props) => {
     >
       <PageContainer maxWidth={1024}>
         <Row justifyContent="space-between">
-          <Text textColor={theme.text} isBold marginBottom={24} fontSize={32}>
+          <Text textColor={theme.text} isBold marginBottom={24} fontSize={26}>
             {t('header.community')}
           </Text>
         </Row>

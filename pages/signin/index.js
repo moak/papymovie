@@ -1,9 +1,12 @@
 import React from 'react';
 import { getProviders, signIn } from 'next-auth/react';
+
+import styled from 'styled-components';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Page from 'components/Page';
 import Text from 'components/Text';
+import PageContainer from 'components/PageContainer';
 
 export default function SignIn(props) {
   const { providers, toggleTheme, theme } = props;
@@ -43,43 +46,48 @@ export default function SignIn(props) {
   ];
   return (
     <Page toggleTheme={toggleTheme} theme={theme}>
-      <div className="login-container">
-        <div className="login-form">
-          <div className="login-form-inner">
-            <div className="logo">
-              <svg
-                height="512"
-                viewBox="0 0 192 192"
-                width="512"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="m155.109 74.028a4 4 0 0 0 -3.48-2.028h-52.4l8.785-67.123a4.023 4.023 0 0 0 -7.373-2.614l-63.724 111.642a4 4 0 0 0 3.407 6.095h51.617l-6.962 67.224a4.024 4.024 0 0 0 7.411 2.461l62.671-111.63a4 4 0 0 0 .048-4.027z" />
-              </svg>
-              <Text isBold fontSize={28} marginBottom={16} marginTop={-4}>
-                Welcome
-              </Text>
-            </div>
-            <p className="body-text">Stop forgetting the movies you watch.</p>
-
-            {Object.values(providers).map((provider, index) => (
-              <div
-                style={{ cursor: 'pointer' }}
-                tabIndex={index}
-                role="button"
-                onKeyDown={() => signIn(provider.id)}
-                key={index}
-                onClick={() => signIn(provider.id)}
-              >
-                <div className="rounded-button google-login-button">
-                  <span className="google-icon">{providersArray[index].svg}</span>
-                  <span>Sign in with {providersArray[index].name}</span>
-                </div>
+      <PageContainer background={theme.background}>
+        <div style={{ border: `1px solid ${theme.borderColor}` }} className="login-container">
+          <div className="login-form">
+            <div className="login-form-inner">
+              <div className="logo">
+                <svg
+                  height="512"
+                  viewBox="0 0 192 192"
+                  width="512"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="m155.109 74.028a4 4 0 0 0 -3.48-2.028h-52.4l8.785-67.123a4.023 4.023 0 0 0 -7.373-2.614l-63.724 111.642a4 4 0 0 0 3.407 6.095h51.617l-6.962 67.224a4.024 4.024 0 0 0 7.411 2.461l62.671-111.63a4 4 0 0 0 .048-4.027z" />
+                </svg>
+                <Text textColor={theme.text} isBold fontSize={28} marginBottom={16} marginTop={-4}>
+                  Welcome
+                </Text>
               </div>
-            ))}
-          </div>
-        </div>
+              <Text textColor={theme.text} fontSize={16} marginBottom={16} marginTop={-4}>
+                Stop forgetting the movies you watch.
+              </Text>
 
-        {/* <div className="onboarding">
+              {Object.values(providers).map((provider, index) => (
+                <div
+                  style={{ cursor: 'pointer' }}
+                  tabIndex={index}
+                  role="button"
+                  onKeyDown={() => signIn(provider.id)}
+                  key={index}
+                  onClick={() => signIn(provider.id)}
+                >
+                  <div className="rounded-button google-login-button">
+                    <span className="google-icon">{providersArray[index].svg}</span>
+                    <Text cursor="pointer" textColor={theme.text}>
+                      Sign in with {providersArray[index].name}
+                    </Text>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* <div className="onboarding">
           <div className="swiper-container">
             <div className="swiper-wrapper">
               <div className="swiper-slide color-1">
@@ -127,7 +135,8 @@ export default function SignIn(props) {
             <div className="swiper-pagination"></div>
           </div>
         </div> */}
-      </div>
+        </div>
+      </PageContainer>
     </Page>
   );
 }

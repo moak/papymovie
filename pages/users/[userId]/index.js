@@ -183,7 +183,7 @@ const User = (props) => {
 
             {isMyProfile || moviesToWatch.length ? (
               <>
-                <Text textColor={theme.text} marginTop={24} marginBottom={8} fontSize={18}>
+                <Text textColor={theme.text} marginTop={24} marginBottom={8} fontSize={18} isBold>
                   {t('view.watching_list')}
                   {moviesToWatch.length > 0 ? ` (${moviesToWatch.length})` : ''}
                 </Text>
@@ -224,22 +224,14 @@ const User = (props) => {
           </Col>
 
           <Col xs={12} md={9}>
-            <Text
-              textColor={theme.text}
-              marginBottom={24}
-              marginTop={isMobile ? 8 : 0}
-              fontSize={isMobile ? 24 : 32}
-            >
-              {isMyProfile
-                ? t('view.my_profile_my_movies')
-                : `${t('view.users_movies', { name: user?.name })} ${
-                    movies.length > 0 ? `(${movies.length})` : ''
-                  }`}
+            <Text marginBottom={12} fontSize={18} isBold textColor={theme.text}>
+              {isMyProfile ? t('view.my_profile_my_movies') : `${t('view.users_movies')} } `} (
+              {movies?.length})
             </Text>
 
             {movies && movies.length === 0 && (
               <EmptyState>
-                <Text textColor={theme.text} fontSize={16}>
+                <Text textColor={theme.text} fontSize={18}>
                   {isMyProfile ? t('view.my_profile_no_movies') : t('view.no_movies')}
                 </Text>
               </EmptyState>
@@ -265,8 +257,15 @@ const User = (props) => {
                         titleCentered
                       >
                         <Box flexDirection="column" alignItems="center">
-                          <Text textColor={theme.text} dotdotdot width={`100%`}>
-                            {isMobile ? description || 'No notes' : description || 'Add a note...'}
+                          <Text
+                            textAlign="center"
+                            cursor="pointer"
+                            marginBottom={8}
+                            textColor={theme.text}
+                            dotdotdot
+                            width={`100%`}
+                          >
+                            {description || 'Add a description...'}
                           </Text>
 
                           <ActionsContainer>
@@ -304,7 +303,7 @@ const User = (props) => {
                 })}
             </List>
 
-            <Text textColor={theme.text} marginTop={24} marginBottom={12} fontSize={18}>
+            <Text textColor={theme.text} marginTop={24} marginBottom={12} fontSize={18} isBold>
               {t('followings')}
             </Text>
             <List>
@@ -340,7 +339,7 @@ const User = (props) => {
                 </Text>
               </EmptyState>
             )}
-            <Text textColor={theme.text} marginTop={24} marginBottom={12} fontSize={18}>
+            <Text textColor={theme.text} marginTop={24} marginBottom={12} fontSize={18} isBold>
               {t('followers')}
             </Text>
             <List>
@@ -378,11 +377,16 @@ const User = (props) => {
           </Col>
         </Row>
         <Confirm
+          style={{ color: theme.text }}
           open={confirm}
           onCancel={close}
           onConfirm={handleDelete}
           header={t('view.delete_movie_title')}
-          content={t('view.delete_movie_confirmation')}
+          content={
+            <Text padding={24} textColor={theme.black}>
+              {t('view.delete_movie_confirmation')}
+            </Text>
+          }
         />
       </PageContainer>
     </Page>

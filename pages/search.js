@@ -86,7 +86,7 @@ const New = (props) => {
           <Loader active inline="centered" size="large" />
         ) : (
           <>
-            <Text textColor={theme.text} isBold marginBottom={24} fontSize={32}>
+            <Text textColor={theme.text} isBold marginBottom={24} fontSize={26}>
               Results for: {router.query.search}
             </Text>
             {movies && movies.length === 0 && series && series.length === 0 ? (
@@ -133,7 +133,7 @@ const New = (props) => {
                 )}
               </>
             )}
-            <Text textColor={theme.text} isBold marginTop={24} marginBottom={24} fontSize={32}>
+            <Text textColor={theme.text} isBold marginTop={24} marginBottom={24} fontSize={26}>
               Series
             </Text>
             {series && series.length === 0 ? (

@@ -28,11 +28,11 @@ body {
 
 .login-container {
   display: flex;
-  max-width: 1200px;
-  background: var(--white);
+  max-width: 600px;
   margin: auto;
   width: 100%;
   min-width: 320px;
+  border-radius: 15px;
 }
 
 .logo {
@@ -69,20 +69,17 @@ body {
 }
 
 .login-container .login-form .google-login-button {
-  color: var(--text);
   border: 1px solid var(--grey);
   margin: 40px 0 20px;
 }
 
 .login-container .login-form .sign-in-seperator {
   text-align: center;
-  color: var(--placeholder);
   position: relative;
   margin: 30px 0 20px;
 }
 
 .login-container .login-form .sign-in-seperator span {
-  background: var(--white);
   z-index: 1;
   position: relative;
   padding: 0 10px;
