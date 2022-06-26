@@ -22,7 +22,9 @@ const PaginationContainer = styled.div`
   justify-content: center;
 }`;
 
-const New = () => {
+const New = (props) => {
+  const { toggleTheme, theme } = props;
+
   const [movies, setMovies] = useState(null);
   const [totalPagesMovies, setTotalPagesMovies] = useState(0);
   const [activePageMovies, setActivePageMovies] = useState(1);
@@ -76,13 +78,15 @@ const New = () => {
         router.query && router.query.search ? `${router.query.search} - ` : ''
       } PapyMovie`}
       url="/search"
+      toggleTheme={toggleTheme}
+      theme={theme}
     >
       <PageContainer>
         {isLoading ? (
           <Loader active inline="centered" size="large" />
         ) : (
           <>
-            <Text isBold marginBottom={24} fontSize={32}>
+            <Text textColor={theme.text} isBold marginBottom={24} fontSize={32}>
               Results for: {router.query.search}
             </Text>
             {movies && movies.length === 0 && series && series.length === 0 ? (
@@ -98,6 +102,7 @@ const New = () => {
                         return (
                           <CardContainer key={id} percent={isMobile || isTablet ? 50 : 20}>
                             <CardMovie
+                              theme={theme}
                               isMobile={isMobile}
                               title={title}
                               subtitle={moment(release_date).format('MMM, YYYY')}
@@ -128,7 +133,7 @@ const New = () => {
                 )}
               </>
             )}
-            <Text isBold marginTop={24} marginBottom={24} fontSize={32}>
+            <Text textColor={theme.text} isBold marginTop={24} marginBottom={24} fontSize={32}>
               Series
             </Text>
             {series && series.length === 0 ? (
@@ -144,6 +149,7 @@ const New = () => {
                         return (
                           <CardContainer key={id} percent={isMobile || isTablet ? 50 : 20}>
                             <CardMovie
+                              theme={theme}
                               title={name}
                               subtitle={moment(first_air_date).format('MMM, YYYY')}
                               imageUrl={`https://image.tmdb.org/t/p/w300/${poster_path}`}

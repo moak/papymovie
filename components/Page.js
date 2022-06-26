@@ -2,6 +2,7 @@ import React, { useState, useCallback } from 'react';
 import { Loader } from 'semantic-ui-react';
 import styled from 'styled-components';
 import Head from 'next/head';
+import { useTheme } from 'styles/theme';
 
 import Header from './Header';
 
@@ -22,6 +23,8 @@ const Page = ({
   previewImage,
   url = '',
   isLoading = false,
+  toggleTheme,
+  theme,
 }) => {
   const [isNavBarOpen, setIsNavBarOpen] = useState(false);
 
@@ -68,15 +71,27 @@ const Page = ({
 
       {isLoading ? (
         <>
-          <Header navbarState={isNavBarOpen} handleNavbar={handleNavbar} />
+          <Header
+            toggleTheme={toggleTheme}
+            theme={theme}
+            navbarState={isNavBarOpen}
+            handleNavbar={handleNavbar}
+          />
           <LoaderContainer>
             <Loader active inline="centered" size="large" />
           </LoaderContainer>
         </>
       ) : (
         <>
-          <Header navbarState={isNavBarOpen} handleNavbar={handleNavbar} />
-          {children}
+          <Header
+            toggleTheme={toggleTheme}
+            theme={theme}
+            navbarState={isNavBarOpen}
+            handleNavbar={handleNavbar}
+          />
+          {/* {children} */}
+
+          {React.cloneElement(children, { theme })}
         </>
       )}
     </>

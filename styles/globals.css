@@ -241,3 +241,75 @@ body {
     margin: 0;
   }
 }
+
+/* TOGGLE */
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --black: #151313;
+  --white: #f5f5f5;
+  --transition: 0.5s ease;
+}
+
+.hidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.toggle {
+  display: inline-block;
+  height: 35px;
+  width: 80px;
+  background: var(--black);
+  border-radius: 40px;
+  padding: 12px;
+  position: relative;
+  margin: auto;
+  cursor: pointer;
+}
+
+.toggle::before {
+  top: 8px;
+  content: '';
+  display: block;
+  height: 21px;
+  width: 21px;
+  border-radius: 30px;
+  background: var(--white);
+  position: absolute;
+  z-index: 2;
+  transform: translate(0);
+  transition: transform var(--transition);
+}
+
+.toggle.enabled::before {
+  transform: translateX(35px);
+}
+
+.toggle input {
+  position: absolute;
+  top: 0;
+  opacity: 0;
+}
+
+.toggle .icons {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  margin: 0 5px;
+}
+
+.toggle .icons svg {
+  fill: var(--white);
+  /* height: 16px;
+  width: 16px; */
+  z-index: 0;
+}

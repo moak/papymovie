@@ -6,6 +6,7 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
 import { useSession, getSession } from 'next-auth/react';
+import dynamic from 'next/dynamic';
 
 import dbConnect from 'utils/dbConnect';
 import Feed from 'models/Feed';
@@ -38,7 +39,7 @@ const Description = styled.a`
 }`;
 
 const Container = styled.div`
-  height: ${(p) => (p.isMobile ? 500 : 600)}px;
+  height: ${(p) => (p.isMobile ? 500 : 620)}px;
   display: flex;
   background-image: url(./cover.jpeg);
   background-repeat: no-repeat;
@@ -60,7 +61,7 @@ const Content = styled.div`
 }`;
 
 const Card = styled.div`
-  margin: 1rem;
+  margin: 0 15px;
   flex-basis: 45%;
   padding: 1.5rem;
   text-align: left;
@@ -125,7 +126,8 @@ const Separator = styled.div`
 }`;
 
 const Home = (props) => {
-  const { latestMovies = [], other } = props;
+  console.log('ehey');
+  const { latestMovies = [], other, toggleTheme, theme } = props;
 
   const { t } = useTranslation('home');
   const router = useRouter();
@@ -152,121 +154,144 @@ const Home = (props) => {
       title={t('metas.title')}
       description={t('metas.description')}
       isLoading={isLoading || !!other}
+      toggleTheme={toggleTheme}
+      theme={theme}
     >
-      <Container isMobile={isMobile}>
-        <Content isMobile={isMobile}>
-          <Text
-            isBold
-            textAlign="center"
-            fontFamily="secondary"
-            textColor="#ffffff"
-            fontSize={isMobile ? 30 : 46}
-            marginBottom={36}
-          >
-            {t('header.title')}
+      <>
+        <Container isMobile={isMobile}>
+          <Content isMobile={isMobile}>
+            <Text
+              isBold
+              textAlign="center"
+              fontFamily="secondary"
+              textColor="#ffffff"
+              fontSize={isMobile ? 30 : 46}
+              marginBottom={36}
+            >
+              {t('header.title')}
+            </Text>
+
+            <Text textColor="#ffffff" fontSize={18} textAlign="center">
+              {t('header.subtitle')}
+            </Text>
+          </Content>
+        </Container>
+        <Goal isMobile={isMobile}>
+          <GoalTitle textAlign="center"> {t('subheader.title')}</GoalTitle>
+          <Separator />
+          <Text textColor={theme.text} fontSize={18} textAlign="center">
+            {t('subheader.subtitle')}
           </Text>
+        </Goal>
+        <div
+          style={{
+            display: 'flex',
+            width: isMobile ? '100%' : '70%',
+            margin: '0 auto',
+            height: isMobile ? '100%' : '290px',
+            marginBottom: isMobile ? 32 : 0,
+          }}
+        >
+          <Box marginBottom={32} flexDirection={isMobile ? 'column' : 'row'}>
+            <Link href="/movies">
+              <Card isMobile={isMobile}>
+                <Text
+                  textColor={theme.text}
+                  marginBottom={24}
+                  textAlign="center"
+                  isBold
+                  fontSize={18}
+                >
+                  {t('features.title1')}
+                </Text>
+                <Icon name="file video" size="huge" />
 
-          <Text textColor="#ffffff" fontSize={18} textAlign="center">
-            {t('header.subtitle')}
+                <Text width="90%" textAlign="center" marginTop={24} textColor={theme.text}>
+                  {t('features.content1')}
+                </Text>
+              </Card>
+            </Link>
+            <Link href="/movies">
+              <Card isMobile={isMobile}>
+                <Text
+                  textColor={theme.text}
+                  marginBottom={24}
+                  textAlign="center"
+                  isBold
+                  fontSize={18}
+                >
+                  {t('features.title2')}
+                </Text>
+                <Icon name="idea" size="huge" />
+
+                <Text width="90%" textAlign="center" marginTop={24} textColor={theme.text}>
+                  {t('features.content2')}
+                </Text>
+              </Card>
+            </Link>
+            <Link href="/users">
+              <Card isMobile={isMobile}>
+                <Text
+                  textColor={theme.text}
+                  marginBottom={24}
+                  textAlign="center"
+                  isBold
+                  fontSize={18}
+                >
+                  {t('features.title3')}
+                </Text>
+                <Icon name="users" size="huge" />
+
+                <Text width="90%" textAlign="center" marginTop={24} textColor={theme.text}>
+                  {t('features.content3')}
+                </Text>
+              </Card>
+            </Link>
+          </Box>
+        </div>
+        <Goal2 isMobile={isMobile}>
+          <GoalTitle> {t('latest_movies')}</GoalTitle>
+
+          <Separator />
+          <br />
+          <List>
+            {latestMovies?.length > 0 &&
+              latestMovies
+                .filter((item) => item.movie && item.user)
+                .slice(0, isMobile ? 6 : 5)
+                .map((item) => {
+                  const { movie = {}, user = {} } = item || {};
+                  const { _id, themoviedbId, title, image, rating } = movie;
+                  const { name, username } = user;
+
+                  return (
+                    <CardContainer key={_id} percent={isMobile || isTablet ? 50 : 20}>
+                      <CardMovie
+                        theme={theme}
+                        isMobile={isMobile}
+                        title={title}
+                        imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
+                        href={`/movies/${themoviedbId}`}
+                        userRating={rating}
+                        titleCentered
+                        height={isMobile ? '230px' : '340px'}
+                      >
+                        <Box flexDirection="column" alignItems="center">
+                          <Description>{name || username}</Description>
+                        </Box>
+                      </CardMovie>
+                    </CardContainer>
+                  );
+                })}
+          </List>
+        </Goal2>
+        <Footer>
+          Powered by
+          <Text marginLeft={4} isBold>
+            Maxus
           </Text>
-        </Content>
-      </Container>
-      <Goal isMobile={isMobile}>
-        <GoalTitle textAlign="center"> {t('subheader.title')}</GoalTitle>
-        <Separator />
-        <Text fontSize={18} textAlign="center">
-          {t('subheader.subtitle')}
-        </Text>
-      </Goal>
-      <div
-        style={{
-          display: 'flex',
-          width: isMobile ? '100%' : '70%',
-          margin: '0 auto',
-          height: isMobile ? '100%' : '290px',
-          marginBottom: isMobile ? 32 : 0,
-        }}
-      >
-        <Box marginBottom={32} flexDirection={isMobile ? 'column' : 'row'}>
-          <Link href="/movies">
-            <Card isMobile={isMobile}>
-              <Text marginBottom={24} textAlign="center" isBold fontSize={18}>
-                {t('features.title1')}
-              </Text>
-              <Icon name="file video" size="huge" />
-
-              <Text width="90%" textAlign="center" marginTop={24} textColor="#a8aeb4">
-                {t('features.content1')}
-              </Text>
-            </Card>
-          </Link>
-          <Link href="/movies">
-            <Card isMobile={isMobile}>
-              <Text marginBottom={24} textAlign="center" isBold fontSize={18}>
-                {t('features.title2')}
-              </Text>
-              <Icon name="idea" size="huge" />
-
-              <Text width="90%" textAlign="center" marginTop={24} textColor="#a8aeb4">
-                {t('features.content2')}
-              </Text>
-            </Card>
-          </Link>
-          <Link href="/users">
-            <Card isMobile={isMobile}>
-              <Text marginBottom={24} textAlign="center" isBold fontSize={18}>
-                {t('features.title3')}
-              </Text>
-              <Icon name="users" size="huge" />
-
-              <Text width="90%" textAlign="center" marginTop={24} textColor="#a8aeb4">
-                {t('features.content3')}
-              </Text>
-            </Card>
-          </Link>
-        </Box>
-      </div>
-      <Goal2 isMobile={isMobile}>
-        <GoalTitle> {t('latest_movies')}</GoalTitle>
-
-        <Separator />
-        <br />
-        <List>
-          {latestMovies?.length > 0 &&
-            latestMovies
-              .filter((item) => item.movie && item.user)
-              .slice(0, isMobile ? 6 : 5)
-              .map((item) => {
-                const { movie = {}, user = {} } = item || {};
-                const { _id, themoviedbId, title, image, rating } = movie;
-                const { name, username } = user;
-
-                return (
-                  <CardContainer key={_id} percent={isMobile || isTablet ? 50 : 20}>
-                    <CardMovie
-                      isMobile={isMobile}
-                      title={title}
-                      imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
-                      href={`/movies/${themoviedbId}`}
-                      userRating={rating}
-                      titleCentered
-                      height={isMobile ? '230px' : '340px'}
-                    >
-                      <Box flexDirection="column" alignItems="center">
-                        <Description>{name || username}</Description>
-                      </Box>
-                    </CardMovie>
-                  </CardContainer>
-                );
-              })}
-        </List>
-      </Goal2>
-      <Footer>
-        Powered by
-        <Text marginLeft={4} isBold>
-          Maxus
-        </Text>
-      </Footer>
+        </Footer>
+      </>
     </Page>
   );
 };
@@ -290,4 +315,5 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default Home;
+// export default Home;
+export default dynamic(() => Promise.resolve(Home), { ssr: false });

@@ -8,7 +8,7 @@ import getRandomNumber from 'utils/getRandomNumber';
 const Container = styled.div`
   display: flex;
   flex-direction: column;
-  border: 1px solid #cecece;
+  border: 1px solid ${(p) => p.borderColor};
   border-radius: 10px;
   overflow: hidden;
   width: 100%;
@@ -48,7 +48,7 @@ const InfosContainer = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  background: #f5f5f5;
+
   font-size: 14px;
   font-weight: 600;
   text-align: center;
@@ -69,7 +69,7 @@ const Image = styled.img`
   top: ${(p) => (p.isMobile ? 50 : 70)}%;
   left: 50%;
   transform: translate(-50%, -${(p) => (p.isMobile ? 50 : 70)}%);
-  border: 2px solid #ffffff;
+  border: 2px solid ${(p) => p.borderColor};
 }`;
 
 const NameContainer = styled.div`
@@ -95,14 +95,14 @@ const images = [
 ];
 
 const CardUser = (props) => {
-  const { href, name, imageUrl, infos, isMobile } = props;
+  const { href, name, imageUrl, infos, isMobile, theme } = props;
 
   const getRandomImage = useMemo(() => {
     return images[getRandomNumber(0, images.length - 1)];
   }, []);
 
   const component = (
-    <Container isClickable={!!href} isMobile={isMobile}>
+    <Container borderColor={theme.borderColor} isClickable={!!href} isMobile={isMobile}>
       <UserContainer>
         <BackgroundImage isMobile={isMobile} backgroundUrl={getRandomImage} />
 
@@ -115,9 +115,10 @@ const CardUser = (props) => {
           width="100px"
           height="100px"
           src={imageUrl}
+          borderColor={theme.borderColor}
         />
         <NameContainer>
-          <Text textAlign="center" isBold fontSize={16} marginBottom={-4}>
+          <Text textColor={theme.text} textAlign="center" isBold fontSize={16} marginBottom={-4}>
             {name}
           </Text>
         </NameContainer>
@@ -128,10 +129,12 @@ const CardUser = (props) => {
 
           return (
             <InfoContainer key={title}>
-              <Text fontSize={18} isBold>
+              <Text textColor={theme.text} fontSize={18} isBold>
                 {amount}
               </Text>
-              <Text fontSize={12}>{title}</Text>
+              <Text textColor={theme.text} fontSize={12}>
+                {title}
+              </Text>
             </InfoContainer>
           );
         })}

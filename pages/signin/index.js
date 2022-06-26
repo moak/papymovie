@@ -6,7 +6,7 @@ import Page from 'components/Page';
 import Text from 'components/Text';
 
 export default function SignIn(props) {
-  const { providers } = props;
+  const { providers, toggleTheme, theme } = props;
 
   const providersArray = [
     {
@@ -42,7 +42,7 @@ export default function SignIn(props) {
     },
   ];
   return (
-    <Page>
+    <Page toggleTheme={toggleTheme} theme={theme}>
       <div className="login-container">
         <div className="login-form">
           <div className="login-form-inner">

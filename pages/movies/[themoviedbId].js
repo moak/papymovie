@@ -25,7 +25,7 @@ import { truncate } from 'utils/string';
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
 
-export const ContentContainer = styled.div`
+const ContentContainer = styled.div`
   height: 100%;
   border-bottom: 1px solid rgba(8.24%, 31.96%, 31.57%, 1);
   background-position: right -200px top;
@@ -38,12 +38,14 @@ export const ContentContainer = styled.div`
   }
 `;
 
-export const SubContainer = styled.div`
+const SubContainer = styled.div`
   background-image: linear-gradient(
     to right,
     rgba(5.88%, 27.45%, 27.06%, 1) 150px,
     rgba(10.59%, 36.47%, 36.08%, 0.84) 100%
   );
+
+  // background-image: linear-gradient(to right, ${(p) => p.color1} 150px, ${(p) => p.color2} 100%);
 
   display: flex;
 
@@ -52,7 +54,7 @@ export const SubContainer = styled.div`
   }
 `;
 
-export const Left = styled.div`
+const Left = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
@@ -60,26 +62,13 @@ export const Left = styled.div`
   min-width: ${(p) => p.width};
 `;
 
-export const Right = styled.div`
+const Right = styled.div`
   padding: 32px 0px;
   padding-left: 40px;
 
   @media (max-width: 769px) {
     padding: 8px 16px;
   }
-`;
-
-export const Title = styled.div`
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin-bottom: 16px;
-  color: #ffffff;
-`;
-export const Infos = styled.div`
-  color: #ffffff;
 `;
 
 const View = (props) => {
@@ -95,6 +84,8 @@ const View = (props) => {
       genres,
       vote_average,
     } = {},
+    toggleTheme,
+    theme,
   } = props;
 
   const { locale } = useRouter();
@@ -356,12 +347,14 @@ const View = (props) => {
       previewImage={`https://image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
       url={`/movies/${themoviedbId}`}
       description={overview ? truncate(overview, 100) : null}
+      toggleTheme={toggleTheme}
+      theme={theme}
     >
       <PageContainer>
         <ContentContainer
           imageUrl={`https://image.tmdb.org/t/p/w1920_and_h800_multi_faces/${backdrop_path}`}
         >
-          <SubContainer>
+          <SubContainer color1={theme.text} color2={theme.textLight}>
             <Left isMobile={isMobile} width={isMobile ? `${window.screen.width} - 32}` : '20%'}>
               <img
                 height="350px"
@@ -383,6 +376,7 @@ const View = (props) => {
                   </RoundedLabel>
                 )}
                 <Text
+                  textColor={theme.white}
                   textAlign={isMobile ? 'center' : 'left'}
                   isBold
                   marginRight={8}
@@ -390,12 +384,11 @@ const View = (props) => {
                   marginBottom={4}
                   fontSize={isMobile ? 24 : 30}
                   marginTop={isMobile ? 4 : 0}
-                  textColor="#ffffff"
                 >
                   {title}
                 </Text>
                 {!isMobile && release_date?.substring(0, 4) && (
-                  <Text isBold fontSize={16} marginLeft={4} textColor="#ffffff">
+                  <Text textColor={theme.white} isBold fontSize={16} marginLeft={4}>
                     ({release_date?.substring(0, 4)})
                   </Text>
                 )}
@@ -414,34 +407,34 @@ const View = (props) => {
                   </RoundedLabel>
 
                   {release_date?.substring(0, 4) && (
-                    <Text isBold fontSize={16} marginLeft={8} textColor="#ffffff">
+                    <Text textColor={theme.white} isBold fontSize={16} marginLeft={8}>
                       ({release_date?.substring(0, 4)})
                     </Text>
                   )}
                 </Box>
               )}
 
-              <Text marginBottom={16} textColor="#ffffff">
+              <Text textColor={theme.white} marginBottom={16} textColor="#ffffff">
                 {genres.map((genre) => {
                   return <span key={genre.name}>{genre.name} - </span>;
                 })}
                 {getHourMinutesFromMinutes(runtime)}
               </Text>
 
-              <Text isBold marginBottom={8} fontSize={22} textColor="#ffffff">
+              <Text textColor={theme.white} isBold marginBottom={8} fontSize={22}>
                 Description
               </Text>
-              <Text lineHeight="20px" marginBottom={24} fontSize={14} textColor="#ffffff">
+              <Text textColor={theme.white} lineHeight="20px" marginBottom={24} fontSize={14}>
                 {overview}
               </Text>
 
               <Divider />
 
               <div style={{ display: 'flex', alignItems: 'center' }}>
-                <Text isBold fontSize={24} textColor="#ffffff" marginRight={12}>
+                <Text textColor={theme.white} isBold fontSize={24} marginRight={12}>
                   <div style={{ display: 'flex', alignItems: 'center' }}>
                     <Text
-                      textColor="#ffffff"
+                      textColor={theme.white}
                       isBold
                       fontSize={isMobile ? (userMovie ? 16 : 24) : 24}
                       marginRight={8}
@@ -454,12 +447,12 @@ const View = (props) => {
 
               <div style={{ display: 'flex', alignItems: 'center' }}>
                 <Text
+                  textColor={theme.white}
                   isBold
                   marginTop={16}
                   marginBottom={8}
                   marginRight={4}
                   fontSize={14}
-                  textColor="#ffffff"
                 >
                   {userMovie ? t('view.my_profile_rating') : t('view.rate_movie')}
                 </Text>
@@ -487,7 +480,7 @@ const View = (props) => {
                 half={false}
               />
 
-              <Text isBold marginTop={16} marginBottom={8} fontSize={14} textColor="#ffffff">
+              <Text textColor={theme.white} isBold marginTop={16} marginBottom={8} fontSize={14}>
                 {userMovie ? t('view.my_profile_description') : t('view.add_description')}
               </Text>
 
@@ -510,7 +503,7 @@ const View = (props) => {
                 {userMovie ? t('view.edit') : t('view.add')}
               </Button>
               {errors.rating && (
-                <Text isBold textColor="#ffffff" marginBottom={8} marginTop={8} fontSize={14}>
+                <Text textColor={theme.white} isBold marginBottom={8} marginTop={8} fontSize={14}>
                   {t('view.rating_required')}
                 </Text>
               )}
@@ -530,13 +523,13 @@ const View = (props) => {
                 {userMovie ? (
                   <Icon style={{ fontSize: 25 }} color="green" name="check" />
                 ) : (
-                  <Text fontSize={20} textColor="#ffffff" isBold>
+                  <Text textColor={theme.white} fontSize={20} textColor="#ffffff" isBold>
                     {t('view.or')}
                   </Text>
                 )}
               </Divider>
 
-              <Text isBold marginTop={8} marginBottom={4} fontSize={18} textColor="#ffffff">
+              <Text textColor={theme.white} isBold marginTop={8} marginBottom={4} fontSize={18}>
                 {isInMoviesToWatch ? (
                   <div>
                     <span>{t('view.watching_list')}</span>
@@ -562,7 +555,7 @@ const View = (props) => {
         {actors && actors.length > 0 && (
           <>
             <div>
-              <Text marginTop={36} marginBottom={16} fontSize={32}>
+              <Text textColor={theme.white} marginTop={36} marginBottom={16} fontSize={32}>
                 {t('view.actors')}
               </Text>
               <List>
@@ -572,6 +565,7 @@ const View = (props) => {
                   return (
                     <CardContainer key={id} percent={isMobile ? 33 : 15}>
                       <CardMovie
+                        theme={theme}
                         title={name}
                         subtitle={character}
                         imageUrl={`https://image.tmdb.org/t/p/w138_and_h175_face/${profile_path}`}
@@ -588,7 +582,7 @@ const View = (props) => {
 
         {similarMovies && similarMovies.length > 0 && (
           <div>
-            <Text marginTop={36} marginBottom={16} fontSize={32}>
+            <Text textColor={theme.white} marginTop={36} marginBottom={16} fontSize={32}>
               {t('view.similar_movies')}
             </Text>
             <List>
@@ -602,6 +596,7 @@ const View = (props) => {
                     percent={isMobile || isTablet ? 50 : 20}
                   >
                     <CardMovie
+                      theme={theme}
                       title={title}
                       subtitle={moment(release_date).format('MMM, YYYY')}
                       imageUrl={`https://image.tmdb.org/t/p/w300/${poster_path}`}

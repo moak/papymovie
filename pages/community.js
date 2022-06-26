@@ -29,20 +29,25 @@ export const Row = styled.div`
 `;
 
 const Community = (props) => {
-  const { feed } = props;
+  const { feed, toggleTheme, theme, ...other } = props;
 
   const { t } = useTranslation('common');
   const isMobile = useIsMobile();
 
+  console.log('other', other);
+  console.log('theme community props', props);
+  console.log('theme community commmm', theme);
   return (
     <Page
       title="Community - PapyMovie"
       description="Check out the recents movies added by the users"
       url="/community"
+      toggleTheme={toggleTheme}
+      theme={theme}
     >
       <PageContainer maxWidth={1024}>
         <Row justifyContent="space-between">
-          <Text isBold marginBottom={24} fontSize={32}>
+          <Text textColor={theme.text} isBold marginBottom={24} fontSize={32}>
             {t('header.community')}
           </Text>
         </Row>
@@ -51,7 +56,7 @@ const Community = (props) => {
           .map((feedItem) => {
             return (
               <div style={{ marginBottom: 16 }} key={feedItem._id}>
-                <CardFeed isMobile={isMobile} feedItem={feedItem} />
+                <CardFeed theme={theme} isMobile={isMobile} feedItem={feedItem} />
               </div>
             );
           })}

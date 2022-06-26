@@ -1,4 +1,5 @@
 import React from 'react';
+import dynamic from 'next/dynamic';
 
 import { useTranslation } from 'next-i18next';
 
@@ -25,4 +26,4 @@ const Naked = () => {
   );
 };
 
-export default Naked;
+export default dynamic(() => Promise.resolve(Naked), { ssr: false });

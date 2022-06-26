@@ -12,15 +12,18 @@ import { useRouter } from 'next/router';
 
 import { useTranslation } from 'next-i18next';
 
+import ToggleTheme from './ToggleTheme';
+
 const Separator = styled.div`
   width: 100%;
-  background-color: #7d7d7d;
-  height: 1px;
+  background-color: ${(p) => p.color};
+
+  // height: 1px;
   margin: 4px 0;
 }`;
 
 const CollapseWrapper = styled(animated.div)`
-  background: #2d3436;
+  background: ${(p) => p.background};
   position: fixed;
   top: 4.5rem;
   left: 0;
@@ -56,14 +59,14 @@ const languages = [
 ];
 
 const ClosableLink = (props) => {
-  const { handleNavbar, display, currentPath, closablePath } = props;
+  const { handleNavbar, display, currentPath, closablePath, theme } = props;
 
   const isCurrent = currentPath === closablePath;
 
   return (
     <Link href={closablePath}>
       <div
-        style={{ color: isCurrent ? '#fdcb6e' : '#dfe6e9' }}
+        style={{ color: isCurrent ? '#fdcb6e' : theme.text }}
         onClick={() => {
           if (currentPath === closablePath) {
             handleNavbar(false);
@@ -77,7 +80,7 @@ const ClosableLink = (props) => {
 };
 
 const CollapseMenu = (props) => {
-  const { handleNavbar } = props;
+  const { handleNavbar, toggleTheme, theme } = props;
 
   const { t } = useTranslation('common');
 
@@ -93,6 +96,7 @@ const CollapseMenu = (props) => {
   if (props.navbarState === true) {
     return (
       <CollapseWrapper
+        background={theme.background}
         style={{
           zIndex: 3,
           transform: open
@@ -107,6 +111,7 @@ const CollapseMenu = (props) => {
           {!session && (
             <li>
               <ClosableLink
+                theme={theme}
                 display={t('header.home')}
                 handleNavbar={handleNavbar}
                 currentPath={router.pathname}
@@ -116,6 +121,7 @@ const CollapseMenu = (props) => {
           )}
           <li>
             <ClosableLink
+              theme={theme}
               display={t('header.movies')}
               handleNavbar={handleNavbar}
               currentPath={router.pathname}
@@ -124,6 +130,7 @@ const CollapseMenu = (props) => {
           </li>
           <li>
             <ClosableLink
+              theme={theme}
               display={t('header.community')}
               handleNavbar={handleNavbar}
               currentPath={router.pathname}
@@ -132,6 +139,7 @@ const CollapseMenu = (props) => {
           </li>
           <li>
             <ClosableLink
+              theme={theme}
               display={t('header.users')}
               handleNavbar={handleNavbar}
               currentPath={router.pathname}
@@ -143,23 +151,27 @@ const CollapseMenu = (props) => {
             <>
               <li>
                 <ClosableLink
+                  theme={theme}
                   display={t('header.my_profile')}
                   handleNavbar={handleNavbar}
                   currentPath={router.pathname}
                   closablePath={`/users/${session?.user?.id}`}
                 />
               </li>
-              <Separator />
+              <Separator color={theme.textLight} />
 
               <li>
-                <a onClick={signOut}>{t('header.disconnect')}</a>
+                <a style={{ color: theme.text }} onClick={signOut}>
+                  {t('header.disconnect')}
+                </a>
               </li>
             </>
           ) : (
             <>
-              <Separator />
+              <Separator color={theme.textLight} />
               <li>
                 <ClosableLink
+                  theme={theme}
                   display={t('header.connect')}
                   handleNavbar={handleNavbar}
                   currentPath={router.pathname}
@@ -169,7 +181,7 @@ const CollapseMenu = (props) => {
               </li>
             </>
           )}
-          <Separator />
+          <Separator color={theme.textLight} />
 
           <li style={{ marginTop: 8 }}>
             {languages.map((language, index) => (
@@ -200,6 +212,11 @@ const CollapseMenu = (props) => {
               </React.Fragment>
             ))}
           </li>
+
+          <li style={{ marginTop: 12 }}>
+            <ToggleTheme toggleTheme={toggleTheme} />
+          </li>
+          <Separator color={theme.textLight} />
         </NavLinks>
       </CollapseWrapper>
     );

@@ -22,9 +22,9 @@ const SocialButtons = styled.div`
 const Wrapper = styled.div`
   display: flex;
   width: 100%;
-  border: 1px solid #d8d7d7;
+  border: 1px solid ${(p) => p.theme.borderColor};
   border-radius: 10px;
-  background-color: #f5f5f5;
+  background-color: ${(p) => p.theme.background};
 }`;
 
 const Container = styled.div`
@@ -48,7 +48,7 @@ const UserContainer = styled.div`
 
 const UserImage = styled.img`
   border-radius: 50%;
-  border: 1px solid #ffffff;
+  border: 1px solid ${(p) => p.theme.borderColor};
   margin-right: ${(p) => (p.isMobile ? 8 : 12)}px;
   cursor: pointer;
 }`;
@@ -69,13 +69,14 @@ const NameContainer = styled.div`
 }`;
 
 const CardFeed = (props) => {
-  const { feedItem, isMobile } = props;
+  const { feedItem, isMobile, theme } = props;
   const router = useRouter();
   const { data: session } = useSession();
 
   const [feedItemState, setFeedItem] = useState(feedItem);
   const [pendingComment, setPendingComment] = useState('');
 
+  console.log('cardfeed theme', theme);
   if (!feedItem.movie || !feedItem.user) {
     return null;
   }
@@ -178,8 +179,9 @@ const CardFeed = (props) => {
     setPendingComment(event.target.value);
   }, []);
 
+  console.log('themethemethemetheme', theme);
   const component = (
-    <Wrapper>
+    <Wrapper theme={theme}>
       <Container isMobile={isMobile}>
         <UserContainer>
           <UserImage
@@ -201,6 +203,7 @@ const CardFeed = (props) => {
           <NameContainer>
             <Link href={linkUser}>
               <Text
+                textColor={theme.text}
                 style={{ cursor: 'pointer' }}
                 isBold
                 fontSize={isMobile ? 12 : 14}
@@ -210,7 +213,7 @@ const CardFeed = (props) => {
                 {userName}
               </Text>
             </Link>
-            <Text textColor="grey" fontSize={isMobile ? 11 : 12}>
+            <Text textColor={theme.textLight} fontSize={isMobile ? 11 : 12}>
               {moment(created_at).fromNow()}
             </Text>
           </NameContainer>
@@ -227,6 +230,7 @@ const CardFeed = (props) => {
             >
               <Link href={linkMovie}>
                 <Text
+                  textColor={theme.text}
                   cursor="pointer"
                   textAlign="center"
                   marginRight={4}
@@ -257,8 +261,9 @@ const CardFeed = (props) => {
                   alignItems: 'center',
                 }}
               >
-                <Text>{userName} added</Text>
+                <Text textColor={theme.text}>{userName} added</Text>
                 <Text
+                  textColor={theme.text}
                   marginRight={4}
                   marginLeft={4}
                   isBold
@@ -270,7 +275,9 @@ const CardFeed = (props) => {
                 >
                   {title}
                 </Text>
-                <Text marginRight={8}>in his library.</Text>
+                <Text textColor={theme.text} marginRight={8}>
+                  in his library.
+                </Text>
 
                 <RoundedLabel
                   borderWith={2}
@@ -286,18 +293,23 @@ const CardFeed = (props) => {
           )}
           <SocialButtons isMobile={isMobile}>
             <Button onClick={session ? handleClickLike : signIn} as="div" labelPosition="right">
-              <Button compact size={isLikingLoading ? 'mini' : 'tiny'} color="green">
+              <Button
+                compact
+                size={isLikingLoading ? 'mini' : 'tiny'}
+                style={{ color: theme.white, backgroundColor: theme.like }}
+                color={theme.like}
+              >
                 <Icon name={'thumbs up'} />
               </Button>
-              <Label style={{ fontSize: 12 }} as="a" basic color="green" pointing="left">
+              <Label style={{ fontSize: 12 }} as="a" basic color={theme.like} pointing="left">
                 {!!likesState && likesState.length}
               </Label>
             </Button>
             <Button onClick={session ? handleClickDislike : signIn} as="div" labelPosition="right">
-              <Button compact size={isDislikingLoading ? 'mini' : 'tiny'} color="red">
+              <Button compact size={isDislikingLoading ? 'mini' : 'tiny'} color={theme.dislike}>
                 <Icon name={'thumbs down'} />
               </Button>
-              <Label style={{ fontSize: 12 }} as="a" basic color="red" pointing="left">
+              <Label style={{ fontSize: 12 }} as="a" basic color={theme.dislike} pointing="left">
                 {!!dislikesState && dislikesState.length}
               </Label>
             </Button>
@@ -310,11 +322,17 @@ const CardFeed = (props) => {
                   <Comment key={index}>
                     <Comment.Avatar src={comment.user.image} />
                     <Comment.Content>
-                      <Comment.Author as="a">{comment.user.name}</Comment.Author>
+                      <Comment.Author style={{ color: theme.text }} as="a">
+                        {comment.user.name}
+                      </Comment.Author>
                       <Comment.Metadata>
-                        <div>{moment(comment.updated_at).fromNow()}</div>
+                        <div style={{ color: theme.textLight }}>
+                          {moment(comment.updated_at).fromNow()}
+                        </div>
                       </Comment.Metadata>
-                      <Comment.Text>{comment.content}</Comment.Text>
+                      <Comment.Text style={{ color: theme.textLight }}>
+                        {comment.content}
+                      </Comment.Text>
                     </Comment.Content>
                   </Comment>
                 );
@@ -324,7 +342,13 @@ const CardFeed = (props) => {
 
           <Form style={{ fontSize: '1.2rem' }}>
             <TextArea
-              style={{ fontSize: isMobile ? '16px' : '14px', resize: 'none', padding: '10px' }}
+              textColor={theme.text}
+              style={{
+                fontSize: isMobile ? '16px' : '14px',
+                resize: 'none',
+                padding: '10px',
+                // backgroundColor: theme.textLight,
+              }}
               value={pendingComment}
               onChange={handleChangeComment}
               placeholder={'Write a comment'}

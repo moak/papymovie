@@ -27,9 +27,10 @@ const ActionsContainer = styled.div`
   display: flex;
 }`;
 
-const User = () => {
-  const { t } = useTranslation('user');
+const User = (props) => {
+  const { theme, toggleTheme } = props;
 
+  const { t } = useTranslation('user');
   const router = useRouter();
 
   const { data: session } = useSession();
@@ -145,12 +146,15 @@ const User = () => {
       url={`/users/${_id}`}
       previewImage={image}
       isLoading={!user}
+      toggleTheme={toggleTheme}
+      theme={theme}
     >
       <PageContainer>
         <Row>
           <Col xs={12} md={3}>
             <CardContainer height={isMobile ? 280 : 350}>
               <CardUser
+                theme={theme}
                 isMobile={isMobile}
                 name={name}
                 imageUrl={image}
@@ -179,14 +183,16 @@ const User = () => {
 
             {isMyProfile || moviesToWatch.length ? (
               <>
-                <Text marginTop={24} marginBottom={8} fontSize={18}>
+                <Text textColor={theme.text} marginTop={24} marginBottom={8} fontSize={18}>
                   {t('view.watching_list')}
                   {moviesToWatch.length > 0 ? ` (${moviesToWatch.length})` : ''}
                 </Text>
 
                 {moviesToWatch && moviesToWatch.length === 0 && (
                   <EmptyState>
-                    <Text fontSize={14}>{t('view.watching_list_no_result')}</Text>
+                    <Text textColor={theme.text} fontSize={14}>
+                      {t('view.watching_list_no_result')}
+                    </Text>
                   </EmptyState>
                 )}
 
@@ -196,7 +202,12 @@ const User = () => {
                         const { _id, title, themoviedbId, image } = movieToWatch;
 
                         return (
-                          <CardContainer key={_id} height={isMobile ? 200 : 180} percent={50}>
+                          <CardContainer
+                            background={theme.background}
+                            key={_id}
+                            height={isMobile ? 200 : 180}
+                            percent={50}
+                          >
                             <CardImage
                               isMobile
                               title={title}
@@ -213,7 +224,12 @@ const User = () => {
           </Col>
 
           <Col xs={12} md={9}>
-            <Text marginBottom={24} marginTop={isMobile ? 8 : 0} fontSize={isMobile ? 24 : 32}>
+            <Text
+              textColor={theme.text}
+              marginBottom={24}
+              marginTop={isMobile ? 8 : 0}
+              fontSize={isMobile ? 24 : 32}
+            >
               {isMyProfile
                 ? t('view.my_profile_my_movies')
                 : `${t('view.users_movies', { name: user?.name })} ${
@@ -223,7 +239,7 @@ const User = () => {
 
             {movies && movies.length === 0 && (
               <EmptyState>
-                <Text fontSize={16}>
+                <Text textColor={theme.text} fontSize={16}>
                   {isMyProfile ? t('view.my_profile_no_movies') : t('view.no_movies')}
                 </Text>
               </EmptyState>
@@ -238,6 +254,7 @@ const User = () => {
                   return (
                     <CardContainer key={_id} percent={isMobile ? 50 : isTablet ? 33 : 25}>
                       <CardMovie
+                        theme={theme}
                         isMobile={isMobile}
                         title={title}
                         imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
@@ -248,7 +265,7 @@ const User = () => {
                         titleCentered
                       >
                         <Box flexDirection="column" alignItems="center">
-                          <Text dotdotdot width={`100%`}>
+                          <Text textColor={theme.text} dotdotdot width={`100%`}>
                             {isMobile ? description || 'No notes' : description || 'Add a note...'}
                           </Text>
 
@@ -287,7 +304,7 @@ const User = () => {
                 })}
             </List>
 
-            <Text marginTop={24} marginBottom={12} fontSize={18}>
+            <Text textColor={theme.text} marginTop={24} marginBottom={12} fontSize={18}>
               {t('followings')}
             </Text>
             <List>
@@ -301,6 +318,7 @@ const User = () => {
                       percent={isMobile ? 100 : 33}
                     >
                       <CardUser
+                        theme={theme}
                         isMobile={isMobile}
                         href={`/users/${_id}`}
                         name={name}
@@ -317,12 +335,12 @@ const User = () => {
             </List>
             {followings && followings.length === 0 && (
               <EmptyState>
-                <Text fontSize={16}>
+                <Text textColor={theme.text} fontSize={16}>
                   {isMyProfile ? t('view.my_profile_no_followings') : t('view.no_followings')}
                 </Text>
               </EmptyState>
             )}
-            <Text marginTop={24} marginBottom={12} fontSize={18}>
+            <Text textColor={theme.text} marginTop={24} marginBottom={12} fontSize={18}>
               {t('followers')}
             </Text>
             <List>
@@ -335,6 +353,7 @@ const User = () => {
                     percent={isMobile ? 100 : 33}
                   >
                     <CardUser
+                      theme={theme}
                       isMobile={isMobile}
                       href={`/users/${_id}`}
                       name={name}
@@ -351,7 +370,7 @@ const User = () => {
             </List>
             {followers?.length === 0 && (
               <EmptyState>
-                <Text fontSize={16}>
+                <Text textColor={theme.text} fontSize={16}>
                   {isMyProfile ? t('view.my_profile_no_followers') : t('view.no_followers')}
                 </Text>
               </EmptyState>

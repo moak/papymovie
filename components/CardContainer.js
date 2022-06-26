@@ -5,7 +5,6 @@ const CardContainer = styled.div`
   height: ${(p) => `${p.height}px` || null};
   display: flex;
   padding: 0 8px;
-  background-color: #fff;
   margin-bottom: 16px;
 }`;
 

@@ -34,7 +34,7 @@ export const LeftColumn = styled.div`
 `;
 
 const RightColumn = styled.div`
-  background-color: #f5f5f5;
+  background-color: ${(p) => p.background || '#f5f5f5'};
   width: 280px;
   border: 1px solid rgb(224, 230, 233);
   border-radius: 10px;
@@ -60,7 +60,9 @@ export const Row = styled.div`
   position: relative;
 `;
 
-const Movies = () => {
+const Movies = (props) => {
+  const { theme, toggleTheme } = props;
+
   const { t } = useTranslation('movie');
 
   const router = useRouter();
@@ -202,10 +204,12 @@ const Movies = () => {
       title="Movies - PapyMovie"
       description="Discover the popular or best rated movies as well as the ones coming soon"
       url="/movies"
+      toggleTheme={toggleTheme}
+      theme={theme}
     >
-      <PageContainer maxWidth="1300">
+      <PageContainer background={theme.background} maxWidth="1300">
         <Row justifyContent="space-between">
-          <Text isBold marginBottom={24} fontSize={32}>
+          <Text textColor={theme.text} isBold marginBottom={24} fontSize={32}>
             {t('movies')}
           </Text>
           {isMobile && (
@@ -220,12 +224,14 @@ const Movies = () => {
 
         <Row flexDirection={isMobile ? 'column' : 'row'}>
           {(!isMobile || (isMobile && isFiltersVisible)) && (
-            <RightColumn>
-              <Text isBold fontSize={16} marginBottom={16}>
+            <RightColumn background={theme.background}>
+              <Text textColor={theme.text} isBold fontSize={16} marginBottom={16}>
                 {t('filters')}
               </Text>
 
-              <Text marginBottom={4}>{t('sort_by')}</Text>
+              <Text textColor={theme.text} marginBottom={4}>
+                {t('sort_by')}
+              </Text>
               <Select
                 fluid
                 style={{ marginBottom: 32 }}
@@ -235,7 +241,9 @@ const Movies = () => {
                 value={filter}
               />
 
-              <Text marginBottom={8}>Genres</Text>
+              <Text textColor={theme.text} marginBottom={8}>
+                Genres
+              </Text>
               <div style={{ marginBottom: 16 }}>
                 {genres &&
                   genres.map((genre) => {
@@ -256,7 +264,9 @@ const Movies = () => {
 
               <Row flexDirection="row">
                 <div style={{ marginRight: 12, width: '100%' }}>
-                  <Text marginBottom={4}>{t('between')}</Text>
+                  <Text textColor={theme.text} marginBottom={4}>
+                    {t('between')}
+                  </Text>
                   <Select
                     fluid
                     style={{ marginBottom: 32, width: isMobile ? '100%' : '92px' }}
@@ -267,7 +277,9 @@ const Movies = () => {
                   />
                 </div>
                 <div style={{ width: '100%' }}>
-                  <Text marginBottom={4}>{t('and')}</Text>
+                  <Text textColor={theme.text} marginBottom={4}>
+                    {t('and')}
+                  </Text>
 
                   <Select
                     fluid
@@ -299,6 +311,7 @@ const Movies = () => {
                         href={`/movies/${id}`}
                         grade={vote_average}
                         height={isMobile ? '230px' : '340px'}
+                        theme={theme}
                       />
                     </CardContainer>
                   );

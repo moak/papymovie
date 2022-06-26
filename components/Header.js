@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-
 import { useSpring, animated } from 'react-spring';
 import { Button, Input } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
@@ -15,10 +14,13 @@ import Brand from './Brand';
 import BurgerMenu from './BurgerMenu';
 import CollapseMenu from './CollapseMenu';
 import SearchBar from './SearchBar';
+import ToggleTheme from './ToggleTheme';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
+import { useTheme } from 'styles/theme';
 
+console.log(useTheme);
 // eslint-disable-next-line no-unused-vars
 const HeaderContainer = styled(({ isTransparent, ...props }) => (
   <animated.nav
@@ -29,7 +31,7 @@ const HeaderContainer = styled(({ isTransparent, ...props }) => (
   width: 100%;
   top: 0;
   left: 0;
-  background: ${(p) => (p.isTransparent ? 'transparent' : '#2d3436')};
+  background-color: ${(p) => (p.isTransparent ? 'transparent' : p.theme.headerBackground)};
   z-index: 3;
   font-size: 14px;
 `;
@@ -43,6 +45,9 @@ const FlexContainer = styled.div`
   height: 5rem;
   align-items: center;
 `;
+const ToggleThemeContainer = styled.div`
+  display: inline;
+`;
 
 const NavLinks = styled(animated.ul)`
   justify-self: end;
@@ -50,9 +55,9 @@ const NavLinks = styled(animated.ul)`
   margin: auto 0;
 
   & a {
-    color: #dfe6e9;
+    color: ${(p) => p.color};
+    font-weight: 600;
     text-transform: uppercase;
-    font-weight: 500;
     border-bottom: 1px solid transparent;
     margin: 0 1.5rem;
     transition: all 300ms linear 0s;
@@ -79,6 +84,9 @@ const BurgerWrapper = styled.div`
 `;
 
 const Header = (props) => {
+  const { toggleTheme, theme } = props;
+
+  console.log('props header', props);
   const { t } = useTranslation('common');
 
   const { data: session } = useSession();
@@ -155,15 +163,23 @@ const Header = (props) => {
     router.replace(router.asPath, router.asPath, { locale: data });
   };
 
+  console.log('themeContext', theme);
+  console.log('theme', theme);
+
   return (
     <>
       <HeaderContainer
+        theme={theme}
         style={barAnimation}
         isTransparent={router.pathname === '/' && isTransparent}
       >
         <FlexContainer>
-          {isMobile ? null : <Brand isConnected={!!session} />}
-
+          {isMobile ? null : (
+            <Brand
+              isConnected={!!session}
+              color={isTransparent && router.pathname === '/' ? 'white' : theme.text}
+            />
+          )}
           <form onSubmit={submitSearch}>
             <SearchBar
               isMobile={isMobile}
@@ -175,24 +191,29 @@ const Header = (props) => {
               value={search || ''}
             />
           </form>
-
           {!isMobile && !isTablet && (
-            <NavLinks style={{ ...linkAnimation, width: 550 }}>
+            <NavLinks
+              color={isTransparent && router.pathname === '/' ? 'white' : theme.text}
+              style={{ ...linkAnimation, width: 550 }}
+            >
               {!isMobile && !isTablet && (
                 <>
                   <Link href="/movies">{t('header.movies')}</Link>
                   <Link href="/community">{t('header.community')}</Link>
                   <Link href="/users">{t('header.users')}</Link>
+
                   {session && (
                     <Link href={`/users/${session && session?.user?.id}`}>
                       {t('header.my_profile')}
                     </Link>
                   )}
+                  <ToggleThemeContainer>
+                    <ToggleTheme toggleTheme={toggleTheme} />
+                  </ToggleThemeContainer>
                 </>
               )}
             </NavLinks>
           )}
-
           {!isMobile && !isTablet && (
             <>
               <NavLinks style={{ ...linkAnimation }}>
@@ -202,7 +223,7 @@ const Header = (props) => {
                       <span
                         style={{
                           margin: '0 6px',
-                          color: '#ffffff',
+                          color: theme.text,
                         }}
                       >
                         |
@@ -213,7 +234,7 @@ const Header = (props) => {
                       onClick={() => handleLocaleChange(language.lang)}
                       style={{
                         cursor: 'pointer',
-                        color: router.locale === language.lang ? '#ffffff' : 'grey',
+                        color: router.locale === language.lang ? theme.text : theme.textLight,
                         marginRight: index + 1 === languages.length ? 20 : 0,
                       }}
                     >
@@ -247,13 +268,17 @@ const Header = (props) => {
               </NavLinks>
             </>
           )}
-
           <BurgerWrapper>
             <BurgerMenu navbarState={props.navbarState} handleNavbar={props.handleNavbar} />
           </BurgerWrapper>
         </FlexContainer>
       </HeaderContainer>
-      <CollapseMenu navbarState={props.navbarState} handleNavbar={props.handleNavbar} />
+      <CollapseMenu
+        theme={theme}
+        toggleTheme={toggleTheme}
+        navbarState={props.navbarState}
+        handleNavbar={props.handleNavbar}
+      />
     </>
   );
 };

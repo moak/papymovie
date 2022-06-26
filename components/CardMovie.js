@@ -42,7 +42,6 @@ const ContentContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: ${(p) => (p.isMobile ? 8 : 12)}px;
-  background-color: #ffffff;
 }`;
 
 const GradeContainerDesktop = styled.div`
@@ -72,6 +71,7 @@ const CardMovie = (props) => {
     isMobile,
     titleCentered,
     height,
+    theme,
   } = props;
 
   const component = (
@@ -119,11 +119,16 @@ const CardMovie = (props) => {
               fontSize={16}
               marginBottom={4}
               textAlign={titleCentered ? 'center' : 'left'}
+              textColor={theme.text}
             >
               {title}
             </Text>
           </TitleContainer>
-          {subtitle && <Text dotdotdot>{subtitle}</Text>}
+          {subtitle && (
+            <Text textColor={theme.text} dotdotdot>
+              {subtitle}
+            </Text>
+          )}
 
           {children}
         </ContentContainer>

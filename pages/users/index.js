@@ -19,16 +19,22 @@ import CardContainer from 'components/CardContainer';
 import List from 'components/List';
 
 const Users = (props) => {
-  const { users } = props;
+  const { users, toggleTheme, theme } = props;
 
   const { t } = useTranslation('user');
 
   const isMobile = useIsMobile();
 
   return (
-    <Page title={t('list.metas.title')} description={t('list.metas.description')} url="/users">
+    <Page
+      toggleTheme={toggleTheme}
+      theme={theme}
+      title={t('list.metas.title')}
+      description={t('list.metas.description')}
+      url="/users"
+    >
       <PageContainer>
-        <Text isBold marginBottom={24} fontSize={32}>
+        <Text textColor={theme.text} isBold marginBottom={24} fontSize={32}>
           {t('list.title')}
         </Text>
 
@@ -46,6 +52,7 @@ const Users = (props) => {
                   percent={isMobile ? 100 : 25}
                 >
                   <CardUser
+                    theme={theme}
                     isMobile={isMobile}
                     name={name}
                     imageUrl={image}

@@ -5,19 +5,19 @@ import useIsMobile from 'hooks/useIsMobile';
 
 const Logo = styled.a`
   font-size: 1.7rem;
-  color: #ffffff;
+  color: ${(p) => p.color};
   font-weight: 700;
   letter-spacing: 2px;
   height: auto;
 
   &:hover {
     text-decoration: none;
-    color: #ffffff;
+    color: ${(p) => p.color};
   }
 `;
 
 const Brand = (props) => {
-  const { isConnected } = props;
+  const { isConnected, color } = props;
   const isMobile = useIsMobile();
 
   if (isMobile) {
@@ -25,7 +25,7 @@ const Brand = (props) => {
   }
   return (
     <Link href={isConnected ? '/movies' : '/'} passHref>
-      <Logo>PapyMovie</Logo>
+      <Logo color={color}>PapyMovie</Logo>
     </Link>
   );
 };
