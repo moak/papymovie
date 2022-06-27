@@ -3,8 +3,9 @@
     "home": "Accueil",
     "connect": "Connexion",
     "disconnect": "Déconnexion",
-    "search": "Chercher un film",
+    "search": "Chercher un film ou série",
     "movies": "Films",
+    "series": "Séries",
     "community": "Communauté",
     "users": "Utilisateurs",
     "my_profile": "Mon profil"

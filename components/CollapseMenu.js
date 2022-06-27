@@ -59,24 +59,23 @@ const languages = [
 ];
 
 const ClosableLink = (props) => {
-  const { handleNavbar, display, currentPath, closablePath, theme } = props;
+  const { handleNavbar, display, currentPath, closablePath, href, theme } = props;
 
-  const isCurrent = currentPath === closablePath;
+  let isCurrent = currentPath === closablePath;
 
-  return (
-    <Link href={closablePath}>
-      <div
-        style={{ color: isCurrent ? '#fdcb6e' : theme.text }}
-        onClick={() => {
-          if (currentPath === closablePath) {
-            handleNavbar(false);
-          }
-        }}
-      >
-        {display}
-      </div>
-    </Link>
-  );
+  if (currentPath)
+    return (
+      <Link href={href}>
+        <div
+          style={{ color: isCurrent ? '#fdcb6e' : theme.text }}
+          onClick={() => {
+            return handleNavbar(false);
+          }}
+        >
+          {display}
+        </div>
+      </Link>
+    );
 };
 
 const CollapseMenu = (props) => {
@@ -114,7 +113,8 @@ const CollapseMenu = (props) => {
                 theme={theme}
                 display={t('header.home')}
                 handleNavbar={handleNavbar}
-                currentPath={router.pathname}
+                currentPath={router.asPath}
+                href="/"
                 closablePath="/"
               />
             </li>
@@ -124,8 +124,19 @@ const CollapseMenu = (props) => {
               theme={theme}
               display={t('header.movies')}
               handleNavbar={handleNavbar}
-              currentPath={router.pathname}
-              closablePath="/movies"
+              currentPath={router.asPath}
+              href="/movies?type=movie"
+              closablePath="/movies?type=movie"
+            />
+          </li>
+          <li>
+            <ClosableLink
+              theme={theme}
+              display={t('header.series')}
+              handleNavbar={handleNavbar}
+              currentPath={router.asPath}
+              href="/movies?type=serie"
+              closablePath="/movies?type=serie"
             />
           </li>
           <li>
@@ -133,7 +144,8 @@ const CollapseMenu = (props) => {
               theme={theme}
               display={t('header.community')}
               handleNavbar={handleNavbar}
-              currentPath={router.pathname}
+              currentPath={router.asPath}
+              href="/community"
               closablePath="/community"
             />
           </li>
@@ -142,7 +154,8 @@ const CollapseMenu = (props) => {
               theme={theme}
               display={t('header.users')}
               handleNavbar={handleNavbar}
-              currentPath={router.pathname}
+              currentPath={router.asPath}
+              href="/users"
               closablePath="/users"
             />
           </li>
@@ -154,7 +167,8 @@ const CollapseMenu = (props) => {
                   theme={theme}
                   display={t('header.my_profile')}
                   handleNavbar={handleNavbar}
-                  currentPath={router.pathname}
+                  currentPath={router.asPath}
+                  href={`/users/${session?.user?.id}`}
                   closablePath={`/users/${session?.user?.id}`}
                 />
               </li>
@@ -176,6 +190,7 @@ const CollapseMenu = (props) => {
                   handleNavbar={handleNavbar}
                   currentPath={router.pathname}
                   closablePath={`/signin`}
+                  href="/signin"
                   onClick={signIn}
                 />
               </li>

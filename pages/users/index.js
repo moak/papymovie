@@ -58,7 +58,7 @@ const Users = (props) => {
                     imageUrl={image}
                     href={`/users/${_id}`}
                     infos={[
-                      { amount: user.movies.length, title: t('movies') },
+                      { amount: user.movies.length, title: t('media') },
                       { amount: user.followers.length, title: t('followers') },
                       { amount: user.followings.length, title: t('followings') },
                     ]}

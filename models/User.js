@@ -19,9 +19,10 @@ const UserSchema = new Schema(
     ],
     moviesToWatch: [
       {
-        themoviedbId: String,
-        title: String,
-        image: String,
+        themoviedbId: { type: String, required: false },
+        title: { type: String, required: false },
+        image: { type: String, required: false },
+        mediaType: { type: String, required: false },
       },
     ],
     followers: [

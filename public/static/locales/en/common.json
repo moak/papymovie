@@ -3,8 +3,9 @@
     "home": "Home",
     "connect": "Connect",
     "disconnect": "Logout",
-    "search": "Search a movie",
+    "search": "Search a movie or a serie",
     "movies": "Movies",
+    "series": "Series",
     "community": "Community",
     "users": "Users",
     "my_profile": "My profile"

@@ -1,5 +1,6 @@
 {
   "movies": "Films",
+  "media": "Médias",
   "followers": "Followers",
   "followings": "Following",
   "follow": "Suivre",
@@ -25,12 +26,16 @@
     "my_profile": "Mon profil",
     "my_profile_my_movies": "Mes films",
     "my_profile_no_movies": "You n'avez pas encore ajouté de films",
+    "my_profile_my_series": "Mes séries",
+    "my_profile_no_series": "You n'avez pas encore ajouté de séries",
     "my_profile_no_followers": "Vous n'avez pas de followers",
     "my_profile_no_followings": "Aucun followers",
     "my_profile_no_notes": "Ajoutez une note..",
 
     "users_movies": "Films",
+    "users_series": "Séries",
     "no_movies": "Pas de films.",
+    "no_series": "Pas de séries.",
     "no_result_watching_list": "Aucun résultat trouvé.",
     "no_followers": "Cet utilisateur n'a pas de followers.",
     "no_followings": "Cet utilisateur de follow personne.",
@@ -38,7 +43,7 @@
     "add_description": "Ajouter une description",
 
     "delete": "Supprimer",
-    "delete_movie_title": "Supprimer film",
-    "delete_movie_confirmation": "Êtes-vous sur de vouloir supprimer ce film?"
+    "delete_movie_title": "Supprimer média",
+    "delete_movie_confirmation": "Êtes-vous sur de vouloir supprimer ce média?"
   }
 }

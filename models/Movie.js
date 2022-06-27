@@ -17,6 +17,10 @@ const MovieSchema = new Schema({
     type: String,
     required: [true, 'Please add a title'],
   },
+  mediaType: {
+    type: String,
+    required: [true, 'Please add a mediaType'],
+  },
   description: {
     type: String,
     required: false,

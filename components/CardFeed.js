@@ -333,10 +333,10 @@ const CardFeed = (props) => {
               {comments.map((comment, index) => {
                 return (
                   <Comment key={index}>
-                    <Comment.Avatar src={comment.user.image} />
+                    <Comment.Avatar src={comment?.user?.image} />
                     <Comment.Content>
                       <Comment.Author style={{ color: theme.text }} as="a">
-                        {comment.user.name}
+                        {comment?.user?.name}
                       </Comment.Author>
                       <Comment.Metadata>
                         <div style={{ color: theme.textLight }}>

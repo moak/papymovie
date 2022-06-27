@@ -73,12 +73,13 @@ const Right = styled.div`
 
 const View = (props) => {
   const {
-    movie,
-    movie: {
+    data,
+    data: {
       backdrop_path,
       poster_path,
       runtime,
       title,
+      name,
       overview,
       release_date,
       genres,
@@ -86,6 +87,8 @@ const View = (props) => {
     } = {},
     toggleTheme,
     theme,
+    isMovieType,
+    mediaId,
   } = props;
 
   const { locale } = useRouter();
@@ -94,7 +97,6 @@ const View = (props) => {
 
   const router = useRouter();
 
-  const { themoviedbId } = router.query;
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
   const { data: session } = useSession();
@@ -104,17 +106,18 @@ const View = (props) => {
   const [userMovie, setUserMovie] = useState(null);
   const [similarMovies, setSimilarMovies] = useState(null);
 
-  const [isSubmittingMovie, setIsSubmittingMovie] = useState(false);
-  const [isSubmittingMovieToWatch, setIsSubmittingMovieToWatch] = useState(false);
+  const [isSubmittingMedia, setIsSubmittingMedia] = useState(false);
+  const [isSubmittingMediaToWatch, setIsSubmittingMediaToWatch] = useState(false);
 
-  const [isInMoviesToWatch, setIsInMoviesToWatch] = useState(false);
+  const [isInMediaToWatch, setIsInMediaToWatch] = useState(false);
 
   const [form, setForm] = useState({
-    themoviedbId,
-    title,
+    themoviedbId: mediaId,
+    title: title || name,
     image: poster_path,
     description: null,
     rating: null,
+    mediaType: isMovieType ? 'movie' : 'serie',
   });
 
   const [errors, setErrors] = useState({});
@@ -133,12 +136,12 @@ const View = (props) => {
     e.preventDefault();
     let errs = validate();
     setErrors(errs);
-    setIsSubmittingMovie(true);
+    setIsSubmittingMedia(true);
   };
 
-  const handleSubmitMovieToWatch = (e) => {
+  const handleSubmitMediaToWatch = (e) => {
     e.preventDefault();
-    setIsSubmittingMovieToWatch(true);
+    setIsSubmittingMediaToWatch(true);
   };
 
   const handleChangeRating = (newRating) => {
@@ -155,7 +158,7 @@ const View = (props) => {
     });
   };
 
-  const createMovie = async () => {
+  const createMedia = async () => {
     try {
       await fetch(`${process.env.NEXTAUTH_URL}/api/movies`, {
         method: 'POST',
@@ -173,11 +176,13 @@ const View = (props) => {
   };
 
   useEffect(() => {
-    const fetchSimilarMovies = async () => {
+    const fetchSimilarMedia = async () => {
       try {
-        const request = await fetch(
-          `https://api.themoviedb.org/3/movie/${themoviedbId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`,
-        );
+        const url = `https://api.themoviedb.org/3/${
+          isMovieType ? 'movie' : 'tv'
+        }/${mediaId}/similar?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`;
+
+        const request = await fetch(url);
         const { results } = await request.json();
 
         setSimilarMovies(results);
@@ -186,15 +191,17 @@ const View = (props) => {
       }
     };
 
-    fetchSimilarMovies();
-  }, [themoviedbId]);
+    fetchSimilarMedia();
+  }, [mediaId]);
 
   useEffect(() => {
-    const fetchCreditMovie = async () => {
+    const fetchCreditMedia = async () => {
       try {
-        const request = await fetch(
-          `https://api.themoviedb.org/3/movie/${themoviedbId}/credits?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`,
-        );
+        const url = `https://api.themoviedb.org/3/${
+          isMovieType ? 'movie' : 'tv'
+        }/${mediaId}/credits?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`;
+
+        const request = await fetch(url);
         const { cast } = await request.json();
 
         setActors(cast);
@@ -204,9 +211,9 @@ const View = (props) => {
     };
 
     if (!isMobile && !isTablet) {
-      fetchCreditMovie();
+      fetchCreditMedia();
     }
-  }, [themoviedbId]);
+  }, [mediaId]);
 
   useEffect(() => {
     const fetchLoggedUser = async () => {
@@ -227,7 +234,7 @@ const View = (props) => {
 
   useEffect(() => {
     if (user) {
-      const userMovie = user.movies.find((movie) => movie.themoviedbId === themoviedbId);
+      const userMovie = user.movies.find((movie) => movie.themoviedbId === mediaId);
 
       setUserMovie(userMovie);
       setForm({
@@ -236,20 +243,21 @@ const View = (props) => {
         rating: userMovie ? userMovie.rating : null,
       });
     }
-  }, [themoviedbId, user]);
+  }, [mediaId, user]);
 
   useEffect(() => {
     if (user) {
-      setIsInMoviesToWatch(
-        user?.moviesToWatch.find((movieToWatch) => movieToWatch.themoviedbId === themoviedbId),
+      console.log('user', user);
+      setIsInMediaToWatch(
+        user?.moviesToWatch?.find((movieToWatch) => movieToWatch.themoviedbId === mediaId),
       );
     }
-  }, [themoviedbId, user]);
+  }, [mediaId, user]);
 
   useEffect(() => {
     document.body.scrollTop = 0; // For Safari
     document.documentElement.scrollTop = 0;
-  }, [themoviedbId]);
+  }, [mediaId]);
 
   const submitMovieToWatch = async () => {
     try {
@@ -260,23 +268,24 @@ const View = (props) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          themoviedbId: form.themoviedbId,
+          themoviedbId: form.themoviedbId.toString(),
           title: form.title,
           image: form.image,
+          mediaType: isMovieType ? 'movie' : 'serie',
         }),
       });
 
       const { isInMoviesToWatch } = await request.json();
 
-      setIsInMoviesToWatch(!isInMoviesToWatch);
+      setIsInMediaToWatch(!isInMoviesToWatch);
 
-      setIsSubmittingMovieToWatch(false);
+      setIsSubmittingMediaToWatch(false);
     } catch (error) {
-      setIsSubmittingMovieToWatch(false);
+      setIsSubmittingMediaToWatch(false);
     }
   };
 
-  const editMovie = async () => {
+  const editMedia = async () => {
     try {
       await fetch(
         `${process.env.NEXTAUTH_URL}/api/users/${session.user.id}/movies/${userMovie._id}`,
@@ -296,7 +305,7 @@ const View = (props) => {
     }
   };
 
-  const deleteMovie = async () => {
+  const deleteMedia = async () => {
     try {
       await fetch(
         `${process.env.NEXTAUTH_URL}/api/users/${session.user.id}/movies/${userMovie._id}`,
@@ -316,36 +325,38 @@ const View = (props) => {
   };
 
   useEffect(() => {
-    if (isSubmittingMovie) {
+    if (isSubmittingMedia) {
       if (Object.keys(errors).length === 0) {
         if (userMovie) {
-          editMovie();
+          editMedia();
         } else {
-          createMovie();
+          createMedia();
         }
       } else {
-        setIsSubmittingMovie(false);
+        setIsSubmittingMedia(false);
       }
     }
   }, [errors]);
 
   useEffect(() => {
-    if (isSubmittingMovieToWatch) {
+    if (isSubmittingMediaToWatch) {
       submitMovieToWatch();
     } else {
-      setIsSubmittingMovieToWatch(false);
+      setIsSubmittingMediaToWatch(false);
     }
-  }, [isSubmittingMovieToWatch]);
+  }, [isSubmittingMediaToWatch]);
 
-  if (!movie) {
+  if (!data) {
     return null;
   }
+
+  console.log('isInMediaToWatch', isInMediaToWatch);
 
   return (
     <Page
       title={t('view.metas.title', { title, date: release_date?.substring(0, 4) })}
       previewImage={`https://image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
-      url={`/movies/${themoviedbId}`}
+      url={`/movies/${mediaId}`}
       description={overview ? truncate(overview, 100) : null}
       toggleTheme={toggleTheme}
       theme={theme}
@@ -385,7 +396,7 @@ const View = (props) => {
                   fontSize={isMobile ? 24 : 30}
                   marginTop={isMobile ? 4 : 0}
                 >
-                  {title}
+                  {title || name}
                 </Text>
                 {!isMobile && release_date?.substring(0, 4) && (
                   <Text textColor={theme.white} isBold fontSize={16} marginLeft={4}>
@@ -414,11 +425,11 @@ const View = (props) => {
                 </Box>
               )}
 
-              <Text textColor={theme.white} marginBottom={16} textColor="#ffffff">
+              <Text textColor={theme.white} marginBottom={16}>
                 {genres.map((genre) => {
                   return <span key={genre.name}>{genre.name} - </span>;
                 })}
-                {getHourMinutesFromMinutes(runtime)}
+                {runtime && getHourMinutesFromMinutes(runtime)}
               </Text>
 
               <Text textColor={theme.white} isBold marginBottom={8} fontSize={22}>
@@ -439,7 +450,9 @@ const View = (props) => {
                       fontSize={isMobile ? (userMovie ? 16 : 24) : 24}
                       marginRight={8}
                     >
-                      {userMovie ? t('view.my_profile_saved') : t('view.save')}
+                      {userMovie
+                        ? t('view.my_profile_saved')
+                        : t(`view.save_${isMovieType ? 'movie' : 'serie'}`)}
                     </Text>
                   </div>
                 </Text>
@@ -454,7 +467,9 @@ const View = (props) => {
                   marginRight={4}
                   fontSize={14}
                 >
-                  {userMovie ? t('view.my_profile_rating') : t('view.rate_movie')}
+                  {userMovie
+                    ? t('view.my_profile_rating')
+                    : t(`view.rate_${isMovieType ? 'movie' : 'serie'}`)}
                 </Text>
                 {form.rating ? (
                   <RoundedLabel
@@ -486,7 +501,7 @@ const View = (props) => {
 
               <Form>
                 <TextArea
-                  placeholder={t('view.description_placeholder')}
+                  placeholder={t(`view.description_placeholder_${isMovieType ? 'movie' : 'serie'}`)}
                   name="description"
                   value={form.description || ''}
                   onChange={handleChangeDescription}
@@ -496,11 +511,11 @@ const View = (props) => {
               <Button
                 onClick={session ? handleSubmitMovie : signIn}
                 size="small"
-                loading={!!isSubmittingMovie}
+                loading={!!isSubmittingMedia}
                 color="green"
                 style={{ marginTop: 10 }}
               >
-                {userMovie ? t('view.edit') : t('view.add')}
+                {userMovie ? t('view.edit') : t(`view.add_${isMovieType ? 'movie' : 'serie'}`)}
               </Button>
               {errors.rating && (
                 <Text textColor={theme.white} isBold marginBottom={8} marginTop={8} fontSize={14}>
@@ -511,7 +526,7 @@ const View = (props) => {
               {userMovie ? (
                 <Button
                   color={'red'}
-                  onClick={deleteMovie}
+                  onClick={deleteMedia}
                   style={{ marginTop: 8, marginBottom: 8 }}
                   size="small"
                 >
@@ -523,14 +538,14 @@ const View = (props) => {
                 {userMovie ? (
                   <Icon style={{ fontSize: 25 }} color="green" name="check" />
                 ) : (
-                  <Text textColor={theme.white} fontSize={20} textColor="#ffffff" isBold>
+                  <Text textColor={theme.white} fontSize={20} isBold>
                     {t('view.or')}
                   </Text>
                 )}
               </Divider>
 
               <Text textColor={theme.white} isBold marginTop={8} marginBottom={4} fontSize={18}>
-                {isInMoviesToWatch ? (
+                {isInMediaToWatch ? (
                   <div>
                     <span>{t('view.watching_list')}</span>
                     <Icon color="green" name="check" style={{ marginLeft: 8 }} />
@@ -540,13 +555,13 @@ const View = (props) => {
                 )}
               </Text>
               <Button
-                color={isInMoviesToWatch ? 'red' : 'blue'}
-                onClick={session ? handleSubmitMovieToWatch : signIn}
-                loading={isSubmittingMovieToWatch}
+                color={isInMediaToWatch ? 'red' : 'blue'}
+                onClick={session ? handleSubmitMediaToWatch : signIn}
+                loading={isSubmittingMediaToWatch}
                 style={{ marginTop: 8, marginBottom: 8 }}
                 size="small"
               >
-                {isInMoviesToWatch ? t('view.delete') : t('view.add')}
+                {isInMediaToWatch ? t('view.delete') : t('view.add')}
               </Button>
             </Right>
           </SubContainer>
@@ -569,7 +584,7 @@ const View = (props) => {
                         title={name}
                         subtitle={character}
                         imageUrl={`https://image.tmdb.org/t/p/w138_and_h175_face/${profile_path}`}
-                        height={isMobile ? '120px' : '220px'}
+                        height={isMobile ? '120px' : '200px'}
                       />
                     </CardContainer>
                   );
@@ -587,7 +602,7 @@ const View = (props) => {
             </Text>
             <List>
               {similarMovies.slice(0, 5).map((movie) => {
-                const { id, title, poster_path, vote_average, release_date } = movie;
+                const { id, title, name, poster_path, vote_average, release_date } = movie;
 
                 return (
                   <CardContainer
@@ -597,7 +612,7 @@ const View = (props) => {
                   >
                     <CardMovie
                       theme={theme}
-                      title={title}
+                      title={title || name}
                       subtitle={moment(release_date).format('MMM, YYYY')}
                       imageUrl={`https://image.tmdb.org/t/p/w300/${poster_path}`}
                       href={`/movies/${id}`}
@@ -616,19 +631,28 @@ const View = (props) => {
 
 export async function getServerSideProps(context) {
   const {
-    query: { themoviedbId },
+    query: { themoviedbId, type },
     locale,
   } = context;
 
-  const url = `https://api.themoviedb.org/3/movie/${themoviedbId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`;
+  let data = null;
 
-  const res = await fetch(url);
-  const data = await res.json();
+  if (type === 'serie') {
+    const urlTest = `https://api.themoviedb.org/3/tv/${themoviedbId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`;
+    const res3 = await fetch(urlTest);
+    data = await res3.json();
+  } else {
+    const url = `https://api.themoviedb.org/3/movie/${themoviedbId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`;
+    const res = await fetch(url);
+    data = await res.json();
+  }
 
   return {
     props: {
       ...(await serverSideTranslations(locale, ['common', 'movie'])),
-      movie: data,
+      data,
+      isMovieType: type !== 'serie',
+      mediaId: type !== 'serie' ? data.id : themoviedbId,
     },
   };
 }

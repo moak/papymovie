@@ -8,6 +8,7 @@ import ToggleTheme from './ToggleTheme';
 
 import Users from 'public/icons/Users';
 import Movies from 'public/icons/Movies';
+import Cinema from 'public/icons/Cinema';
 import Social from 'public/icons/Social';
 import Home from 'public/icons/Home';
 
@@ -54,8 +55,20 @@ const HeaderActions = (props) => {
   const actions = [
     {
       name: t('header.movies'),
-      path: '/movies',
-      genericPath: '/movies',
+      path: '/movies?type=movie',
+      genericPath: '/movies?type=movie',
+      svg: (
+        <Cinema
+          width={20}
+          height={20}
+          color={isTransparent && isLanding ? theme.white : theme.text}
+        />
+      ),
+    },
+    {
+      name: t('header.series'),
+      path: '/movies?type=serie',
+      genericPath: '/movies?type=serie',
       svg: (
         <Movies
           width={20}
@@ -102,7 +115,7 @@ const HeaderActions = (props) => {
   return (
     <Container>
       {actions.map((action, index) => {
-        const isCurrent = router.pathname === action.genericPath;
+        const isCurrent = router.asPath === action.genericPath;
 
         return (
           <Link key={index} href={action.path}>

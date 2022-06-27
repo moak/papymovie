@@ -139,6 +139,10 @@ const User = (props) => {
     moviesToWatch = [],
   } = user || {};
 
+  const finalMovies = movies.filter((movie) => movie.mediaType !== 'serie');
+  const finalSeries = movies.filter((movie) => movie.mediaType === 'serie');
+
+  console.log('finalSeries', finalSeries);
   return (
     <Page
       title={t('view.metas.title', { name })}
@@ -159,7 +163,7 @@ const User = (props) => {
                 name={name}
                 imageUrl={image}
                 infos={[
-                  { amount: movies?.length, title: t('movies') },
+                  { amount: movies?.length, title: t('media') },
                   {
                     amount: user?.followers.length,
                     title: t('followers'),
@@ -199,7 +203,8 @@ const User = (props) => {
                 <List>
                   {moviesToWatch?.length
                     ? moviesToWatch.map((movieToWatch) => {
-                        const { _id, title, themoviedbId, image } = movieToWatch;
+                        console.log('movieToWatch', movieToWatch);
+                        const { _id, title, themoviedbId, image, mediaType } = movieToWatch;
 
                         return (
                           <CardContainer
@@ -213,7 +218,9 @@ const User = (props) => {
                               isMobile
                               title={title}
                               imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
-                              href={`/movies/${themoviedbId}`}
+                              href={`/movies/${themoviedbId}?type=${
+                                mediaType === 'serie' ? 'serie' : 'movie'
+                              }`}
                             />
                           </CardContainer>
                         );
@@ -227,21 +234,100 @@ const User = (props) => {
           <Col xs={12} md={9}>
             <Text marginBottom={12} fontSize={18} isBold textColor={theme.text}>
               {isMyProfile ? t('view.my_profile_my_movies') : `${t('view.users_movies')}`} (
-              {movies?.length})
+              {finalMovies?.length})
             </Text>
 
-            {movies && movies.length === 0 && (
+            {finalMovies && finalMovies.length === 0 && (
               <EmptyState>
-                <Text textColor={theme.text} fontSize={18}>
+                <Text textColor={theme.text} fontSize={16}>
                   {isMyProfile ? t('view.my_profile_no_movies') : t('view.no_movies')}
                 </Text>
               </EmptyState>
             )}
 
             <List>
-              {movies &&
-                movies.length > 0 &&
-                movies.map((movie) => {
+              {finalMovies?.length > 0 &&
+                finalMovies.map((movie) => {
+                  const { _id, description, themoviedbId, title, image, rating } = movie;
+
+                  return (
+                    <CardContainer key={_id} percent={isMobile ? 50 : isTablet ? 33 : 25}>
+                      <CardMovie
+                        theme={theme}
+                        isMobile={isMobile}
+                        title={title}
+                        imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
+                        href={`/movies/${themoviedbId}`}
+                        imageHeight={isMyProfile ? 70 : 70}
+                        isMyProfile={isMyProfile}
+                        userRating={rating}
+                        titleCentered
+                      >
+                        <Box flexDirection="column" alignItems="center">
+                          <Text
+                            textAlign="center"
+                            cursor="pointer"
+                            marginBottom={8}
+                            textColor={theme.text}
+                            dotdotdot
+                            width={`100%`}
+                          >
+                            {isMyProfile
+                              ? description || t('view.add_description')
+                              : description || t('view.no_description')}
+                          </Text>
+
+                          <ActionsContainer>
+                            {isMyProfile ? (
+                              <>
+                                <Button
+                                  size="tiny"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    router.push(`/movies/${themoviedbId}`);
+                                  }}
+                                  primary
+                                  icon
+                                >
+                                  <Icon name="pencil" />
+                                </Button>
+
+                                <Button
+                                  size="tiny"
+                                  color="red"
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    return open(_id);
+                                  }}
+                                >
+                                  {t('view.delete')}
+                                </Button>
+                              </>
+                            ) : null}
+                          </ActionsContainer>
+                        </Box>
+                      </CardMovie>
+                    </CardContainer>
+                  );
+                })}
+            </List>
+
+            <Text marginBottom={12} fontSize={18} isBold textColor={theme.text}>
+              {isMyProfile ? t('view.my_profile_my_series') : `${t('view.users_series')}`} (
+              {finalSeries?.length})
+            </Text>
+
+            {finalSeries && finalSeries.length === 0 && (
+              <EmptyState>
+                <Text textColor={theme.text} fontSize={16}>
+                  {isMyProfile ? t('view.my_profile_no_series') : t('view.no_series')}
+                </Text>
+              </EmptyState>
+            )}
+
+            <List>
+              {finalSeries?.length > 0 &&
+                finalSeries.map((movie) => {
                   const { _id, description, themoviedbId, title, image, rating } = movie;
 
                   return (
@@ -326,7 +412,7 @@ const User = (props) => {
                         name={name}
                         imageUrl={image}
                         infos={[
-                          { amount: movies.length, title: t('movies') },
+                          { amount: movies.length, title: t('media') },
                           { amount: followers.length, title: t('followers') },
                           { amount: followings.length, title: t('followings') },
                         ]}
@@ -361,7 +447,7 @@ const User = (props) => {
                       name={name}
                       imageUrl={image}
                       infos={[
-                        { amount: movies.length, title: t('movies') },
+                        { amount: movies.length, title: t('media') },
                         { amount: followers.length, title: t('followers') },
                         { amount: followings.length, title: t('followings') },
                       ]}

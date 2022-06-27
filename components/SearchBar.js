@@ -56,7 +56,7 @@ const IconInnerWrapper = styled.div`
 
 const Span = styled.span`
   display: inline;
-  max-width: 140px;
+  max-width: 180px;
   display: inline-block;
   color: #8e8e8e;
   white-space: nowrap;

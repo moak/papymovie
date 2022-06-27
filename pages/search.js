@@ -52,6 +52,7 @@ const New = (props) => {
       );
 
       const { results: seriesResults, total_pages: seriesTotalPage } = await seriesQuery.json();
+      console.log('seriesResults', seriesResults);
 
       setIsLoading(false);
       setMovies(moviesResults);
@@ -109,7 +110,7 @@ const New = (props) => {
                               imageUrl={`https://image.tmdb.org/t/p/w${
                                 isMobile ? 200 : 300
                               }/${poster_path}`}
-                              href={`/movies/${id}`}
+                              href={`/movies/${id}?type=movie`}
                               grade={vote_average}
                               height={isMobile ? '230px' : '340px'}
                             />
@@ -153,7 +154,7 @@ const New = (props) => {
                               title={name}
                               subtitle={moment(first_air_date).format('MMM, YYYY')}
                               imageUrl={`https://image.tmdb.org/t/p/w300/${poster_path}`}
-                              href={null}
+                              href={`/movies/${id}?type=serie`}
                               grade={vote_average}
                               height={isMobile ? '230px' : '340px'}
                             />
