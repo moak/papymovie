@@ -27,5 +27,7 @@ module.exports = {
 
     GA_TRACKING_ID: process.env.GA_TRACKING_ID,
     SECRET: process.env.SECRET,
+
+    PANELBEAR_ID: process.env.PANELBEAR_ID,
   },
 };

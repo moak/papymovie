@@ -4,8 +4,7 @@ body {
   /* overflow-x: hidden !important; */
   padding: 0;
   margin: 0;
-  font-family: 'Roboto', sans-serif;
-  /* font-family: 'Raleway', sans-serif; */
+  font-family: 'Raleway', sans-serif;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@200;300;400;500&display=swap');
@@ -37,6 +36,8 @@ body {
 
 .logo {
   display: flex;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
 .login-container .logo svg {
@@ -231,9 +232,7 @@ body {
   .login-container .login-form {
     padding: 20px;
   }
-  .login-container .login-form-group {
-    margin-bottom: 16px;
-  }
+
   .login-container {
     margin: 0;
   }

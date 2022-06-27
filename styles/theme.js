@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components';
 const greyLight = '#f4f4f4';
 
 export const lightTheme = {
+  name: 'light',
   body: '#FFF',
   text: 'black',
   textLight: 'grey',
@@ -19,6 +20,7 @@ export const lightTheme = {
 };
 
 export const darkTheme = {
+  name: 'dark',
   body: '#2a2929',
   text: '#FFF',
   textLight: '#fff',
@@ -40,7 +42,6 @@ export const GlobalStyles = createGlobalStyle`
       return theme?.body;
     }};
     color: ${({ theme }) => theme?.text};
-    font-family: Tahoma, Helvetica, Arial, Roboto, sans-serif;
     transition: all 0.50s linear;
   }`;
 

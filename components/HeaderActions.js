@@ -7,9 +7,9 @@ import { useTranslation } from 'next-i18next';
 import ToggleTheme from './ToggleTheme';
 
 import Users from 'public/icons/Users';
-import User from 'public/icons/User';
 import Movies from 'public/icons/Movies';
-import Feed from 'public/icons/Feed';
+import Social from 'public/icons/Social';
+import Home from 'public/icons/Home';
 
 const Container = styled.div`
   display: flex;
@@ -20,7 +20,7 @@ const Container = styled.div`
 
 const ContainerItem = styled.div`
   padding: 10px 0 20px 0;
-  width: 120px;
+  width: 130px;
   cursor: pointer;
   ${(p) => (p.isCurrent ? `  border-bottom: 4px red solid;` : null)}
 `;
@@ -69,7 +69,7 @@ const HeaderActions = (props) => {
       path: '/community',
       genericPath: '/community',
       svg: (
-        <User
+        <Social
           width={20}
           height={20}
           color={isTransparent && isLanding ? theme.white : theme.text}
@@ -95,7 +95,7 @@ const HeaderActions = (props) => {
       name: t('header.my_profile'),
       genericPath: '/users/[userId]',
       path: `/users/${session && session?.user?.id}`,
-      svg: <Feed width={20} height={20} color={theme.text} />,
+      svg: <Home width={20} height={20} color={theme.text} />,
     });
   }
 

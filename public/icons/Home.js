@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-const Feed = ({ width, height, color = '#fff' }) => (
+const Home = ({ width, height, color = '#030D45' }) => (
   <svg
     width={width}
     height={height}
@@ -12,4 +12,4 @@ const Feed = ({ width, height, color = '#fff' }) => (
   </svg>
 );
 
-export default Feed;
+export default Home;

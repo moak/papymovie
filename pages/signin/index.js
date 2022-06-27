@@ -1,15 +1,26 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { getProviders, signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import dynamic from 'next/dynamic';
 
-import styled from 'styled-components';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import Page from 'components/Page';
 import Text from 'components/Text';
 import PageContainer from 'components/PageContainer';
 
-export default function SignIn(props) {
+const SignIn = (props) => {
   const { providers, toggleTheme, theme } = props;
+
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (session) {
+      router.push(router.query.callbackUrl);
+    }
+  }, [session]);
 
   const providersArray = [
     {
@@ -38,56 +49,72 @@ export default function SignIn(props) {
     {
       name: 'Github',
       svg: (
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill={theme.text}
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
           <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
         </svg>
       ),
     },
   ];
+
+  // return <div style={{ color: theme.color }}>toto</div>;
+
+  console.log('theme.text', theme.text);
   return (
     <Page toggleTheme={toggleTheme} theme={theme}>
-      <PageContainer background={theme.background}>
-        <div style={{ border: `1px solid ${theme.borderColor}` }} className="login-container">
-          <div className="login-form">
-            <div className="login-form-inner">
-              <div className="logo">
-                <svg
-                  height="512"
-                  viewBox="0 0 192 192"
-                  width="512"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path d="m155.109 74.028a4 4 0 0 0 -3.48-2.028h-52.4l8.785-67.123a4.023 4.023 0 0 0 -7.373-2.614l-63.724 111.642a4 4 0 0 0 3.407 6.095h51.617l-6.962 67.224a4.024 4.024 0 0 0 7.411 2.461l62.671-111.63a4 4 0 0 0 .048-4.027z" />
-                </svg>
-                <Text textColor={theme.text} isBold fontSize={28} marginBottom={16} marginTop={-4}>
-                  Welcome
-                </Text>
-              </div>
-              <Text textColor={theme.text} fontSize={16} marginBottom={16} marginTop={-4}>
-                Stop forgetting the movies you watch.
-              </Text>
-
-              {Object.values(providers).map((provider, index) => (
-                <div
-                  style={{ cursor: 'pointer' }}
-                  tabIndex={index}
-                  role="button"
-                  onKeyDown={() => signIn(provider.id)}
-                  key={index}
-                  onClick={() => signIn(provider.id)}
-                >
-                  <div className="rounded-button google-login-button">
-                    <span className="google-icon">{providersArray[index].svg}</span>
-                    <Text cursor="pointer" textColor={theme.text}>
-                      Sign in with {providersArray[index].name}
-                    </Text>
-                  </div>
+      <>
+        <Text textColor={theme.text} isBold fontSize={28} marginBottom={16} marginTop={-4}>
+          Welcome
+        </Text>
+        <PageContainer background={theme.background}>
+          <div style={{ border: `1px solid ${theme.borderColor}` }} className="login-container">
+            <div className="login-form">
+              <div className="login-form-inner">
+                <div className="logo">
+                  <svg
+                    height="512"
+                    viewBox="0 0 192 192"
+                    width="512"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="m155.109 74.028a4 4 0 0 0 -3.48-2.028h-52.4l8.785-67.123a4.023 4.023 0 0 0 -7.373-2.614l-63.724 111.642a4 4 0 0 0 3.407 6.095h51.617l-6.962 67.224a4.024 4.024 0 0 0 7.411 2.461l62.671-111.63a4 4 0 0 0 .048-4.027z" />
+                  </svg>
+                  <Text textColor={theme.text} isBold fontSize={28} marginTop={-4}>
+                    Welcome
+                  </Text>
                 </div>
-              ))}
-            </div>
-          </div>
+                <Text textColor={theme.text} fontSize={16} marginBottom={16} marginTop={-4}>
+                  Stop forgetting the movies you watch.
+                </Text>
 
-          {/* <div className="onboarding">
+                {Object.values(providers).map((provider, index) => (
+                  <div
+                    style={{ cursor: 'pointer' }}
+                    tabIndex={index}
+                    role="button"
+                    onKeyDown={() =>
+                      signIn(provider.id, { callbackUrl: `${router.query.callbackUrl}` })
+                    }
+                    key={index}
+                    onClick={() => signIn(provider.id)}
+                  >
+                    <div className="rounded-button google-login-button">
+                      <span className="google-icon">{providersArray[index].svg}</span>
+                      <Text cursor="pointer" textColor={theme.text}>
+                        Sign in with {providersArray[index].name}
+                      </Text>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* <div className="onboarding">
           <div className="swiper-container">
             <div className="swiper-wrapper">
               <div className="swiper-slide color-1">
@@ -135,11 +162,12 @@ export default function SignIn(props) {
             <div className="swiper-pagination"></div>
           </div>
         </div> */}
-        </div>
-      </PageContainer>
+          </div>
+        </PageContainer>
+      </>
     </Page>
   );
-}
+};
 
 export async function getServerSideProps(context) {
   const { locale } = context;
@@ -149,3 +177,5 @@ export async function getServerSideProps(context) {
     props: { providers, ...(await serverSideTranslations(locale, ['common', 'user'])) },
   };
 }
+
+export default dynamic(() => Promise.resolve(SignIn), { ssr: false });

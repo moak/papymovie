@@ -5,7 +5,7 @@ import styled from 'styled-components';
 const Container = styled.div`
   display: flex;
   flex-direction: ${(p) => (p.isMobile ? 'row' : 'column')};
-  border: 1px solid #cecece;
+  border: 1px solid ${(p) => p.borderColor};
   border-radius: 10px;
   overflow: hidden;
   width: 100%;
@@ -26,10 +26,10 @@ const Image = styled.img`
 }`;
 
 const CardImage = (props) => {
-  const { imageUrl, href, isMobile } = props;
+  const { imageUrl, href, isMobile, theme } = props;
 
   const component = (
-    <Container isClickable={!!href} isMobile={isMobile}>
+    <Container borderColor={theme.borderColor} isClickable={!!href} isMobile={isMobile}>
       <Image
         onError={(e) => {
           e.target.onerror = null;

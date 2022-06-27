@@ -209,6 +209,7 @@ const User = (props) => {
                             percent={50}
                           >
                             <CardImage
+                              theme={theme}
                               isMobile
                               title={title}
                               imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
@@ -225,7 +226,7 @@ const User = (props) => {
 
           <Col xs={12} md={9}>
             <Text marginBottom={12} fontSize={18} isBold textColor={theme.text}>
-              {isMyProfile ? t('view.my_profile_my_movies') : `${t('view.users_movies')} } `} (
+              {isMyProfile ? t('view.my_profile_my_movies') : `${t('view.users_movies')}`} (
               {movies?.length})
             </Text>
 
@@ -265,7 +266,9 @@ const User = (props) => {
                             dotdotdot
                             width={`100%`}
                           >
-                            {description || 'Add a description...'}
+                            {isMyProfile
+                              ? description || t('view.add_description')
+                              : description || t('view.no_description')}
                           </Text>
 
                           <ActionsContainer>

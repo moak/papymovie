@@ -1,14 +1,6 @@
 import styled from 'styled-components';
 
-const fonts = {
-  primary: 'Poppins',
-  secondary: 'Poppins',
-};
-
 const Text = styled.div`
-  font-family: ${(p) => (p.fontFamily === 'secondary' ? fonts.secondary : fonts.primary)},
-    sans-serif;
-
   font-size: ${(p) => p.fontSize || 14}px;
   color: ${(p) => p.textColor || 'black'};
   font-weight: ${(p) => (p.isBold ? 600 : 400)};

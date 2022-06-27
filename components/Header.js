@@ -103,8 +103,8 @@ const Header = (props) => {
   const [search, setSearch] = useState(router.query.search || '');
 
   const languages = [
-    { lang: 'fr', display: 'FR' },
     { lang: 'en', display: 'EN' },
+    { lang: 'fr', display: 'FR' },
   ];
 
   const handleChangeSearch = useCallback((value) => {
@@ -128,7 +128,9 @@ const Header = (props) => {
   }, []);
 
   const connect = useCallback(() => {
-    signIn(null, { callbackUrl: `${window.location.origin}/movies` });
+    signIn(null, { callbackUrl: `${window.location.href}` });
+
+    // router.push('/signin');
   }, []);
 
   const linkAnimation = useSpring({
@@ -211,6 +213,7 @@ const Header = (props) => {
                     <span // eslint-disable-line jsx-a11y/click-events-have-key-events
                       onClick={() => handleLocaleChange(language.lang)}
                       style={{
+                        fontWeight: router.locale === language.lang ? 700 : 500,
                         cursor: 'pointer',
                         color: router.locale === language.lang ? theme.text : theme.textLight,
                         marginRight: index + 1 === languages.length ? 20 : 0,

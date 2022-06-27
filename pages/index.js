@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { Icon } from 'semantic-ui-react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
@@ -10,6 +9,10 @@ import dynamic from 'next/dynamic';
 
 import dbConnect from 'utils/dbConnect';
 import Feed from 'models/Feed';
+
+import Movies from 'public/icons/Movies';
+import Social from 'public/icons/Social';
+import Users from 'public/icons/Users';
 
 import Page from 'components/Page';
 import Text from 'components/Text';
@@ -66,7 +69,7 @@ const Card = styled.div`
   text-align: left;
   color: inherit;
   text-decoration: none;
-  border: ${(p) => (p.isMobile ? 0 : 1)}px solid ${(p) => p.border};
+  border: ${(p) => (p.isMobile ? 0 : 1)}px solid ${(p) => p.theme.borderColor};
   border-radius: 10px;
   transition: color 0.15s ease, border-color 0.15s ease;
   display: flex;
@@ -77,8 +80,8 @@ const Card = styled.div`
     !p.isMobile &&
     `
     &:hover {
-      color: #0070f3;
-      border-color: #0070f3;
+      color: ${p.theme.textLight};
+      border-color: ${p.theme.textLight};
       cursor: pointer;
     }
   `}
@@ -192,8 +195,9 @@ const Home = (props) => {
         >
           <Box marginBottom={32} flexDirection={isMobile ? 'column' : 'row'}>
             <Link href="/movies">
-              <Card border={theme.borderColor} isMobile={isMobile}>
+              <Card theme={theme} isMobile={isMobile}>
                 <Text
+                  cursor="pointer"
                   textColor={theme.text}
                   marginBottom={24}
                   textAlign="center"
@@ -202,16 +206,24 @@ const Home = (props) => {
                 >
                   {t('features.title1')}
                 </Text>
-                <Icon name="file video" size="huge" />
 
-                <Text width="90%" textAlign="center" marginTop={24} textColor={theme.text}>
+                <Movies width={60} height={60} color={theme.text} />
+
+                <Text
+                  cursor="pointer"
+                  width="90%"
+                  textAlign="center"
+                  marginTop={24}
+                  textColor={theme.text}
+                >
                   {t('features.content1')}
                 </Text>
               </Card>
             </Link>
-            <Link href="/movies">
-              <Card border={theme.borderColor} isMobile={isMobile}>
+            <Link href="/community">
+              <Card theme={theme} isMobile={isMobile}>
                 <Text
+                  cursor="pointer"
                   textColor={theme.text}
                   marginBottom={24}
                   textAlign="center"
@@ -220,15 +232,22 @@ const Home = (props) => {
                 >
                   {t('features.title2')}
                 </Text>
-                <Icon name="idea" size="huge" />
 
-                <Text width="90%" textAlign="center" marginTop={24} textColor={theme.text}>
+                <Social width={60} height={60} color={theme.text} />
+
+                <Text
+                  cursor="pointer"
+                  width="90%"
+                  textAlign="center"
+                  marginTop={24}
+                  textColor={theme.text}
+                >
                   {t('features.content2')}
                 </Text>
               </Card>
             </Link>
             <Link href="/users">
-              <Card border={theme.borderColor} isMobile={isMobile}>
+              <Card theme={theme} isMobile={isMobile}>
                 <Text
                   textColor={theme.text}
                   marginBottom={24}
@@ -238,9 +257,15 @@ const Home = (props) => {
                 >
                   {t('features.title3')}
                 </Text>
-                <Icon name="users" size="huge" />
+                <Users width={60} height={60} color={theme.text} />
 
-                <Text width="90%" textAlign="center" marginTop={24} textColor={theme.text}>
+                <Text
+                  cursor="pointer"
+                  width="90%"
+                  textAlign="center"
+                  marginTop={24}
+                  textColor={theme.text}
+                >
                   {t('features.content3')}
                 </Text>
               </Card>

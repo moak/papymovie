@@ -2,7 +2,6 @@ import * as React from 'react';
 
 const Users = ({ width, height, color = '#fff' }) => (
   <svg
-    w
     width={width}
     height={height}
     fill={color}

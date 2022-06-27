@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import Moon from 'public/icons/Moon';
 import Sun from 'public/icons/Sun';
 
-const ThemeToggle = (props) => {
+const ToggleTheme = (props) => {
   const { isDarkMode, toggleTheme } = props;
 
   const [toggled, setIsToggled] = useState(isDarkMode || false);
@@ -21,10 +21,17 @@ const ThemeToggle = (props) => {
           <Moon width={14} height={14} />
           <Sun width={14} height={14} />
         </div>
-        <input id="toggle" name="toggle" type="checkbox" checked={toggled} onClick={toggleState} />
+        <input
+          id="toggle"
+          name="toggle"
+          type="checkbox"
+          checked={toggled}
+          onClick={toggleState}
+          onChange={() => null}
+        />
       </div>
     </label>
   );
 };
 
-export default ThemeToggle;
+export default ToggleTheme;

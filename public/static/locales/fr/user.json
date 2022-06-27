@@ -34,7 +34,8 @@
     "no_result_watching_list": "Aucun résultat trouvé.",
     "no_followers": "Cet utilisateur n'a pas de followers.",
     "no_followings": "Cet utilisateur de follow personne.",
-    "no_notes": "Pas de note",
+    "no_description": "Pas de description",
+    "add_description": "Ajouter une description",
 
     "delete": "Supprimer",
     "delete_movie_title": "Supprimer film",

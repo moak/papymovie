@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-const Users = ({ width, height, color = '#030D45' }) => (
+const Social = ({ width, height, color = '#fff' }) => (
   <svg
     width={width}
     height={height}
@@ -12,4 +12,4 @@ const Users = ({ width, height, color = '#030D45' }) => (
   </svg>
 );
 
-export default Users;
+export default Social;

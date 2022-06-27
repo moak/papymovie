@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import { useRouter } from 'next/router';
@@ -73,8 +73,11 @@ const CardFeed = (props) => {
   const router = useRouter();
   const { data: session } = useSession();
 
+  const [isCommentFieldVisible, setIsCommentFieldVisible] = useState(false);
   const [feedItemState, setFeedItem] = useState(feedItem);
   const [pendingComment, setPendingComment] = useState('');
+
+  const inputCommentRef = useRef(null);
 
   if (!feedItem.movie || !feedItem.user) {
     return null;
@@ -127,23 +130,35 @@ const CardFeed = (props) => {
     signIn(null, { callbackUrl: `${window.location.origin}/community` });
   }, []);
 
+  const toggleCommentBlock = useCallback(() => {
+    setIsCommentFieldVisible(!isCommentFieldVisible);
+  }, []);
+
+  useEffect(() => {
+    if (isCommentFieldVisible) {
+      inputCommentRef.current.focus();
+    }
+  }, [isCommentFieldVisible]);
+
   const handleClickComment = useCallback(async () => {
     try {
-      await fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/comment`, {
-        method: 'Post',
-        body: JSON.stringify({
-          content: pendingComment,
-        }),
-      });
+      if (pendingComment) {
+        await fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/comment`, {
+          method: 'Post',
+          body: JSON.stringify({
+            content: pendingComment,
+          }),
+        });
 
-      setPendingComment('');
+        setPendingComment('');
 
-      const request = await fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/comment`, {
-        method: 'GET',
-      });
+        const request = await fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/comment`, {
+          method: 'GET',
+        });
 
-      const { data } = await request.json();
-      setFeedItem({ ...feedItem, comments: data.comments });
+        const { data } = await request.json();
+        setFeedItem({ ...feedItem, comments: data.comments });
+      }
     } catch (error) {
       console.log(error);
     }
@@ -339,18 +354,22 @@ const CardFeed = (props) => {
           ) : null}
 
           <Form style={{ fontSize: '1.2rem' }}>
-            <TextArea
-              textColor={theme.text}
-              style={{
-                fontSize: isMobile ? '16px' : '14px',
-                resize: 'none',
-                padding: '10px',
-                // backgroundColor: theme.textLight,
-              }}
-              value={pendingComment}
-              onChange={handleChangeComment}
-              placeholder={'Write a comment'}
-            />
+            {isCommentFieldVisible ? (
+              <TextArea
+                ref={inputCommentRef}
+                textColor={theme.text}
+                style={{
+                  fontSize: isMobile ? '16px' : '14px',
+                  resize: 'none',
+                  padding: '10px',
+                  // backgroundColor: theme.textLight,
+                }}
+                value={pendingComment}
+                onChange={handleChangeComment}
+                placeholder={'Write a comment'}
+              />
+            ) : null}
+
             <Button
               size="tiny"
               style={{ marginTop: '12px' }}
@@ -358,7 +377,13 @@ const CardFeed = (props) => {
               icon="edit"
               content="Add comment"
               primary
-              onClick={session ? handleClickComment : connect}
+              onClick={
+                session
+                  ? isCommentFieldVisible
+                    ? handleClickComment
+                    : toggleCommentBlock
+                  : connect
+              }
             />
           </Form>
         </DetailsContainer>
