@@ -1,3 +1,10 @@
 {
-  "title": "Communauté"
+  "view": {
+    "title": "Communauté",
+    "description": "Informez vous des derniers médias ajoutés par les utilisateurs",
+    "added": "a ajouté",
+    "in_library": "dans sa librairie.",
+    "comment_placeholder": "Écrire un commentaire",
+    "comment_button": "Commenter"
+  }
 }

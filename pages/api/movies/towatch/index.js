@@ -21,13 +21,10 @@ export default async (req, res) => {
 
         const user = await User.findById(session.userId);
 
-        // console.log('user', user);
-        // console.log('user.isInMoviesToWatch', user.isInMoviesToWatch);
         const isInMoviesToWatch = !!user.moviesToWatch.find(
           (movieToWatch) => movieToWatch.themoviedbId === req.body.themoviedbId,
         );
 
-        console.log('isInMoviesToWatch', isInMoviesToWatch);
         if (isInMoviesToWatch) {
           await User.findByIdAndUpdate(
             { _id: session.userId },
@@ -36,13 +33,6 @@ export default async (req, res) => {
           );
           res.status(201).json({ success: true, isInMoviesToWatch });
         } else {
-          console.log('insert', {
-            themoviedbId: req.body.themoviedbId,
-            title: req.body.title,
-            image: req.body.image,
-            mediaType: req.body.mediaType,
-          });
-
           await User.findByIdAndUpdate(
             { _id: session.userId },
             {

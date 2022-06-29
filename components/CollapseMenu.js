@@ -2,13 +2,14 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { signOut, signIn } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 import { useSpring, animated } from 'react-spring';
 import { useRouter } from 'next/router';
+import moment from 'moment';
 
 import { useTranslation } from 'next-i18next';
 
@@ -17,8 +18,6 @@ import ToggleTheme from './ToggleTheme';
 const Separator = styled.div`
   width: 100%;
   background-color: ${(p) => p.color};
-
-  // height: 1px;
   margin: 4px 0;
 }`;
 
@@ -59,40 +58,51 @@ const languages = [
 ];
 
 const ClosableLink = (props) => {
-  const { handleNavbar, display, currentPath, closablePath, href, theme } = props;
+  const { display, href, theme, isCurrent, onClick } = props;
 
-  let isCurrent = currentPath === closablePath;
-
-  if (currentPath)
+  if (onClick) {
     return (
-      <Link href={href}>
-        <div
-          style={{ color: isCurrent ? '#fdcb6e' : theme.text }}
-          onClick={() => {
-            return handleNavbar(false);
-          }}
-        >
-          {display}
-        </div>
-      </Link>
+      <div onClick={onClick} style={{ color: isCurrent ? '#fdcb6e' : theme.text }}>
+        {display}
+      </div>
     );
+  }
+  return (
+    <Link href={href}>
+      <div style={{ color: isCurrent ? '#fdcb6e' : theme.text }}>{display}</div>
+    </Link>
+  );
 };
 
 const CollapseMenu = (props) => {
-  const { handleNavbar, toggleTheme, theme } = props;
+  const { toggleTheme, theme, navbarState } = props;
 
   const { t } = useTranslation('common');
 
   const router = useRouter();
+  const { userId } = router.query;
+
   const { data: session } = useSession();
 
-  const { open } = useSpring({ open: props.navbarState ? 0 : 1 });
+  const { open } = useSpring({ open: navbarState ? 0 : 1 });
+
+  const isMyProfile = userId === session?.user?.id;
 
   const handleLocaleChange = (data) => {
     router.replace(router.asPath, router.asPath, { locale: data });
   };
 
-  if (props.navbarState === true) {
+  const logout = useCallback(() => {
+    signOut({
+      callbackUrl: `${window.location.origin}`,
+    });
+  }, []);
+
+  const connect = useCallback(() => {
+    signIn(null, { callbackUrl: `${window.location.href}` });
+  }, []);
+
+  if (navbarState === true) {
     return (
       <CollapseWrapper
         background={theme.background}
@@ -112,10 +122,10 @@ const CollapseMenu = (props) => {
               <ClosableLink
                 theme={theme}
                 display={t('header.home')}
-                handleNavbar={handleNavbar}
                 currentPath={router.asPath}
                 href="/"
                 closablePath="/"
+                isCurrent={router.asPath === '/'}
               />
             </li>
           )}
@@ -123,40 +133,43 @@ const CollapseMenu = (props) => {
             <ClosableLink
               theme={theme}
               display={t('header.movies')}
-              handleNavbar={handleNavbar}
               currentPath={router.asPath}
-              href="/movies?type=movie"
-              closablePath="/movies?type=movie"
+              href="/movies"
+              closablePath="movies"
+              isCurrent={!router.asPath.includes('/signin') && router.asPath.includes('movie')}
             />
           </li>
           <li>
             <ClosableLink
               theme={theme}
               display={t('header.series')}
-              handleNavbar={handleNavbar}
               currentPath={router.asPath}
-              href="/movies?type=serie"
-              closablePath="/movies?type=serie"
+              href="/series"
+              closablePath="series"
+              isCurrent={!router.asPath.includes('/signin') && router.asPath.includes('serie')}
             />
           </li>
           <li>
             <ClosableLink
               theme={theme}
               display={t('header.community')}
-              handleNavbar={handleNavbar}
               currentPath={router.asPath}
               href="/community"
-              closablePath="/community"
+              closablePath="community"
+              isCurrent={!router.asPath.includes('/signin') && router.asPath.includes('community')}
             />
           </li>
           <li>
             <ClosableLink
               theme={theme}
               display={t('header.users')}
-              handleNavbar={handleNavbar}
               currentPath={router.asPath}
               href="/users"
-              closablePath="/users"
+              closablePath="users"
+              isCurrent={
+                (!session && router.asPath.includes('/users')) ||
+                (!isMyProfile && router.asPath.includes('/users'))
+              }
             />
           </li>
 
@@ -166,16 +179,16 @@ const CollapseMenu = (props) => {
                 <ClosableLink
                   theme={theme}
                   display={t('header.my_profile')}
-                  handleNavbar={handleNavbar}
                   currentPath={router.asPath}
                   href={`/users/${session?.user?.id}`}
-                  closablePath={`/users/${session?.user?.id}`}
+                  closablePath={`users/${session?.user?.id}`}
+                  isCurrent={isMyProfile || router.asPath.includes(`users/[userId]`)}
                 />
               </li>
               <Separator color={theme.textLight} />
 
               <li>
-                <a style={{ color: theme.text }} onClick={signOut}>
+                <a style={{ color: theme.text }} onClick={logout}>
                   {t('header.disconnect')}
                 </a>
               </li>
@@ -187,11 +200,11 @@ const CollapseMenu = (props) => {
                 <ClosableLink
                   theme={theme}
                   display={t('header.connect')}
-                  handleNavbar={handleNavbar}
                   currentPath={router.pathname}
                   closablePath={`/signin`}
                   href="/signin"
-                  onClick={signIn}
+                  onClick={connect}
+                  isCurrent={router.asPath.includes(`/signin`)}
                 />
               </li>
             </>
@@ -214,7 +227,10 @@ const CollapseMenu = (props) => {
                 )}
 
                 <span // eslint-disable-line jsx-a11y/click-events-have-key-events
-                  onClick={() => handleLocaleChange(language.lang)}
+                  onClick={() => {
+                    moment.locale(language.lang);
+                    handleLocaleChange(language.lang);
+                  }}
                   style={{
                     fontWeight: router.locale === language.lang ? 700 : 500,
                     fontSize: 18,

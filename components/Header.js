@@ -2,24 +2,22 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
-import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import { useSpring, animated } from 'react-spring';
-import { Button, Input } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 import { useRouter } from 'next/router';
 import { signOut, signIn } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
+import moment from 'moment';
 
 import Brand from './Brand';
 import BurgerMenu from './BurgerMenu';
 import CollapseMenu from './CollapseMenu';
 import SearchBar from './SearchBar';
-import ToggleTheme from './ToggleTheme';
 import HeaderActions from './HeaderActions';
 
 import useIsMobile from 'hooks/useIsMobile';
 import useIsTablet from 'hooks/useIsTablet';
-import { useTheme } from 'styles/theme';
 
 // eslint-disable-next-line no-unused-vars
 const HeaderContainer = styled(({ isTransparent, ...props }) => (
@@ -44,9 +42,6 @@ const FlexContainer = styled.div`
   justify-content: space-between;
   height: 5rem;
   align-items: center;
-`;
-const ToggleThemeContainer = styled.div`
-  display: inline;
 `;
 
 const NavLinks = styled(animated.div)`
@@ -87,7 +82,7 @@ const BurgerWrapper = styled.div`
 `;
 
 const Header = (props) => {
-  const { toggleTheme, theme } = props;
+  const { toggleTheme, theme, navbarState } = props;
 
   const { t } = useTranslation('common');
 
@@ -129,8 +124,6 @@ const Header = (props) => {
 
   const connect = useCallback(() => {
     signIn(null, { callbackUrl: `${window.location.href}` });
-
-    // router.push('/signin');
   }, []);
 
   const linkAnimation = useSpring({
@@ -203,7 +196,8 @@ const Header = (props) => {
                       <span
                         style={{
                           margin: '0 6px',
-                          color: theme.text,
+                          color:
+                            isTransparent && router.pathname === '/' ? theme.textLight : theme.text,
                         }}
                       >
                         |
@@ -211,11 +205,19 @@ const Header = (props) => {
                     )}
 
                     <span // eslint-disable-line jsx-a11y/click-events-have-key-events
-                      onClick={() => handleLocaleChange(language.lang)}
+                      onClick={() => {
+                        moment.locale(language.lang);
+                        handleLocaleChange(language.lang);
+                      }}
                       style={{
                         fontWeight: router.locale === language.lang ? 700 : 500,
                         cursor: 'pointer',
-                        color: router.locale === language.lang ? theme.text : theme.textLight,
+                        color:
+                          isTransparent && router.pathname === '/'
+                            ? theme.white
+                            : router.locale === language.lang
+                            ? theme.text
+                            : theme.textLight,
                         marginRight: index + 1 === languages.length ? 20 : 0,
                       }}
                     >
@@ -250,7 +252,7 @@ const Header = (props) => {
             </>
           )}
           <BurgerWrapper>
-            <BurgerMenu navbarState={props.navbarState} handleNavbar={props.handleNavbar} />
+            <BurgerMenu navbarState={navbarState} handleNavbar={props.handleNavbar} />
           </BurgerWrapper>
         </FlexContainer>
         {!isMobile && !isTablet && (
@@ -265,12 +267,7 @@ const Header = (props) => {
           </>
         )}
       </HeaderContainer>
-      <CollapseMenu
-        theme={theme}
-        toggleTheme={toggleTheme}
-        navbarState={props.navbarState}
-        handleNavbar={props.handleNavbar}
-      />
+      <CollapseMenu theme={theme} toggleTheme={toggleTheme} navbarState={navbarState} />
     </>
   );
 };

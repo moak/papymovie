@@ -1,8 +1,8 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Loader } from 'semantic-ui-react';
 import styled from 'styled-components';
 import Head from 'next/head';
-import { useTheme } from 'styles/theme';
+import { useRouter } from 'next/router';
 
 import Header from './Header';
 
@@ -19,14 +19,15 @@ const LoaderContainer = styled.div`
 const Page = ({
   children,
   title = 'PapyMovie',
-  description = 'Stop forgetting what you watch and get inspired!',
-  previewImage,
+  description = "Don't forget the things you watch",
+  previewImage = 'https://i.postimg.cc/2S13B0pD/cover.jpg',
   url = '',
   isLoading = false,
   toggleTheme,
   theme,
 }) => {
   const [isNavBarOpen, setIsNavBarOpen] = useState(false);
+  const router = useRouter();
 
   const handleNavbar = useCallback(
     (value) => {
@@ -39,6 +40,10 @@ const Page = ({
     [isNavBarOpen],
   );
 
+  useEffect(() => {
+    setIsNavBarOpen(false);
+  }, [router.pathname]);
+
   return (
     <>
       {title && !isLoading ? (
@@ -47,7 +52,6 @@ const Page = ({
           <link rel="icon" href="/favicon.ico" />
           <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
           <meta property="og:site_name" content="PapyMovie" key="ogsitename" />
-          <meta property="fb:app_id" content={process.env.FACEBOOK_CLIENT_ID} key="fbappid" />
 
           <meta property="og:url" content={`${process.env.NEXTAUTH_URL}${url}`} key="ogurl" />
 

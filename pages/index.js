@@ -1,9 +1,12 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useRouter } from 'next/router';
+import { Button } from 'semantic-ui-react';
+import { signIn } from 'next-auth/react';
+
 import { useSession, getSession } from 'next-auth/react';
 import dynamic from 'next/dynamic';
 
@@ -43,7 +46,7 @@ const Description = styled.div`
 const Container = styled.div`
   height: ${(p) => (p.isMobile ? 500 : 620)}px;
   display: flex;
-  background-image: url(./cover.jpeg);
+  background-image: url('./cover.jpeg');
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -140,6 +143,10 @@ const Home = (props) => {
   const isLoading = status === 'loading';
   const isAuthenticated = status === 'authenticated';
 
+  const connect = useCallback(() => {
+    signIn(null, { callbackUrl: `${window.location.href}` });
+  }, []);
+
   useEffect(() => {
     if (other || session || isAuthenticated) {
       router.push('movies');
@@ -162,6 +169,8 @@ const Home = (props) => {
         <Container isMobile={isMobile}>
           <Content isMobile={isMobile}>
             <Text
+              width={isMobile ? '340px' : '540px'}
+              as="h1"
               isBold
               textAlign="center"
               fontFamily="secondary"
@@ -172,9 +181,13 @@ const Home = (props) => {
               {t('header.title')}
             </Text>
 
-            <Text textColor="#ffffff" fontSize={18} textAlign="center">
+            <Text as="h2" textColor="#ffffff" fontSize={isMobile ? 16 : 20} textAlign="center">
               {t('header.subtitle')}
             </Text>
+
+            <Button style={{ marginTop: 40, width: 170 }} circular primary onClick={connect}>
+              {t('connect')}
+            </Button>
           </Content>
         </Container>
         <Goal isMobile={isMobile}>
@@ -294,7 +307,7 @@ const Home = (props) => {
                         isMobile={isMobile}
                         title={title}
                         imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
-                        href={`/movies/${themoviedbId}`}
+                        href={`/medias/${themoviedbId}`}
                         userRating={rating}
                         titleCentered
                         height={isMobile ? '230px' : '340px'}

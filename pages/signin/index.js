@@ -10,17 +10,14 @@ import Page from 'components/Page';
 import Text from 'components/Text';
 import PageContainer from 'components/PageContainer';
 
+import useIsMobile from 'hooks/useIsMobile';
+
 const SignIn = (props) => {
   const { providers, toggleTheme, theme } = props;
 
-  const { data: session } = useSession();
+  const { status } = useSession();
   const router = useRouter();
-
-  useEffect(() => {
-    if (session) {
-      router.push(router.query.callbackUrl);
-    }
-  }, [session]);
+  const isMobile = useIsMobile();
 
   const providersArray = [
     {
@@ -62,17 +59,17 @@ const SignIn = (props) => {
     },
   ];
 
-  // return <div style={{ color: theme.color }}>toto</div>;
-
-  console.log('theme.text', theme.text);
   return (
-    <Page toggleTheme={toggleTheme} theme={theme}>
+    <Page toggleTheme={toggleTheme} theme={theme} isLoading={status === 'loading'}>
       <>
         <Text textColor={theme.text} isBold fontSize={28} marginBottom={16} marginTop={-4}>
           Welcome
         </Text>
         <PageContainer background={theme.background}>
-          <div style={{ border: `1px solid ${theme.borderColor}` }} className="login-container">
+          <div
+            style={{ border: isMobile ? null : `1px solid ${theme.borderColor}` }}
+            className="login-container"
+          >
             <div className="login-form">
               <div className="login-form-inner">
                 <div className="logo">
@@ -89,7 +86,7 @@ const SignIn = (props) => {
                   </Text>
                 </div>
                 <Text textColor={theme.text} fontSize={16} marginBottom={16} marginTop={-4}>
-                  Stop forgetting the movies you watch.
+                  {`Don't forget the things you watch.`}
                 </Text>
 
                 {Object.values(providers).map((provider, index) => (
@@ -101,7 +98,9 @@ const SignIn = (props) => {
                       signIn(provider.id, { callbackUrl: `${router.query.callbackUrl}` })
                     }
                     key={index}
-                    onClick={() => signIn(provider.id)}
+                    onClick={() => {
+                      return signIn(provider.id, { callbackUrl: `${router.query.callbackUrl}` });
+                    }}
                   >
                     <div className="rounded-button google-login-button">
                       <span className="google-icon">{providersArray[index].svg}</span>
@@ -115,53 +114,53 @@ const SignIn = (props) => {
             </div>
 
             {/* <div className="onboarding">
-          <div className="swiper-container">
-            <div className="swiper-wrapper">
-              <div className="swiper-slide color-1">
-                <div className="slide-image">
-                  <img
-                    src="https://raw.githubusercontent.com/ismailvtl/ismailvtl.github.io/master/images/startup-launch.png"
-                    loading="lazy"
-                    alt=""
-                  />
-                </div>
-                <div className="slide-content">
-                  <h2>Slide 1.</h2>
-                  <p>Text 1</p>
-                </div>
-              </div>
+              <div className="swiper-container">
+                <div className="swiper-wrapper">
+                  <div className="swiper-slide color-1">
+                    <div className="slide-image">
+                      <img
+                        src="https://raw.githubusercontent.com/ismailvtl/ismailvtl.github.io/master/images/startup-launch.png"
+                        loading="lazy"
+                        alt=""
+                      />
+                    </div>
+                    <div className="slide-content">
+                      <h2>Slide 1.</h2>
+                      <p>Text 1</p>
+                    </div>
+                  </div>
 
-              <div className="swiper-slide color-1">
-                <div className="slide-image">
-                  <img
-                    src="https://raw.githubusercontent.com/ismailvtl/ismailvtl.github.io/master/images/cloud-storage.png"
-                    loading="lazy"
-                    alt=""
-                  />
-                </div>
-                <div className="slide-content">
-                  <h2>Slide 2.</h2>
-                  <p>Text 2</p>
-                </div>
-              </div>
+                  <div className="swiper-slide color-1">
+                    <div className="slide-image">
+                      <img
+                        src="https://raw.githubusercontent.com/ismailvtl/ismailvtl.github.io/master/images/cloud-storage.png"
+                        loading="lazy"
+                        alt=""
+                      />
+                    </div>
+                    <div className="slide-content">
+                      <h2>Slide 2.</h2>
+                      <p>Text 2</p>
+                    </div>
+                  </div>
 
-              <div className="swiper-slide color-1">
-                <div className="slide-image">
-                  <img
-                    src="https://raw.githubusercontent.com/ismailvtl/ismailvtl.github.io/master/images/cloud-storage.png"
-                    loading="lazy"
-                    alt=""
-                  />
+                  <div className="swiper-slide color-1">
+                    <div className="slide-image">
+                      <img
+                        src="https://raw.githubusercontent.com/ismailvtl/ismailvtl.github.io/master/images/cloud-storage.png"
+                        loading="lazy"
+                        alt=""
+                      />
+                    </div>
+                    <div className="slide-content">
+                      <h2>Slide 3.</h2>
+                      <p>Text 3</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="slide-content">
-                  <h2>Slide 3.</h2>
-                  <p>Text 3</p>
-                </div>
+                <div className="swiper-pagination"></div>
               </div>
-            </div>
-            <div className="swiper-pagination"></div>
-          </div>
-        </div> */}
+            </div> */}
           </div>
         </PageContainer>
       </>

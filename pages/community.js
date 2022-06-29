@@ -29,15 +29,15 @@ export const Row = styled.div`
 `;
 
 const Community = (props) => {
-  const { feed, toggleTheme, theme, ...other } = props;
+  const { feed, toggleTheme, theme } = props;
 
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('community');
   const isMobile = useIsMobile();
 
   return (
     <Page
-      title="Community - PapyMovie"
-      description="Check out the recents movies added by the users"
+      title={`${t('view.title')} - PapyMovie`}
+      description={t('view.description')}
       url="/community"
       toggleTheme={toggleTheme}
       theme={theme}
@@ -45,7 +45,7 @@ const Community = (props) => {
       <PageContainer maxWidth={1024}>
         <Row justifyContent="space-between">
           <Text textColor={theme.text} isBold marginBottom={24} fontSize={26}>
-            {t('header.community')}
+            {t('view.title')}
           </Text>
         </Row>
         {feed
@@ -53,7 +53,7 @@ const Community = (props) => {
           .map((feedItem) => {
             return (
               <div style={{ marginBottom: 16 }} key={feedItem._id}>
-                <CardFeed theme={theme} isMobile={isMobile} feedItem={feedItem} />
+                <CardFeed t={t} theme={theme} isMobile={isMobile} feedItem={feedItem} />
               </div>
             );
           })}

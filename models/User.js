@@ -5,12 +5,10 @@ const { Schema } = mongoose;
 const UserSchema = new Schema(
   {
     email: { type: String, required: true, unique: true },
-    username: { type: String, required: false, unique: true },
-    password: { type: String },
+    username: { type: String },
     token: { type: String },
     lang: { type: String },
     country: { type: String },
-    admin: Boolean,
     movies: [
       {
         type: Schema.Types.ObjectId,

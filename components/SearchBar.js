@@ -138,7 +138,7 @@ const SearchContainer = (props) => {
   return (
     <Container width={width}>
       <Input
-        spellcheck="false"
+        spellcheck={false}
         fontSize={isMobile ? 16 : 14}
         onChange={handleQueryChange}
         value={query}

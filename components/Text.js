@@ -1,3 +1,7 @@
+/* eslint-disable react/display-name */
+
+import React from 'react';
+
 import styled from 'styled-components';
 
 const Text = styled.div`
@@ -13,6 +17,7 @@ const Text = styled.div`
 
   line-height: ${(p) => p.lineHeight || 'normal'};
   width: ${(p) => (p.width ? `${p.width}` : 'auto')};
+  max-width: ${(p) => (p.maxWidth ? `${p.maxWidth}px` : null)};
   text-align: ${(p) => p.textAlign || 'left'};
   text-transform: ${(p) => p.textTransform || 'none'};
   cursor: ${(p) => p.cursor || 'auto'};
@@ -26,4 +31,12 @@ const Text = styled.div`
   `}
 `;
 
-export default Text;
+const TextTag = React.forwardRef(({ children, as = 'div', ...props }) => {
+  return (
+    <Text as={as} {...props}>
+      {children}
+    </Text>
+  );
+});
+
+export default TextTag;

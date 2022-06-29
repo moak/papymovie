@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -51,12 +51,15 @@ const HeaderActions = (props) => {
   const { t } = useTranslation('common');
 
   const router = useRouter();
+  const { userId } = router.query;
+
+  const isMyProfile = userId === session?.user?.id;
 
   const actions = [
     {
       name: t('header.movies'),
-      path: '/movies?type=movie',
-      genericPath: '/movies?type=movie',
+      path: '/movies',
+      includesWords: 'movie',
       svg: (
         <Cinema
           width={20}
@@ -67,8 +70,8 @@ const HeaderActions = (props) => {
     },
     {
       name: t('header.series'),
-      path: '/movies?type=serie',
-      genericPath: '/movies?type=serie',
+      path: '/series',
+      includesWords: 'serie',
       svg: (
         <Movies
           width={20}
@@ -80,7 +83,7 @@ const HeaderActions = (props) => {
     {
       name: t('header.community'),
       path: '/community',
-      genericPath: '/community',
+      includesWords: 'community',
       svg: (
         <Social
           width={20}
@@ -92,7 +95,8 @@ const HeaderActions = (props) => {
     {
       name: t('header.users'),
       path: '/users',
-      genericPath: '/users',
+      includesWords: 'users',
+      shouldBeDisplayed: !session || !isMyProfile,
       svg: (
         <Users
           width={20}
@@ -106,7 +110,8 @@ const HeaderActions = (props) => {
   if (session) {
     actions.push({
       name: t('header.my_profile'),
-      genericPath: '/users/[userId]',
+      includesWords: '/users/[userId]',
+
       path: `/users/${session && session?.user?.id}`,
       svg: <Home width={20} height={20} color={theme.text} />,
     });
@@ -115,11 +120,12 @@ const HeaderActions = (props) => {
   return (
     <Container>
       {actions.map((action, index) => {
-        const isCurrent = router.asPath === action.genericPath;
+        const { shouldBeDisplayed = true } = action;
+        const isCurrent = router.pathname.includes(action.includesWords);
 
         return (
           <Link key={index} href={action.path}>
-            <ContainerItem theme={theme} isCurrent={isCurrent}>
+            <ContainerItem theme={theme} isCurrent={isCurrent && shouldBeDisplayed}>
               <ContainerHoverItem hover={isTransparent && isLanding ? 'transparent' : theme.hover}>
                 <div>{action.svg}</div>
                 <ContainerItemName color={isTransparent && isLanding ? theme.white : theme.text}>

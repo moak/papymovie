@@ -6,7 +6,7 @@ import dynamic from 'next/dynamic';
 
 import MediaList from 'components/MediaList';
 
-const Movies = (props) => {
+const Series = (props) => {
   const { theme, toggleTheme } = props;
 
   const { t } = useTranslation('movie');
@@ -19,7 +19,7 @@ const Movies = (props) => {
       theme={theme}
       t={t}
       locale={router.locale}
-      mediaType="movie"
+      mediaType="serie"
     />
   );
 };
@@ -34,4 +34,4 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default dynamic(() => Promise.resolve(Movies), { ssr: false });
+export default dynamic(() => Promise.resolve(Series), { ssr: false });

@@ -64,12 +64,8 @@ justify-content: space-around;
 flex: 1;
 }`;
 
-const NameContainer = styled.div`
-
-}`;
-
 const CardFeed = (props) => {
-  const { feedItem, isMobile, theme } = props;
+  const { feedItem, isMobile, theme, t } = props;
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -89,7 +85,7 @@ const CardFeed = (props) => {
     likes = [],
     dislikes = [],
     user: { _id: userId, image: userImage, name: userName } = {},
-    movie: { image: movieImage, title, rating, themoviedbId } = {},
+    movie: { image: movieImage, title, rating, themoviedbId, mediaType } = {},
     comments,
   } = feedItemState;
 
@@ -98,7 +94,7 @@ const CardFeed = (props) => {
   const [likesState, setLikesState] = useState(likes);
   const [dislikesState, setDislikesState] = useState(dislikes);
 
-  const linkMovie = themoviedbId ? `/movies/${themoviedbId}` : null;
+  const linkMovie = themoviedbId ? `/medias/${themoviedbId}?type=${mediaType}` : null;
   const linkUser = `/users/${userId}`;
 
   const handleClickLike = useCallback(async (e) => {
@@ -213,11 +209,11 @@ const CardFeed = (props) => {
             src={userImage}
           />
 
-          <NameContainer>
+          <div>
             <Link href={linkUser}>
               <Text
+                as="a"
                 textColor={theme.text}
-                style={{ cursor: 'pointer' }}
                 isBold
                 fontSize={isMobile ? 12 : 14}
                 marginBottom={4}
@@ -227,18 +223,18 @@ const CardFeed = (props) => {
               </Text>
             </Link>
             <Text textColor={theme.textLight} fontSize={isMobile ? 11 : 12}>
-              {moment(created_at).fromNow()}
+              {moment(created_at).locale(router.locale).fromNow()}
             </Text>
-          </NameContainer>
+          </div>
         </UserContainer>
         <DetailsContainer>
           {isMobile ? (
             <div
               style={{
                 display: 'flex',
-                flexDirection: 'column',
                 alignItems: 'center',
                 flexBasis: 80,
+                justifyContent: 'center',
               }}
             >
               <Link href={linkMovie}>
@@ -246,9 +242,9 @@ const CardFeed = (props) => {
                   textColor={theme.text}
                   cursor="pointer"
                   textAlign="center"
-                  marginRight={4}
-                  marginLeft={4}
-                  marginBottom={8}
+                  marginRight={8}
+                  marginLeft={-35}
+                  maxWidth={150}
                   isBold
                   fontSize={14}
                 >
@@ -257,8 +253,8 @@ const CardFeed = (props) => {
               </Link>
               <RoundedLabel
                 borderWith={2}
-                width="30px"
-                height="30px"
+                width="26px"
+                height="26px"
                 rounded
                 color={getColorFromMark(rating)}
               >
@@ -274,7 +270,9 @@ const CardFeed = (props) => {
                   alignItems: 'center',
                 }}
               >
-                <Text textColor={theme.text}>{userName} added</Text>
+                <Text textColor={theme.text}>
+                  {userName} {t('view.added')}
+                </Text>
                 <Text
                   textColor={theme.text}
                   marginRight={4}
@@ -289,7 +287,7 @@ const CardFeed = (props) => {
                   {title}
                 </Text>
                 <Text textColor={theme.text} marginRight={8}>
-                  in his library.
+                  {t('view.in_library')}
                 </Text>
 
                 <RoundedLabel
@@ -310,11 +308,10 @@ const CardFeed = (props) => {
                 compact
                 size={isLikingLoading ? 'mini' : 'tiny'}
                 style={{ color: theme.white, backgroundColor: theme.like }}
-                color={theme.like}
               >
                 <Icon name={'thumbs up'} />
               </Button>
-              <Label style={{ fontSize: 12 }} as="a" basic color={theme.like} pointing="left">
+              <Label style={{ fontSize: 12 }} as="a" basic pointing="left">
                 {!!likesState && likesState.length}
               </Label>
             </Button>
@@ -322,7 +319,7 @@ const CardFeed = (props) => {
               <Button compact size={isDislikingLoading ? 'mini' : 'tiny'} color={theme.dislike}>
                 <Icon name={'thumbs down'} />
               </Button>
-              <Label style={{ fontSize: 12 }} as="a" basic color={theme.dislike} pointing="left">
+              <Label style={{ fontSize: 12 }} as="a" basic pointing="left">
                 {!!dislikesState && dislikesState.length}
               </Label>
             </Button>
@@ -340,7 +337,7 @@ const CardFeed = (props) => {
                       </Comment.Author>
                       <Comment.Metadata>
                         <div style={{ color: theme.textLight }}>
-                          {moment(comment.updated_at).fromNow()}
+                          {moment(comment.updated_at).locale(router.locale).fromNow()}
                         </div>
                       </Comment.Metadata>
                       <Comment.Text style={{ color: theme.textLight }}>
@@ -362,11 +359,10 @@ const CardFeed = (props) => {
                   fontSize: isMobile ? '16px' : '14px',
                   resize: 'none',
                   padding: '10px',
-                  // backgroundColor: theme.textLight,
                 }}
                 value={pendingComment}
                 onChange={handleChangeComment}
-                placeholder={'Write a comment'}
+                placeholder={t('view.comment_placeholder')}
               />
             ) : null}
 
@@ -375,7 +371,7 @@ const CardFeed = (props) => {
               style={{ marginTop: '12px' }}
               labelPosition="left"
               icon="edit"
-              content="Add comment"
+              content={t('view.comment_button')}
               primary
               onClick={
                 session
@@ -399,7 +395,7 @@ const CardFeed = (props) => {
             e.target.src = 'https://www.freeiconspng.com/thumbs/no-image-icon/no-image-icon-6.png';
           }}
           width="100%"
-          height="200"
+          height="180"
           src={`https://image.tmdb.org/t/p/w300/${movieImage}`}
         />
       </MovieContainer>

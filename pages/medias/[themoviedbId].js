@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Icon, Divider, TextArea } from 'semantic-ui-react';
 import ReactStars from 'react-stars';
+import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import moment from 'moment';
@@ -92,9 +93,7 @@ const View = (props) => {
   } = props;
 
   const { locale } = useRouter();
-
   const { t } = useTranslation('movie');
-
   const router = useRouter();
 
   const isMobile = useIsMobile();
@@ -247,7 +246,6 @@ const View = (props) => {
 
   useEffect(() => {
     if (user) {
-      console.log('user', user);
       setIsInMediaToWatch(
         user?.moviesToWatch?.find((movieToWatch) => movieToWatch.themoviedbId === mediaId),
       );
@@ -350,13 +348,11 @@ const View = (props) => {
     return null;
   }
 
-  console.log('isInMediaToWatch', isInMediaToWatch);
-
   return (
     <Page
-      title={t('view.metas.title', { title, date: release_date?.substring(0, 4) })}
+      title={title || name}
       previewImage={`https://image.tmdb.org/t/p/w300_and_h450_bestv2/${poster_path}`}
-      url={`/movies/${mediaId}`}
+      url={`/medias/${mediaId}`}
       description={overview ? truncate(overview, 100) : null}
       toggleTheme={toggleTheme}
       theme={theme}
@@ -370,7 +366,7 @@ const View = (props) => {
               <img
                 height="350px"
                 width={isMobile ? '70%' : null}
-                alt="paster_path"
+                alt="media poster"
                 style={{
                   borderRadius: 16,
                   marginBottom: isMobile ? 8 : 0,
@@ -615,7 +611,7 @@ const View = (props) => {
                       title={title || name}
                       subtitle={moment(release_date).format('MMM, YYYY')}
                       imageUrl={`https://image.tmdb.org/t/p/w300/${poster_path}`}
-                      href={`/movies/${id}`}
+                      href={`/medias/${id}?type=${isMovieType ? 'movie' : 'serie'}`}
                       userRating={vote_average}
                     />
                   </CardContainer>
@@ -638,9 +634,9 @@ export async function getServerSideProps(context) {
   let data = null;
 
   if (type === 'serie') {
-    const urlTest = `https://api.themoviedb.org/3/tv/${themoviedbId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`;
-    const res3 = await fetch(urlTest);
-    data = await res3.json();
+    const url = `https://api.themoviedb.org/3/tv/${themoviedbId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`;
+    const res = await fetch(url);
+    data = await res.json();
   } else {
     const url = `https://api.themoviedb.org/3/movie/${themoviedbId}?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`;
     const res = await fetch(url);
@@ -652,9 +648,9 @@ export async function getServerSideProps(context) {
       ...(await serverSideTranslations(locale, ['common', 'movie'])),
       data,
       isMovieType: type !== 'serie',
-      mediaId: type !== 'serie' ? data.id : themoviedbId,
+      mediaId: type !== 'serie' ? data.id.toString() : themoviedbId,
     },
   };
 }
 
-export default View;
+export default dynamic(() => Promise.resolve(View), { ssr: false });

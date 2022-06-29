@@ -1,11 +1,11 @@
 {
   "metas": {
-    "title": "PapyMovie | Stop forgetting the movies you watch",
-    "description": "Start rating and storing your best movies. Discover new movies by following friends or people with same interest."
+    "title": "PapyMovie | Don't foget the things you watch",
+    "description": "Start rating and storing your best movies and series. Discover new movies by following friends or people with same interest."
   },
   "header": {
-    "title": "Stop forgetting the movies you watch.",
-    "subtitle": "Start rating and storing your best movies."
+    "title": "Don't forget the things you watch.",
+    "subtitle": "Start rating and storing your best movies and series"
   },
   "subheader": {
     "title": "our goals",
@@ -19,5 +19,6 @@
     "title3": "Follow your friends",
     "content3": "Watch your friends movies or people share the same interests."
   },
-  "latest_movies": "latest added movies"
+  "latest_movies": "latest added movies",
+  "connect": "Connect"
 }

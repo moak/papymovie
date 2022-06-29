@@ -92,6 +92,7 @@ const CardMovie = (props) => {
           width="100%"
           height="100%"
           src={imageUrl}
+          alt={title}
           style={{ borderRadius: 10 }}
         />
         {userRating ? (

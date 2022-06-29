@@ -31,8 +31,8 @@ const New = (props) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const [series, setSeries] = useState(null);
-  const [totalPagesSeries, setTotalPagesSeries] = useState(0);
   const [activePageSeries, setActivePageSeries] = useState(1);
+  const [totalPagesSeries, setTotalPagesSeries] = useState(0);
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
@@ -47,24 +47,35 @@ const New = (props) => {
 
       const { results: moviesResults, total_pages: moviesTotalPage } = await moviesQuery.json();
 
-      const seriesQuery = await fetch(
-        `https://api.themoviedb.org/3/search/tv?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&query=${router.query.search}&page=${activePageSeries}&language=${router.locale}`,
-      );
-
-      const { results: seriesResults, total_pages: seriesTotalPage } = await seriesQuery.json();
-      console.log('seriesResults', seriesResults);
-
       setIsLoading(false);
       setMovies(moviesResults);
-      setSeries(seriesResults);
       setTotalPagesMovies(moviesTotalPage);
-      setTotalPagesSeries(seriesTotalPage);
     };
 
     if (router.query.search) {
       searchMovie();
     }
   }, [router, activePageMovies]);
+
+  useEffect(() => {
+    const searchMovie = async () => {
+      setIsLoading(true);
+
+      const seriesQuery = await fetch(
+        `https://api.themoviedb.org/3/search/tv?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&query=${router.query.search}&page=${activePageSeries}&language=${router.locale}`,
+      );
+
+      const { results: seriesResults, total_pages: seriesTotalPage } = await seriesQuery.json();
+
+      setIsLoading(false);
+      setSeries(seriesResults);
+      setTotalPagesSeries(seriesTotalPage);
+    };
+
+    if (router.query.search) {
+      searchMovie();
+    }
+  }, [router, activePageSeries]);
 
   const handlePaginationChangeMovies = (e, { activePage }) => {
     setActivePageMovies(activePage);
@@ -88,7 +99,7 @@ const New = (props) => {
         ) : (
           <>
             <Text textColor={theme.text} isBold marginBottom={24} fontSize={26}>
-              Results for: {router.query.search}
+              Movies for: {router.query.search}
             </Text>
             {movies && movies.length === 0 && series && series.length === 0 ? (
               <EmptyState>No results found for {router.query.search}.</EmptyState>
@@ -110,7 +121,7 @@ const New = (props) => {
                               imageUrl={`https://image.tmdb.org/t/p/w${
                                 isMobile ? 200 : 300
                               }/${poster_path}`}
-                              href={`/movies/${id}?type=movie`}
+                              href={`/medias/${id}?type=movie`}
                               grade={vote_average}
                               height={isMobile ? '230px' : '340px'}
                             />
@@ -135,7 +146,7 @@ const New = (props) => {
               </>
             )}
             <Text textColor={theme.text} isBold marginTop={24} marginBottom={24} fontSize={26}>
-              Series
+              Series for: {router.query.search}
             </Text>
             {series && series.length === 0 ? (
               <EmptyState>No results found for {router.query.search}.</EmptyState>
@@ -154,7 +165,7 @@ const New = (props) => {
                               title={name}
                               subtitle={moment(first_air_date).format('MMM, YYYY')}
                               imageUrl={`https://image.tmdb.org/t/p/w300/${poster_path}`}
-                              href={`/movies/${id}?type=serie`}
+                              href={`/medias/${id}?type=serie`}
                               grade={vote_average}
                               height={isMobile ? '230px' : '340px'}
                             />

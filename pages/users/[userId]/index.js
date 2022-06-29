@@ -142,7 +142,6 @@ const User = (props) => {
   const finalMovies = movies.filter((movie) => movie.mediaType !== 'serie');
   const finalSeries = movies.filter((movie) => movie.mediaType === 'serie');
 
-  console.log('finalSeries', finalSeries);
   return (
     <Page
       title={t('view.metas.title', { name })}
@@ -203,7 +202,6 @@ const User = (props) => {
                 <List>
                   {moviesToWatch?.length
                     ? moviesToWatch.map((movieToWatch) => {
-                        console.log('movieToWatch', movieToWatch);
                         const { _id, title, themoviedbId, image, mediaType } = movieToWatch;
 
                         return (
@@ -218,7 +216,7 @@ const User = (props) => {
                               isMobile
                               title={title}
                               imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
-                              href={`/movies/${themoviedbId}?type=${
+                              href={`/medias/${themoviedbId}?type=${
                                 mediaType === 'serie' ? 'serie' : 'movie'
                               }`}
                             />
@@ -257,7 +255,7 @@ const User = (props) => {
                         isMobile={isMobile}
                         title={title}
                         imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
-                        href={`/movies/${themoviedbId}`}
+                        href={`/medias/${themoviedbId}?type=movie`}
                         imageHeight={isMyProfile ? 70 : 70}
                         isMyProfile={isMyProfile}
                         userRating={rating}
@@ -284,7 +282,7 @@ const User = (props) => {
                                   size="tiny"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    router.push(`/movies/${themoviedbId}`);
+                                    router.push(`/medias/${themoviedbId}?type=movie`);
                                   }}
                                   primary
                                   icon
@@ -337,7 +335,7 @@ const User = (props) => {
                         isMobile={isMobile}
                         title={title}
                         imageUrl={`https://image.tmdb.org/t/p/w300/${image}`}
-                        href={`/movies/${themoviedbId}`}
+                        href={`/medias/${themoviedbId}?type=serie`}
                         imageHeight={isMyProfile ? 70 : 70}
                         isMyProfile={isMyProfile}
                         userRating={rating}
@@ -364,7 +362,7 @@ const User = (props) => {
                                   size="tiny"
                                   onClick={(e) => {
                                     e.preventDefault();
-                                    router.push(`/movies/${themoviedbId}`);
+                                    router.push(`/medias/${themoviedbId}`);
                                   }}
                                   primary
                                   icon

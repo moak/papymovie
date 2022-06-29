@@ -118,7 +118,14 @@ const CardUser = (props) => {
           borderColor={theme.borderColor}
         />
         <NameContainer>
-          <Text textColor={theme.text} textAlign="center" isBold fontSize={16} marginBottom={-4}>
+          <Text
+            cursor="pointer"
+            textColor={theme.text}
+            textAlign="center"
+            isBold
+            fontSize={16}
+            marginBottom={-4}
+          >
             {name}
           </Text>
         </NameContainer>

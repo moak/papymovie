@@ -1,3 +1,10 @@
 {
-  "title": "Community"
+  "view": {
+    "title": "Community",
+    "description": "Check out the recents movies added by the users",
+    "added": "added",
+    "in_library": "in his library.",
+    "comment_placeholder": "Write a comment",
+    "comment_button": "Add comment"
+  }
 }
