@@ -19,7 +19,7 @@ const Container = styled.div`
     !p.isMobile &&
     `
     &:hover{
-      box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.4);
+      transform: scale(1.02);
     }
   `}
 }`;
@@ -44,6 +44,7 @@ const BackgroundImage = styled.div`
 
 const InfosContainer = styled.div`
   height: 60px;
+  margin-bottom: 8px;
   justify-content: space-around;
   display: flex;
   flex-direction: row;
@@ -59,7 +60,7 @@ const InfosContainer = styled.div`
 const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: center;
 }`;
 
@@ -139,7 +140,7 @@ const CardUser = (props) => {
               <Text textColor={theme.text} fontSize={18} isBold>
                 {amount}
               </Text>
-              <Text textColor={theme.text} fontSize={12}>
+              <Text isBold textColor={theme.text} fontSize={11}>
                 {title}
               </Text>
             </InfoContainer>

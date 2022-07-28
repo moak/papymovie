@@ -16,7 +16,7 @@ const Container = styled.div`
     !p.isMobile &&
     `
     &:hover{
-      box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.4);
+      transform: scale(1.02);
     }
   `}
 }`;

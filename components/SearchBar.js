@@ -89,7 +89,7 @@ const RightSearchIcon = styled(SearchIcon)`
 `;
 
 const SearchContainer = (props) => {
-  const { placeholder, onChange, value, onDelete, isMobile, width } = props;
+  const { placeholder, onChange, value, isMobile, width } = props;
 
   const [query, setQuery] = useState(value || placeholder);
   const [isFocused, setIsFocused] = useState(false);
@@ -116,7 +116,6 @@ const SearchContainer = (props) => {
     onChange('');
     setIsFocused(false);
     inputRef.current.blur();
-    onDelete();
   };
 
   const preventBlur = (e) => {

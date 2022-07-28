@@ -6,7 +6,7 @@ export const lightTheme = {
   name: 'light',
   body: '#FFF',
   text: 'black',
-  textLight: 'grey',
+  textLight: '#B4B4B4',
   headerBackground: '#fff',
   borderColor: '#e9e7e7',
   background: '#fff',

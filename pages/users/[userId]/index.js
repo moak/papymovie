@@ -42,7 +42,8 @@ const User = (props) => {
 
   const isMyProfile = userId === session?.user?.id;
 
-  const isFollowing = isMyProfile
+  console.log('followersState', followersState);
+  const isFollowingCheck = isMyProfile
     ? false
     : !!followersState.find(
         (follower) => (follower || follower?._id) === (session && session?.user?.id),
@@ -54,6 +55,7 @@ const User = (props) => {
   const [movieId, setMovieId] = useState(null);
   const [confirm, setConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(isFollowingCheck);
 
   const open = (movieId) => {
     setMovieId(movieId);
@@ -265,8 +267,8 @@ const User = (props) => {
                           <Text
                             textAlign="center"
                             cursor="pointer"
-                            marginBottom={8}
-                            textColor={theme.text}
+                            marginBottom={12}
+                            textColor={theme.textLight}
                             dotdotdot
                             width={`100%`}
                           >
@@ -346,7 +348,7 @@ const User = (props) => {
                             textAlign="center"
                             cursor="pointer"
                             marginBottom={8}
-                            textColor={theme.text}
+                            textColor={theme.textLight}
                             dotdotdot
                             width={`100%`}
                           >

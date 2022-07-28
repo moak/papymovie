@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { getProviders, signIn } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import dynamic from 'next/dynamic';
 
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -13,7 +14,10 @@ import PageContainer from 'components/PageContainer';
 import useIsMobile from 'hooks/useIsMobile';
 
 const SignIn = (props) => {
+  console.log('props', props);
   const { providers, toggleTheme, theme } = props;
+
+  const { t } = useTranslation('common');
 
   const { status } = useSession();
   const router = useRouter();
@@ -63,7 +67,7 @@ const SignIn = (props) => {
     <Page toggleTheme={toggleTheme} theme={theme} isLoading={status === 'loading'}>
       <>
         <Text textColor={theme.text} isBold fontSize={28} marginBottom={16} marginTop={-4}>
-          Welcome
+          {t('signin.welcome')}
         </Text>
         <PageContainer background={theme.background}>
           <div
@@ -82,11 +86,11 @@ const SignIn = (props) => {
                     <path d="m155.109 74.028a4 4 0 0 0 -3.48-2.028h-52.4l8.785-67.123a4.023 4.023 0 0 0 -7.373-2.614l-63.724 111.642a4 4 0 0 0 3.407 6.095h51.617l-6.962 67.224a4.024 4.024 0 0 0 7.411 2.461l62.671-111.63a4 4 0 0 0 .048-4.027z" />
                   </svg>
                   <Text textColor={theme.text} isBold fontSize={28} marginTop={-4}>
-                    Welcome
+                    {t('signin.welcome')}
                   </Text>
                 </div>
                 <Text textColor={theme.text} fontSize={16} marginBottom={16} marginTop={-4}>
-                  {`Don't forget the things you watch.`}
+                  {t('signin.subtitle')}
                 </Text>
 
                 {Object.values(providers).map((provider, index) => (
@@ -105,7 +109,7 @@ const SignIn = (props) => {
                     <div className="rounded-button google-login-button">
                       <span className="google-icon">{providersArray[index].svg}</span>
                       <Text cursor="pointer" textColor={theme.text}>
-                        Sign in with {providersArray[index].name}
+                        {t('signin.button')} {providersArray[index].name}
                       </Text>
                     </div>
                   </div>
@@ -173,7 +177,7 @@ export async function getServerSideProps(context) {
 
   const providers = await getProviders();
   return {
-    props: { providers, ...(await serverSideTranslations(locale, ['common', 'user'])) },
+    props: { providers, ...(await serverSideTranslations(locale, ['common'])) },
   };
 }
 

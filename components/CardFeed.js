@@ -66,6 +66,7 @@ flex: 1;
 
 const CardFeed = (props) => {
   const { feedItem, isMobile, theme, t } = props;
+
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -89,38 +90,69 @@ const CardFeed = (props) => {
     comments,
   } = feedItemState;
 
-  const [isLikingLoading, setIsLikingLoading] = useState(false);
-  const [isDislikingLoading, setIsDislikingLoading] = useState(false);
+  const [isLiking, setIsLiking] = useState(null);
+  const [isDisliking, setIsDisliking] = useState(null);
+
   const [likesState, setLikesState] = useState(likes);
   const [dislikesState, setDislikesState] = useState(dislikes);
+
+  const [seeAllComments, setSeeAllComments] = useState(false);
 
   const linkMovie = themoviedbId ? `/medias/${themoviedbId}?type=${mediaType}` : null;
   const linkUser = `/users/${userId}`;
 
-  const handleClickLike = useCallback(async (e) => {
-    e.preventDefault();
+  const handleClickLike = useCallback(
+    (e) => {
+      e.preventDefault();
 
-    if (!session) {
-      return null;
-    }
+      const newLikes = isLiking
+        ? likesState.filter((item) => item !== session?.user?.id)
+        : [...likesState, session?.user?.id];
 
-    try {
-      setIsLikingLoading(true);
-      const request = await fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/like`, {
-        method: 'Post',
-      });
+      try {
+        setLikesState(newLikes);
+        setIsLiking(!isLiking);
 
-      const { data } = await request.json();
-      const { likes, dislikes } = data;
+        if (isDisliking) {
+          setDislikesState(dislikesState.filter((item) => item !== session?.user?.id));
+        }
 
-      setIsLikingLoading(false);
+        fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/like`, {
+          method: 'Post',
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [session, isLiking, isDisliking, likesState, dislikesState],
+  );
 
-      setLikesState(likes);
-      setDislikesState(dislikes);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
+  const handleClickDislike = useCallback(
+    (e) => {
+      // working
+      e.preventDefault();
+
+      const newDislikes = isDisliking
+        ? dislikesState.filter((item) => item !== session?.user?.id)
+        : [...dislikesState, session?.user?.id];
+
+      try {
+        setDislikesState(newDislikes);
+        setIsDisliking(!isDisliking);
+
+        if (isLiking) {
+          setLikesState(likesState.filter((item) => item !== session?.user?.id));
+        }
+
+        fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/dislike`, {
+          method: 'Post',
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    [session, isDisliking, isLiking, likesState, dislikesState],
+  );
 
   const connect = useCallback(() => {
     signIn(null, { callbackUrl: `${window.location.origin}/community` });
@@ -136,54 +168,40 @@ const CardFeed = (props) => {
     }
   }, [isCommentFieldVisible]);
 
+  useEffect(() => {
+    if (session && likes && dislikes) {
+      const isLikingCheck = !!likes.find((item) => item === session?.user?.id);
+      setIsLiking(isLikingCheck);
+
+      const isDislikingCheck = !!dislikes.find((item) => item === session?.user?.id);
+      setIsDisliking(isDislikingCheck);
+    }
+  }, [session, likes, dislikes]);
+
   const handleClickComment = useCallback(async () => {
     try {
       if (pendingComment) {
+        const newComment = {
+          content: pendingComment,
+          created_at: new Date().toUTCString(),
+          updated_at: new Date().toUTCString(),
+          user: session?.user,
+        };
+
+        setPendingComment('');
+        setFeedItem({ ...feedItem, comments: [...comments, newComment] });
+
         await fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/comment`, {
           method: 'Post',
           body: JSON.stringify({
             content: pendingComment,
           }),
         });
-
-        setPendingComment('');
-
-        const request = await fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/comment`, {
-          method: 'GET',
-        });
-
-        const { data } = await request.json();
-        setFeedItem({ ...feedItem, comments: data.comments });
       }
     } catch (error) {
       console.log(error);
     }
   }, [pendingComment]);
-
-  const handleClickDislike = useCallback(async (e) => {
-    e.preventDefault();
-
-    if (!session) {
-      return null;
-    }
-
-    try {
-      setIsDislikingLoading(true);
-      const request = await fetch(`${process.env.NEXTAUTH_URL}/api/feed/${_id}/dislike`, {
-        method: 'Post',
-      });
-
-      const { data } = await request.json();
-      const { likes, dislikes } = data;
-
-      setIsDislikingLoading(false);
-
-      setLikesState(likes);
-      setDislikesState(dislikes);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
 
   const handleChangeComment = useCallback((event) => {
     setPendingComment(event.target.value);
@@ -306,7 +324,7 @@ const CardFeed = (props) => {
             <Button onClick={session ? handleClickLike : signIn} as="div" labelPosition="right">
               <Button
                 compact
-                size={isLikingLoading ? 'mini' : 'tiny'}
+                size={isLiking ? 'mini' : 'tiny'}
                 style={{ color: theme.white, backgroundColor: theme.like }}
               >
                 <Icon name={'thumbs up'} />
@@ -316,7 +334,7 @@ const CardFeed = (props) => {
               </Label>
             </Button>
             <Button onClick={session ? handleClickDislike : signIn} as="div" labelPosition="right">
-              <Button compact size={isDislikingLoading ? 'mini' : 'tiny'} color={theme.dislike}>
+              <Button compact size={isDisliking ? 'mini' : 'tiny'} color={theme.dislike}>
                 <Icon name={'thumbs down'} />
               </Button>
               <Label style={{ fontSize: 12 }} as="a" basic pointing="left">
@@ -325,9 +343,19 @@ const CardFeed = (props) => {
             </Button>
           </SocialButtons>
 
+          {comments.length > 3 ? (
+            <a
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setSeeAllComments(!seeAllComments);
+              }}
+            >
+              {` See all comments (${comments.length}) `}
+            </a>
+          ) : null}
           {comments?.length > 0 ? (
             <Comment.Group>
-              {comments.map((comment, index) => {
+              {comments.slice(seeAllComments ? 0 : -3).map((comment, index) => {
                 return (
                   <Comment key={index}>
                     <Comment.Avatar src={comment?.user?.image} />
@@ -340,9 +368,7 @@ const CardFeed = (props) => {
                           {moment(comment.updated_at).locale(router.locale).fromNow()}
                         </div>
                       </Comment.Metadata>
-                      <Comment.Text style={{ color: theme.textLight }}>
-                        {comment.content}
-                      </Comment.Text>
+                      <Comment.Text style={{ color: theme.text }}>{comment.content}</Comment.Text>
                     </Comment.Content>
                   </Comment>
                 );

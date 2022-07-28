@@ -178,9 +178,6 @@ const Header = (props) => {
             <SearchBar
               width={isMobile ? 230 : 350}
               isMobile={isMobile}
-              onDelete={() => {
-                router.push(`/movies`);
-              }}
               placeholder={t('header.search')}
               onChange={handleChangeSearch}
               value={search || ''}

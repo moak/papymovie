@@ -13,6 +13,7 @@ const Container = styled.div`
   overflow: visible;
   width: 100%;
   height: 100%;
+  padding: 2px;
 }`;
 
 const ImageContainer = styled.div`
@@ -28,7 +29,7 @@ const Image = styled.img`
     !p.isMobile &&
     `
     &:hover{
-      box-shadow: 0 3px 10px -3px rgba(0, 0, 0, 0.9);
+      transform: scale(1.02);
     }
   `}
 
@@ -126,7 +127,7 @@ const CardMovie = (props) => {
             </Text>
           </TitleContainer>
           {subtitle && (
-            <Text textColor={theme.text} dotdotdot>
+            <Text textColor={theme.textLight} dotdotdot>
               {subtitle}
             </Text>
           )}

@@ -491,7 +491,13 @@ const View = (props) => {
                 half={false}
               />
 
-              <Text textColor={theme.white} isBold marginTop={16} marginBottom={8} fontSize={14}>
+              <Text
+                textColor={theme.textLight}
+                isBold
+                marginTop={16}
+                marginBottom={8}
+                fontSize={14}
+              >
                 {userMovie ? t('view.my_profile_description') : t('view.add_description')}
               </Text>
 

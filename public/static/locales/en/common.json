@@ -9,5 +9,10 @@
     "community": "Community",
     "users": "Users",
     "my_profile": "My profile"
+  },
+  "signin": {
+    "welcome": "Welcome",
+    "subtitle": "Don't forget the things you watch.",
+    "button": "Sign in with"
   }
 }

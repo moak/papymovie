@@ -9,5 +9,10 @@
     "community": "Communauté",
     "users": "Utilisateurs",
     "my_profile": "Mon profil"
+  },
+  "signin": {
+    "welcome": "Bienvenue",
+    "subtitle": "N'oubliez plus les films que vous regardez..",
+    "button": "Se connect avec"
   }
 }
