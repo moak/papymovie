@@ -24,6 +24,9 @@ const ImageContainer = styled.div`
 
 const Image = styled.img`
   cursor: ${(p) => (p.isClickable ? 'pointer' : 'default')};
+  transition: transform 200ms ease-in-out;
+
+
   ${(p) =>
     p.isClickable &&
     !p.isMobile &&

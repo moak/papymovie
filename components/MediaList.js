@@ -65,9 +65,9 @@ const MediaList = (props) => {
       upcoming: `https://api.themoviedb.org/3/movie/upcoming`,
       genres: `https://api.themoviedb.org/3/genre/movie/list?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&language=${locale}`,
       filters: [
-        { key: 'discover', value: 'discover', text: 'Popular' },
-        { key: 'top_rated', value: 'top_rated', text: 'Top rated' },
-        { key: 'upcoming', value: 'upcoming', text: 'Coming soon' },
+        { key: 'discover', value: 'discover', text: t('popular') },
+        { key: 'top_rated', value: 'top_rated', text: t('top_rated') },
+        { key: 'upcoming', value: 'upcoming', text: t('coming_soon') },
       ],
     },
     serie: {
@@ -239,10 +239,7 @@ const MediaList = (props) => {
             <RightColumn background={theme.background} borderColor={theme.borderColor}>
               {urls[mediaType].filters ? (
                 <>
-                  <Text textColor={theme.text} isBold fontSize={16} marginBottom={16}>
-                    {t('filters')}
-                  </Text>
-                  <Text textColor={theme.text} marginBottom={4}>
+                  <Text isBold textColor={theme.text} marginBottom={8}>
                     {t('sort_by')}
                   </Text>
                   <Select
@@ -256,7 +253,7 @@ const MediaList = (props) => {
                 </>
               ) : null}
 
-              <Text textColor={theme.text} marginBottom={8}>
+              <Text isBold textColor={theme.text} marginBottom={8}>
                 Genres
               </Text>
               <div style={{ marginBottom: 16 }}>

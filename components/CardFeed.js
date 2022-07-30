@@ -247,37 +247,42 @@ const CardFeed = (props) => {
         </UserContainer>
         <DetailsContainer>
           {isMobile ? (
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                flexBasis: 80,
-                justifyContent: 'center',
-              }}
-            >
-              <Link href={linkMovie}>
-                <Text
-                  textColor={theme.text}
-                  cursor="pointer"
-                  textAlign="center"
-                  marginRight={8}
-                  marginLeft={-35}
-                  maxWidth={150}
-                  isBold
-                  fontSize={14}
-                >
-                  {truncate(title, 50)}
-                </Text>
-              </Link>
-              <RoundedLabel
-                borderWith={2}
-                width="26px"
-                height="26px"
-                rounded
-                color={getColorFromMark(rating)}
+            <div>
+              <Text fontSize={12} marginBottom={8} textAlign="center">
+                {t(`view.added_${mediaType}_mobile`)}
+              </Text>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  flexBasis: 80,
+                  justifyContent: 'center',
+                  marginBottom: 20,
+                }}
               >
-                {rating}
-              </RoundedLabel>
+                <Link href={linkMovie}>
+                  <Text
+                    textColor={theme.text}
+                    cursor="pointer"
+                    textAlign="center"
+                    marginRight={8}
+                    maxWidth={150}
+                    isBold
+                    fontSize={14}
+                  >
+                    {truncate(title, 50)}
+                  </Text>
+                </Link>
+                <RoundedLabel
+                  borderWith={2}
+                  width="26px"
+                  height="26px"
+                  rounded
+                  color={getColorFromMark(rating)}
+                >
+                  {rating}
+                </RoundedLabel>
+              </div>
             </div>
           ) : (
             <>
@@ -288,9 +293,7 @@ const CardFeed = (props) => {
                   alignItems: 'center',
                 }}
               >
-                <Text textColor={theme.text}>
-                  {userName} {t('view.added')}
-                </Text>
+                <Text textColor={theme.text}>{t(`view.added_${mediaType}`)}</Text>
                 <Text
                   textColor={theme.text}
                   marginRight={4}

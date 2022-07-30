@@ -13,6 +13,7 @@ const Container = styled.div`
   overflow: hidden;
   width: 100%;
   cursor: ${(p) => (p.isClickable ? 'pointer' : 'default')};
+  transition: transform 200ms ease-in-out;
 
   ${(p) =>
     p.isClickable &&

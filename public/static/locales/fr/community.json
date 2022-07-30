@@ -2,7 +2,10 @@
   "view": {
     "title": "Communauté",
     "description": "Informez vous des derniers médias ajoutés par les utilisateurs",
-    "added": "a ajouté",
+    "added_movie": "A ajouté le film",
+    "added_serie": "A ajouté la série",
+    "added_serie_mobile": "A ajouté une série:",
+    "added_movie_mobile": "A ajouté un film:",
     "in_library": "dans sa librairie.",
     "comment_placeholder": "Écrire un commentaire",
     "comment_button": "Commenter"

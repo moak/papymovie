@@ -2,7 +2,10 @@
   "view": {
     "title": "Community",
     "description": "Check out the recents movies added by the users",
-    "added": "added",
+    "added_movie": "Added the movie",
+    "added_serie": "Added the serie",
+    "added_serie_mobile": "Added a serie:",
+    "added_movie_mobile": "Added a movie:",
     "in_library": "in his library.",
     "comment_placeholder": "Write a comment",
     "comment_button": "Add comment"

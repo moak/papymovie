@@ -35,19 +35,11 @@ const User = (props) => {
 
   const { data: session } = useSession();
   const [user, setUser] = useState();
-  const [followersState, setFollowersState] = useState([]);
   const [isFollowRequestLoading, setIsFollowRequestLoading] = useState(false);
 
   const { userId } = router.query;
 
   const isMyProfile = userId === session?.user?.id;
-
-  console.log('followersState', followersState);
-  const isFollowingCheck = isMyProfile
-    ? false
-    : !!followersState.find(
-        (follower) => (follower || follower?._id) === (session && session?.user?.id),
-      );
 
   const isMobile = useIsMobile();
   const isTablet = useIsTablet();
@@ -55,7 +47,7 @@ const User = (props) => {
   const [movieId, setMovieId] = useState(null);
   const [confirm, setConfirm] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [isFollowing, setIsFollowing] = useState(isFollowingCheck);
+  const [isFollowing, setIsFollowing] = useState(null);
 
   const open = (movieId) => {
     setMovieId(movieId);
@@ -81,6 +73,16 @@ const User = (props) => {
 
     setUser(data);
   };
+
+  useEffect(() => {
+    if (session && user) {
+      const isFollowing = isMyProfile
+        ? false
+        : !!user.followers.find((follower) => follower?._id === (session && session?.user?.id));
+
+      setIsFollowing(isFollowing);
+    }
+  }, [session, user]);
 
   useEffect(() => {
     fetchUser();
@@ -119,7 +121,6 @@ const User = (props) => {
         ...user,
         followers: data,
       });
-      setFollowersState(data);
       setIsFollowRequestLoading(false);
     } catch (error) {
       console.log(error);
@@ -157,7 +158,7 @@ const User = (props) => {
       <PageContainer>
         <Row>
           <Col xs={12} md={3}>
-            <CardContainer height={isMobile ? 280 : 350}>
+            <CardContainer height={isMobile ? 300 : 350}>
               <CardUser
                 theme={theme}
                 isMobile={isMobile}
@@ -173,18 +174,19 @@ const User = (props) => {
                 ]}
               />
             </CardContainer>
-
-            {!isMyProfile && (
-              <Button
-                style={{ marginBottom: isMobile ? 16 : 0 }}
-                loading={isFollowRequestLoading}
-                color={isFollowing ? 'red' : 'blue'}
-                fluid
-                onClick={session ? handleClickFollow : signIn}
-              >
-                {isFollowing ? t('unfollow') : t('follow')}
-              </Button>
-            )}
+            <div style={{ padding: '0 8px' }}>
+              {!isMyProfile && (
+                <Button
+                  style={{ marginBottom: isMobile ? 16 : 0 }}
+                  loading={isFollowRequestLoading}
+                  color={isFollowing ? 'red' : 'blue'}
+                  fluid
+                  onClick={session ? handleClickFollow : signIn}
+                >
+                  {isFollowing ? t('unfollow') : t('follow')}
+                </Button>
+              )}
+            </div>
 
             {isMyProfile || moviesToWatch.length ? (
               <>
