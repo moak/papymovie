@@ -106,6 +106,18 @@ const Header = (props) => {
     setSearch(value);
   }, []);
 
+  const deleteSearch = useCallback(
+    (e) => {
+      if (e) {
+        e.preventDefault();
+      }
+      setSearch('');
+
+      router.push(`/search?search=`);
+    },
+    [search],
+  );
+
   const submitSearch = useCallback(
     (e) => {
       if (e) {
@@ -181,6 +193,8 @@ const Header = (props) => {
               placeholder={t('header.search')}
               onChange={handleChangeSearch}
               value={search || ''}
+              onSubmit={submitSearch}
+              onDelete={deleteSearch}
             />
           </form>
 

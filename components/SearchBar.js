@@ -89,21 +89,21 @@ const RightSearchIcon = styled(SearchIcon)`
 `;
 
 const SearchContainer = (props) => {
-  const { placeholder, onChange, value, isMobile, width } = props;
+  const { placeholder, onSubmit, onChange, onDelete, value, isMobile, width } = props;
 
-  const [query, setQuery] = useState(value || placeholder);
+  const [searchValue, setSearchValue] = useState(value || placeholder);
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef();
 
   const handleQueryChange = (e) => {
-    setQuery(e.target.value);
+    setSearchValue(e.target.value);
     onChange(e.target.value);
   };
 
   const handleOnClick = () => {
     setIsFocused(true);
-    if (query === placeholder) {
-      setQuery('');
+    if (searchValue === placeholder) {
+      setSearchValue('');
       onChange('');
       inputRef.current.focus();
     } else {
@@ -112,10 +112,11 @@ const SearchContainer = (props) => {
   };
 
   const handleXCircleClick = () => {
-    setQuery(placeholder);
-    onChange('');
-    setIsFocused(false);
-    inputRef.current.blur();
+    setSearchValue('');
+    onDelete();
+
+    // setIsFocused(false);
+    // inputRef.current.blur();
   };
 
   const preventBlur = (e) => {
@@ -123,14 +124,16 @@ const SearchContainer = (props) => {
   };
 
   const handleOnBlur = () => {
-    if (query === '') {
-      setQuery(placeholder);
+    if (searchValue === '') {
+      setSearchValue(placeholder);
+    } else {
+      onSubmit();
     }
     setIsFocused(false);
   };
   const handleOnFocus = () => {
-    if (query === '') {
-      setQuery('');
+    if (searchValue === '') {
+      setSearchValue('');
     }
   };
 
@@ -140,7 +143,7 @@ const SearchContainer = (props) => {
         spellcheck={false}
         fontSize={isMobile ? 16 : 14}
         onChange={handleQueryChange}
-        value={query}
+        value={searchValue}
         ref={inputRef}
         onBlur={handleOnBlur}
         onFocus={handleOnFocus}
@@ -148,7 +151,7 @@ const SearchContainer = (props) => {
       />
       {isFocused ? (
         <>
-          <Span>{query}</Span>
+          <Span>{searchValue}</Span>
           <RightSearchIcon onMouseDown={preventBlur} onClick={handleXCircleClick}>
             <Icon style={{ fontSize: 16 }} name="close" color="grey" />
           </RightSearchIcon>
@@ -162,7 +165,7 @@ const SearchContainer = (props) => {
           <IconOuterWrapper onClick={handleOnClick} width={width}>
             <IconInnerWrapper>
               <SearchIcon />
-              <Span>{query}</Span>
+              <Span>{searchValue}</Span>
             </IconInnerWrapper>
           </IconOuterWrapper>
         </>

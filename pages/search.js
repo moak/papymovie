@@ -41,8 +41,9 @@ const New = (props) => {
   useEffect(() => {
     const searchMovie = async () => {
       setIsLoading(true);
+
       const moviesQuery = await fetch(
-        `https://api.themoviedb.org/3/search/movie?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&query=${router.query.search}&page=${activePageMovies}&language=${router.locale}`,
+        `https://api.themoviedb.org/3/search/movie?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&page=${activePageSeries}&language=${router.locale}&query=${router.query.search}}`,
       );
 
       const { results: moviesResults, total_pages: moviesTotalPage } = await moviesQuery.json();
@@ -55,14 +56,14 @@ const New = (props) => {
     if (router.query.search) {
       searchMovie();
     }
-  }, [router, activePageMovies]);
+  }, [router, activePageMovies, router.query.search]);
 
   useEffect(() => {
-    const searchMovie = async () => {
+    const searchSerie = async () => {
       setIsLoading(true);
 
       const seriesQuery = await fetch(
-        `https://api.themoviedb.org/3/search/tv?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&query=${router.query.search}&page=${activePageSeries}&language=${router.locale}`,
+        `https://api.themoviedb.org/3/search/tv?api_key=c37c9b9896e0233f219e6d0c58f7d8d5&page=${activePageSeries}&language=${router.locale}&query=${router.query.search}}`,
       );
 
       const { results: seriesResults, total_pages: seriesTotalPage } = await seriesQuery.json();
@@ -73,7 +74,7 @@ const New = (props) => {
     };
 
     if (router.query.search) {
-      searchMovie();
+      searchSerie();
     }
   }, [router, activePageSeries]);
 
@@ -96,6 +97,8 @@ const New = (props) => {
       <PageContainer>
         {isLoading ? (
           <Loader active inline="centered" size="large" />
+        ) : router.query.search.length === 0 ? (
+          <EmptyState>Search a movie or serie.</EmptyState>
         ) : (
           <>
             <Text textColor={theme.text} isBold marginBottom={24} fontSize={26}>
