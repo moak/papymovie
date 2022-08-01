@@ -4,10 +4,10 @@ const greyLight = '#f4f4f4';
 
 export const lightTheme = {
   name: 'light',
-  body: '#FFF',
+  body: '#fbfbfc',
   text: 'black',
   textLight: '#B4B4B4',
-  headerBackground: '#fff',
+  headerBackground: '#fbfbfc',
   borderColor: '#e9e7e7',
   background: '#fff',
   like: '#5789cd',
@@ -24,7 +24,7 @@ export const darkTheme = {
   body: '#2a2929',
   text: '#FFF',
   textLight: '#fff',
-  headerBackground: '#2a2929',
+  headerBackground: '#1f1e1e',
   borderColor: '#555555',
   background: '#2a2929',
   like: '#5789cd',

@@ -111,6 +111,7 @@ const HeaderActions = (props) => {
     actions.push({
       name: t('header.my_profile'),
       includesWords: '/users/[userId]',
+      shouldBeDisplayed: isMyProfile,
 
       path: `/users/${session && session?.user?.id}`,
       svg: <Home width={20} height={20} color={theme.text} />,
@@ -119,12 +120,12 @@ const HeaderActions = (props) => {
 
   return (
     <Container>
-      {actions.map((action, index) => {
+      {actions.map((action) => {
         const { shouldBeDisplayed = true } = action;
         const isCurrent = router.pathname.includes(action.includesWords);
 
         return (
-          <Link key={index} href={action.path}>
+          <Link key={action.path} href={action.path}>
             <ContainerItem theme={theme} isCurrent={isCurrent && shouldBeDisplayed}>
               <ContainerHoverItem hover={isTransparent && isLanding ? 'transparent' : theme.hover}>
                 <div>{action.svg}</div>
