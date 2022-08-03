@@ -30,7 +30,7 @@ export default async (req, res) => {
 
         await User.findByIdAndUpdate(
           { _id: session.userId },
-          { $push: { movies: movie._id } },
+          { $push: { movies: movie._id }, updated_at: new Date().toUTCString() },
           { new: true },
         );
 

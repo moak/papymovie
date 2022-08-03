@@ -36,7 +36,7 @@ const UserSchema = new Schema(
       },
     ],
     created_at: { type: Date, default: new Date().toUTCString() },
-    updated_at: { type: Date, default: new Date().toUTCString() },
+    updated_at: { type: Date },
   },
   {
     usePushEach: true,
