@@ -138,9 +138,11 @@ const CardFeedUser = (props) => {
               {name}
             </Text>
           </Link>
-          <Text cursor="pointer" textColor={theme.textLight} fontSize={isMobile ? 11 : 12}>
-            {moment(updatedAt).locale(router.locale).fromNow()}
-          </Text>
+          {updatedAt && (
+            <Text cursor="pointer" textColor={theme.textLight} fontSize={isMobile ? 11 : 12}>
+              {moment(updatedAt).locale(router.locale).fromNow()}
+            </Text>
+          )}
         </div>
       </UserContainer>
       <InfosContainer>

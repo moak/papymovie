@@ -10,7 +10,7 @@ const Brand = (props) => {
     return null;
   }
   return (
-    <Link href={isConnected ? '/movies' : '/'} passHref>
+    <Link href={isConnected ? '/community' : '/'} passHref>
       <svg width="140" height="50" viewBox="0 -5 187 77" style={{ cursor: 'pointer' }}>
         <defs id="SvgjsDefs4950"></defs>
         <g

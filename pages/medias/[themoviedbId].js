@@ -348,6 +348,8 @@ const View = (props) => {
     return null;
   }
 
+  console.log('vote_average', vote_average);
+  console.log('typeof vote_average', typeof vote_average);
   return (
     <Page
       title={title || name}
@@ -379,7 +381,7 @@ const View = (props) => {
               <Box alignItems="center" flexDirection={isMobile ? 'column' : 'row'}>
                 {!isMobile && (
                   <RoundedLabel borderWith={2} rounded color={getColorFromMark(vote_average)}>
-                    {vote_average}
+                    {vote_average.toFixed(1)}
                   </RoundedLabel>
                 )}
                 <Text
@@ -572,7 +574,7 @@ const View = (props) => {
         {actors && actors.length > 0 && (
           <>
             <div>
-              <Text textColor={theme.white} marginTop={36} marginBottom={16} fontSize={26}>
+              <Text textColor={theme.text} marginTop={36} marginBottom={16} fontSize={26}>
                 {t('view.actors')}
               </Text>
               <List>
@@ -599,7 +601,7 @@ const View = (props) => {
 
         {similarMovies && similarMovies.length > 0 && (
           <div>
-            <Text textColor={theme.white} marginTop={36} marginBottom={16} fontSize={26}>
+            <Text textColor={theme.text} marginTop={36} marginBottom={16} fontSize={26}>
               {t('view.similar_movies')}
             </Text>
             <List>

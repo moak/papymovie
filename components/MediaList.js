@@ -144,7 +144,6 @@ const MediaList = (props) => {
 
     const { results, total_pages } = await res.json();
 
-    console.log('processMedias', processMedias);
     if (fetchMore) {
       setMedias((medias) => [...(medias || []), ...results]);
     } else {
@@ -160,23 +159,21 @@ const MediaList = (props) => {
       setActivePage(activePage + 1);
       processMedias(true, activePage);
     },
-    [activePage, selectedGenres],
+    [activePage],
   );
 
   useEffect(() => {
-    if (medias?.length) {
-      document.body.scrollTop = 0; // For Safari
-      document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0; // For Safari
+    document.documentElement.scrollTop = 0;
 
-      setActivePage(1);
-      setMedias([]);
-      processMedias(false, 1);
-    }
-  }, [selectedGenres, filter]);
+    setActivePage(1);
+    setMedias([]);
+    processMedias(false, 1);
+  }, [selectedGenres, filter, yearStart, yearEnd]);
 
   useEffect(() => {
     processMedias(false, 1);
-  }, [yearStart, yearEnd]);
+  }, []);
 
   const handleClickGenre = useCallback(
     (genreId) => {
@@ -274,7 +271,7 @@ const MediaList = (props) => {
                 })}
               </div>
 
-              {urls[mediaType].name === 'movie' ? (
+              {/* {urls[mediaType].name === 'movie' ? (
                 <>
                   <Row flexDirection="row">
                     <div style={{ marginRight: 12, width: '100%' }}>
@@ -306,7 +303,7 @@ const MediaList = (props) => {
                     </div>
                   </Row>
                 </>
-              ) : null}
+              ) : null} */}
             </RightColumn>
           )}
           <LeftColumn percent={80} isMobile>

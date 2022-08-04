@@ -34,9 +34,9 @@ export const Row = styled.div`
 `;
 
 const Community = (props) => {
-  const { feed, toggleTheme, theme, users } = props;
+  const { feed, toggleTheme, theme, topUsers, trendingUsers } = props;
 
-  const [seeAllUsers, setSeeAllUsers] = useState(false);
+  const [seeAllTopUsers, setSeeAllTopUsers] = useState(false);
 
   const { t } = useTranslation('community');
   const isMobile = useIsMobile();
@@ -71,38 +71,71 @@ const Community = (props) => {
           <div
             style={{ order: isMobile ? 1 : 2, width: isMobile ? '100%' : 250, marginBottom: 20 }}
           >
-            <Text textColor={theme.text} isBold marginBottom={12} fontSize={isMobile ? 26 : 18}>
-              {t('view.top_user')}
-            </Text>
+            <div>
+              <Text textColor={theme.text} isBold marginBottom={12} fontSize={isMobile ? 26 : 18}>
+                {t('view.top_user')}
+              </Text>
 
-            {users?.slice(0, seeAllUsers || !isMobile ? users.length : 3).map((user, index) => {
-              return (
-                <div
-                  key={user._id}
-                  style={{ width: isMobile ? '100%' : 250, height: 70, marginBottom: 12 }}
-                >
-                  <CardFeedUser
-                    theme={theme}
-                    isMobile={isMobile}
-                    name={user.name}
-                    updatedAt={user.updated_at}
-                    imageUrl={user.image}
-                    href={`/users/${user._id}`}
-                    infos={[{ amount: user.movies.length, title: t('media') }]}
+              {topUsers?.slice(0, seeAllTopUsers || !isMobile ? 3 : 2).map((user) => {
+                return (
+                  <div
+                    key={user._id}
+                    style={{ width: isMobile ? '100%' : 250, height: 70, marginBottom: 12 }}
+                  >
+                    <CardFeedUser
+                      theme={theme}
+                      isMobile={isMobile}
+                      name={user.name}
+                      updatedAt={user.updated_at}
+                      imageUrl={user.image}
+                      href={`/users/${user._id}`}
+                      infos={[{ amount: user.movies.length, title: t('media') }]}
+                    />
+                  </div>
+                );
+              })}
+              {isMobile && topUsers?.length > 3 ? (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <Icon
+                    onClick={() => {
+                      setSeeAllTopUsers(!seeAllTopUsers);
+                    }}
+                    name={`chevron ${seeAllTopUsers ? 'up' : 'down'}`}
                   />
                 </div>
-              );
-            })}
-            {isMobile && users?.length > 3 ? (
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <Icon
-                  onClick={() => {
-                    setSeeAllUsers(!seeAllUsers);
-                  }}
-                  name={`chevron ${seeAllUsers ? 'up' : 'down'}`}
-                />
-              </div>
-            ) : null}
+              ) : null}
+            </div>
+
+            <div>
+              <Text
+                textColor={theme.text}
+                isBold
+                marginBottom={12}
+                marginTop={24}
+                fontSize={isMobile ? 26 : 18}
+              >
+                {t('view.recent_user')}
+              </Text>
+
+              {trendingUsers?.slice(0, 2).map((user) => {
+                return (
+                  <div
+                    key={user._id}
+                    style={{ width: isMobile ? '100%' : 250, height: 70, marginBottom: 12 }}
+                  >
+                    <CardFeedUser
+                      theme={theme}
+                      isMobile={isMobile}
+                      name={user.name}
+                      updatedAt={user.updated_at}
+                      imageUrl={user.image}
+                      href={`/users/${user._id}`}
+                      infos={[{ amount: user.movies.length, title: t('media') }]}
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </Row>
       </PageContainer>
@@ -128,13 +161,19 @@ export async function getServerSideProps(context) {
       ],
     });
 
-  const users = await User.find().sort('movies  ').populate('movies');
+  const users = await User.find();
+
+  let topUsers = users.sort((a, b) => a.movies.length - b.movies.length);
+  let trendingUsers = users
+    .filter((item) => item.updated_at)
+    .sort((a, b) => a.updated_at - b.updated_at);
 
   return {
     props: {
       ...(await serverSideTranslations(locale, ['common', 'community'])),
       feed: JSON.parse(JSON.stringify(feed.reverse())),
-      users: JSON.parse(JSON.stringify(users.reverse())),
+      topUsers: JSON.parse(JSON.stringify(topUsers.reverse())),
+      trendingUsers: JSON.parse(JSON.stringify(trendingUsers.reverse())),
     },
   };
 }

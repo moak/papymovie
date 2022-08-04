@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import { signOut, signIn } from 'next-auth/react';
 import { useSession } from 'next-auth/react';
 import moment from 'moment';
+import Link from 'next/link';
 
 import Brand from './Brand';
 import BurgerMenu from './BurgerMenu';
@@ -38,7 +39,7 @@ const FlexContainer = styled.div`
   max-width: 120rem;
   display: flex;
   margin: auto;
-  padding: 0 2rem;
+  padding: 0 1.5rem;
   justify-content: space-between;
   height: 5rem;
   align-items: center;
@@ -174,20 +175,43 @@ const Header = (props) => {
 
   return (
     <>
-      <HeaderContainer
-        theme={theme}
-        style={barAnimation}
-        // isTransparent={router.pathname === '/' && isTransparent}
-      >
+      <HeaderContainer theme={theme} style={barAnimation}>
         <FlexContainer>
-          {isMobile ? null : (
+          {isMobile ? (
+            <Link href={session ? '/community' : '/'} passHref>
+              <svg width="40" height="40" viewBox="0 -5 80 77" style={{ marginBottom: 12 }}>
+                <g
+                  id="SvgjsG4951"
+                  featurekey="symbolFeature-0"
+                  transform="matrix(0.7186096237138837,0,0,0.7186096237138837,-7.1860962371388375,-4.913421237224502)"
+                  fill={theme.text}
+                >
+                  <path
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill={theme.text}
+                    d="M16.309,50.072c-0.578,0-1.309,0.144-1.309,0.722v36.112c0,0.578,0.73,1.166,1.309,1.166H68v-38H16.309z   M65,80.708c0,2.962-2.401,5.364-5.364,5.364H23.364c-2.963,0-5.364-2.402-5.364-5.364V57.437c0-2.962,2.401-5.364,5.364-5.364  h36.271c2.963,0,5.364,2.402,5.364,5.364V80.708z"
+                  ></path>
+                  <path
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill={theme.text}
+                    d="M77,53.072v8h1v-8H77z M77,53.072v8h1v-8H77z M77,53.072v8h1v-8H77z M77,53.072v8h1v-8H77z M83.561,50.072  H70v38h13.561c0.578,0,1.439-0.588,1.439-1.166V50.794C85,50.216,84.139,50.072,83.561,50.072z M77.345,52.32  c2.842,0,5.146,2.304,5.146,5.146s-2.304,5.146-5.146,5.146c-2.844,0-5.147-2.304-5.147-5.146S74.501,52.32,77.345,52.32z   M73.704,67.042c2.011-2.01,5.27-2.01,7.278,0c2.01,2.01,2.01,5.268,0,7.277c-2.009,2.01-5.268,2.01-7.278,0  C71.694,72.31,71.694,69.052,73.704,67.042z M79,86.072h-7v-1h7V86.072z M81.836,86.817c-0.771,0-1.395-0.624-1.395-1.395  c0-0.772,0.624-1.396,1.395-1.396s1.396,0.624,1.396,1.396C83.232,86.193,82.606,86.817,81.836,86.817z M78,53.072h-1v8h1V53.072z   M77,53.072v8h1v-8H77z M77,53.072v8h1v-8H77z M75.124,73.829l-0.925-0.925l5.458-5.458l0.926,0.925L75.124,73.829z"
+                  ></path>
+                  <path
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill={theme.text}
+                    d="M85.981,45.072h-4.042c-0.54-3-2.943-4.729-6.306-5.892L88.427,4.368c0.436,0.094,0.81-0.038,0.892-0.263  c0.1-0.272-0.26-0.679-0.803-0.878c-0.543-0.198-1.063-0.152-1.162,0.118c-0.068,0.186,0.078,0.417,0.352,0.611L74.886,38.732  c-1.651-0.485-3.503-0.758-5.456-0.758c-2.396,0-4.637,0.408-6.546,1.117L43.965,0.744c0.26-0.234,0.384-0.5,0.289-0.679  c-0.135-0.257-0.66-0.245-1.172,0.024c-0.51,0.27-0.816,0.696-0.682,0.951c0.11,0.208,0.476,0.239,0.884,0.101l18.868,38.456  c-2.795,1.207-4.752,2.476-5.232,5.476h-42.9c-1.951,0-4.02,1.154-4.02,3.105v43.439c0,1.951,2.068,3.456,4.02,3.456h2.589  c0.237,0,0.455,0.167,0.57,0.374l2.579,4.599c0.012,0.02,0.032,0.027,0.057,0.027h57.727c0.206,0,0.401-0.074,0.524-0.238  l3.313-4.473c0.123-0.165,0.318-0.289,0.525-0.289h4.077c1.95,0,4.019-1.505,4.019-3.456V48.178  C90,46.227,87.932,45.072,85.981,45.072z M87,89.109c0,1.084-0.879,1.963-1.962,1.963H14.962c-1.083,0-1.962-0.879-1.962-1.963  V49.035c0-1.084,0.879-1.963,1.962-1.963h70.076c1.083,0,1.962,0.879,1.962,1.963V89.109z"
+                  ></path>
+                </g>
+              </svg>
+            </Link>
+          ) : (
             <Brand
               theme={theme}
               isConnected={!!session}
               color={isTransparent && router.pathname === '/' ? 'white' : theme.text}
             />
           )}
-          <form onSubmit={submitSearch}>
+          <form onSubmit={submitSearch} style={{ marginRight: 10 }}>
             <SearchBar
               width={isMobile ? 230 : 350}
               isMobile={isMobile}

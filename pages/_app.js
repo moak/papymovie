@@ -4,6 +4,12 @@ import { SessionProvider } from 'next-auth/react';
 import { lightTheme, darkTheme, GlobalStyles } from 'styles/theme';
 import { ThemeProvider } from 'styled-components';
 import { usePanelbear } from '@panelbear/panelbear-nextjs';
+import moment from 'moment';
+
+import 'moment/locale/fr';
+
+moment.locale('fr');
+moment.locale('en');
 
 import 'semantic-ui-css/semantic.min.css';
 import 'styles/globals.css';
