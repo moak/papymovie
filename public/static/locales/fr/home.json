@@ -1,6 +1,6 @@
 {
   "metas": {
-    "title": "PapyMovie | Arrêtons d'oublier les films que nous regardons",
+    "title": "Thingsyouwatch | Arrêtons d'oublier les films que nous regardons",
     "description": "Notez et sauvegardez vos meilleurs films. Découvrez des nouveaux films en suivant vos amis."
   },
   "header": {
@@ -16,7 +16,7 @@
     "content1": "Notez et ajoutez une description de vos films préférés.",
     "title2": "Soyez inspirés",
     "content2": "Filtrez, découvrez les tendances et les meilleurs films de tous les temps.",
-    "title3": "Suivez vos amis friends",
+    "title3": "Suivez vos amis",
     "content3": "Visionnez les films de vos amis ou personnes partageant les mêmes gouts que vous."
   },
   "connect": "Se connecter",

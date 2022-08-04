@@ -8,7 +8,7 @@
 
   "list": {
     "metas": {
-      "title": "Users - PapyMovie",
+      "title": "Users - Thingsyouwatch",
       "description": "Check out your friends movies or follow the most inspiring users"
     },
     "title": "Users",
@@ -17,8 +17,8 @@
 
   "view": {
     "metas": {
-      "title": "{{name}} - PapyMovie",
-      "description": "Discover {{name}}'s best movies - PapyMovie"
+      "title": "{{name}} - Thingsyouwatch",
+      "description": "Discover {{name}}'s best movies - Thingsyouwatch"
     },
     "watching_list": "Watching list",
     "watching_list_no_result": "Your watching list is empty",

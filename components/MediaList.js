@@ -144,6 +144,7 @@ const MediaList = (props) => {
 
     const { results, total_pages } = await res.json();
 
+    console.log('processMedias', processMedias);
     if (fetchMore) {
       setMedias((medias) => [...(medias || []), ...results]);
     } else {
@@ -175,7 +176,7 @@ const MediaList = (props) => {
 
   useEffect(() => {
     processMedias(false, 1);
-  }, []);
+  }, [yearStart, yearEnd]);
 
   const handleClickGenre = useCallback(
     (genreId) => {
@@ -212,7 +213,7 @@ const MediaList = (props) => {
 
   return (
     <Page
-      title={`${urls[mediaType].title} - PapyMovie`}
+      title={`${urls[mediaType].title} - Thingsyouwatch`}
       description="Discover the popular or best rated movies as well as the ones coming soon"
       url="/movies"
       toggleTheme={toggleTheme}

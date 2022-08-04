@@ -8,7 +8,7 @@
 
   "list": {
     "metas": {
-      "title": "Utilisateurs - PapyMovie",
+      "title": "Utilisateurs - Thingsyouwatch",
       "description": "Découvrez les films de vos amis ou personnes aiment vos gouts"
     },
     "title": "Utilisateurs",
@@ -17,8 +17,8 @@
 
   "view": {
     "metas": {
-      "title": "{{name}} - PapyMovie",
-      "description": "Découvrer les meilleurs films de {{name}} - PapyMovie"
+      "title": "{{name}} - Thingsyouwatch",
+      "description": "Découvrer les meilleurs films de {{name}} - Thingsyouwatch"
     },
     "watching_list": "A regarder",
     "watching_list_no_result": "Pas de film dans la liste à regarder",

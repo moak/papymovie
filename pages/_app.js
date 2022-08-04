@@ -10,7 +10,7 @@ import 'styles/globals.css';
 
 import { useTheme } from 'styles/theme';
 
-const PappyMovieApp = ({ Component, pageProps: { session, ...pageProps } }) => {
+const ThingsYouWatchApp = ({ Component, pageProps: { session, ...pageProps } }) => {
   let themeLocalStorage = null;
 
   if (typeof window !== 'undefined') {
@@ -47,4 +47,4 @@ const PappyMovieApp = ({ Component, pageProps: { session, ...pageProps } }) => {
   );
 };
 
-export default appWithTranslation(PappyMovieApp);
+export default appWithTranslation(ThingsYouWatchApp);

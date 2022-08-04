@@ -89,7 +89,7 @@ const New = (props) => {
     <Page
       title={`Search a movie - ${
         router.query && router.query.search ? `${router.query.search} - ` : ''
-      } PapyMovie`}
+      } Thingsyouwatch`}
       url="/search"
       toggleTheme={toggleTheme}
       theme={theme}

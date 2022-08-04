@@ -14,7 +14,7 @@
 
   "view": {
     "metas": {
-      "title": "{{title}} - Movie ({{date}}) - Papymovie"
+      "title": "{{title}} - Movie ({{date}}) - Thingsyouwatch"
     },
 
     "rating_required": "* Rating is required",

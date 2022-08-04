@@ -43,7 +43,7 @@ const Community = (props) => {
 
   return (
     <Page
-      title={`${t('view.title')} - PapyMovie`}
+      title={`${t('view.title')} - Thingsyouwatch`}
       description={t('view.description')}
       url="/community"
       toggleTheme={toggleTheme}
@@ -128,7 +128,7 @@ export async function getServerSideProps(context) {
       ],
     });
 
-  const users = await User.find().sort('movies').populate('movies');
+  const users = await User.find().sort('movies  ').populate('movies');
 
   return {
     props: {

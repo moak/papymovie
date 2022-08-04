@@ -14,7 +14,7 @@
 
   "view": {
     "metas": {
-      "title": "{{title}} - Film ({{date}}) - Papymovie"
+      "title": "{{title}} - Film ({{date}}) - Thingsyouwatch"
     },
     "rating_required": "* Une note est obligatoire",
     "actors": "Acteurs",

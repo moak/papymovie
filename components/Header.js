@@ -177,11 +177,12 @@ const Header = (props) => {
       <HeaderContainer
         theme={theme}
         style={barAnimation}
-        isTransparent={router.pathname === '/' && isTransparent}
+        // isTransparent={router.pathname === '/' && isTransparent}
       >
         <FlexContainer>
           {isMobile ? null : (
             <Brand
+              theme={theme}
               isConnected={!!session}
               color={isTransparent && router.pathname === '/' ? 'white' : theme.text}
             />

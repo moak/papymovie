@@ -60,50 +60,26 @@ const HeaderActions = (props) => {
       name: t('header.movies'),
       path: '/movies',
       includesWords: 'movie',
-      svg: (
-        <Cinema
-          width={20}
-          height={20}
-          color={isTransparent && isLanding ? theme.white : theme.text}
-        />
-      ),
+      svg: <Cinema width={20} height={20} color={theme.text} />,
     },
     {
       name: t('header.series'),
       path: '/series',
       includesWords: 'serie',
-      svg: (
-        <Movies
-          width={20}
-          height={20}
-          color={isTransparent && isLanding ? theme.white : theme.text}
-        />
-      ),
+      svg: <Movies width={20} height={20} color={theme.text} />,
     },
     {
       name: t('header.community'),
       path: '/community',
       includesWords: 'community',
-      svg: (
-        <Social
-          width={20}
-          height={20}
-          color={isTransparent && isLanding ? theme.white : theme.text}
-        />
-      ),
+      svg: <Social width={20} height={20} color={theme.text} />,
     },
     {
       name: t('header.users'),
       path: '/users',
       includesWords: 'users',
       shouldBeDisplayed: !session || !isMyProfile,
-      svg: (
-        <Users
-          width={20}
-          height={20}
-          color={isTransparent && isLanding ? theme.white : theme.text}
-        />
-      ),
+      svg: <Users width={20} height={20} color={theme.text} />,
     },
   ];
 
@@ -127,11 +103,9 @@ const HeaderActions = (props) => {
         return (
           <Link key={action.path} href={action.path}>
             <ContainerItem theme={theme} isCurrent={isCurrent && shouldBeDisplayed}>
-              <ContainerHoverItem hover={isTransparent && isLanding ? 'transparent' : theme.hover}>
+              <ContainerHoverItem hover={theme.hover}>
                 <div>{action.svg}</div>
-                <ContainerItemName color={isTransparent && isLanding ? theme.white : theme.text}>
-                  {action.name}
-                </ContainerItemName>
+                <ContainerItemName color={theme.text}>{action.name}</ContainerItemName>
               </ContainerHoverItem>
             </ContainerItem>
           </Link>

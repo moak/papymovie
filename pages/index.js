@@ -170,18 +170,19 @@ const Home = (props) => {
           <Content isMobile={isMobile}>
             <Text
               width={isMobile ? '340px' : '540px'}
-              as="h1"
+              as="div"
               isBold
               textAlign="center"
               fontFamily="secondary"
               textColor="#ffffff"
               fontSize={isMobile ? 30 : 46}
               marginBottom={36}
+              marginTop={130}
             >
               {t('header.title')}
             </Text>
 
-            <Text as="h2" textColor="#ffffff" fontSize={isMobile ? 16 : 20} textAlign="center">
+            <Text as="h2" textColor="#ffffff" fontSize={isMobile ? 16 : 24} textAlign="center">
               {t('header.subtitle')}
             </Text>
 
