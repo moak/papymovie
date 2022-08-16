@@ -13,6 +13,10 @@ export const lightTheme = {
   like: '#5789cd',
   dislike: 'red',
   confirm: 'green',
+  quizzHover: '#e9e7e7',
+
+  error: 'red',
+  success: 'green',
 
   white: '#fff',
   greyLight,
@@ -31,6 +35,10 @@ export const darkTheme = {
   dislike: 'red',
   confirm: 'green',
   greyLight,
+  quizzHover: '#555555',
+
+  error: 'red',
+  success: 'green',
 
   white: '#fff',
   hover: 'grey',

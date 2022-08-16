@@ -11,6 +11,7 @@ import Movies from 'public/icons/Movies';
 import Cinema from 'public/icons/Cinema';
 import Social from 'public/icons/Social';
 import Home from 'public/icons/Home';
+import Trophy from 'public/icons/Trophy';
 
 const Container = styled.div`
   display: flex;
@@ -73,6 +74,12 @@ const HeaderActions = (props) => {
       path: '/community',
       includesWords: 'community',
       svg: <Social width={20} height={20} color={theme.text} />,
+    },
+    {
+      name: t('header.quizz'),
+      path: '/quizz',
+      includesWords: 'quizz',
+      svg: <Trophy width={20} height={20} color={theme.text} />,
     },
     {
       name: t('header.users'),

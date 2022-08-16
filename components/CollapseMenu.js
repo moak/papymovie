@@ -58,11 +58,17 @@ const languages = [
 ];
 
 const ClosableLink = (props) => {
-  const { display, href, theme, isCurrent, onClick } = props;
+  const { display, href, theme, isCurrent, onClick, isBold } = props;
 
   if (onClick) {
     return (
-      <div onClick={onClick} style={{ color: isCurrent ? '#fdcb6e' : theme.text }}>
+      <div
+        onClick={onClick}
+        style={{
+          color: isCurrent ? '#fdcb6e' : theme.text,
+          fontWeight: isBold ? 'bold' : 'normal',
+        }}
+      >
         {display}
       </div>
     );
@@ -162,6 +168,16 @@ const CollapseMenu = (props) => {
           <li>
             <ClosableLink
               theme={theme}
+              display={t('header.quizz')}
+              currentPath={router.asPath}
+              href="/quizz"
+              closablePath="quizz"
+              isCurrent={!router.asPath.includes('/signin') && router.asPath.includes('quizz')}
+            />
+          </li>
+          <li>
+            <ClosableLink
+              theme={theme}
               display={t('header.users')}
               currentPath={router.asPath}
               href="/users"
@@ -203,6 +219,7 @@ const CollapseMenu = (props) => {
                   currentPath={router.pathname}
                   closablePath={`/signin`}
                   href="/signin"
+                  isBold
                   onClick={connect}
                   isCurrent={router.asPath.includes(`/signin`)}
                 />

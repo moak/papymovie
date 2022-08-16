@@ -30,10 +30,8 @@ export default class MyDocument extends Document {
 
   render() {
     return (
-      <Html lang="en">
-        <Head>
-          <link rel="preconnect" href="https://fonts.gstatic.com" />
-        </Head>
+      <Html lang="en" translate="no">
+        <Head>{/* <link rel="preconnect" href="https://fonts.gstatic.com" /> */}</Head>
         <body>
           <Main />
           <NextScript />

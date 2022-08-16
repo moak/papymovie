@@ -11,4 +11,5 @@ export default styled.div`
     color: grey;
     margin-top: 10px;
     margin-bottom: 10px;
+    width: 90%;
 }`;

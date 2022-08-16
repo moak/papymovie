@@ -83,6 +83,7 @@ const Community = (props) => {
                     style={{ width: isMobile ? '100%' : 250, height: 70, marginBottom: 12 }}
                   >
                     <CardFeedUser
+                      isAnimated
                       theme={theme}
                       isMobile={isMobile}
                       name={user.name}
@@ -124,6 +125,7 @@ const Community = (props) => {
                     style={{ width: isMobile ? '100%' : 250, height: 70, marginBottom: 12 }}
                   >
                     <CardFeedUser
+                      isAnimated
                       theme={theme}
                       isMobile={isMobile}
                       name={user.name}

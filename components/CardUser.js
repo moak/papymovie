@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
+import FlipNumbers from 'react-flip-numbers';
 
 import Text from './Text';
 import getRandomNumber from 'utils/getRandomNumber';
@@ -11,12 +12,10 @@ const Container = styled.div`
   border: 1px solid ${(p) => p.borderColor};
   border-radius: 10px;
   overflow: hidden;
+  height: 100%;
   width: 100%;
   cursor: ${(p) => (p.isClickable ? 'pointer' : 'default')};
   transition: transform 200ms ease-in-out;
-
-
-
 
   @keyframes fadein {
     from { opacity: 0; }
@@ -176,9 +175,8 @@ const CardUser = (props) => {
 
           return (
             <InfoContainer key={title}>
-              <Text textColor={theme.text} fontSize={18} isBold>
-                {amount}
-              </Text>
+              <FlipNumbers duration={1} height={16} width={10} play numbers={amount.toString()} />
+
               <Text isBold textColor={theme.text} fontSize={11}>
                 {title}
               </Text>

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import moment from 'moment';
+import FlipNumbers from 'react-flip-numbers';
 
 import Text from './Text';
 
@@ -15,7 +16,7 @@ const Container = styled.div`
   cursor: ${(p) => (p.isClickable ? 'pointer' : 'default')};
   padding: 8px;
   background: ${(p) => p.theme.background};
-
+  box-shadow: ${(p) => p.theme.borderColor} 0px 2px 4px;
   transition: transform 200ms ease-in-out;
 
   @keyframes fadein {
@@ -67,7 +68,7 @@ const Container = styled.div`
 const UserContainer = styled.div`
   display: flex;
   align-items: center;
-  width: 70%;
+  width: 65%;
 }`;
 
 const InfosContainer = styled.div`
@@ -77,8 +78,7 @@ const InfosContainer = styled.div`
   font-weight: 600;
   text-align: center;
   padding: 5px;
-  width: 30%;
-
+  width: 35%;
 }`;
 
 const InfoContainer = styled.div`
@@ -96,18 +96,18 @@ const UserImage = styled.img`
   cursor: pointer;
 }`;
 
-const Image = styled.img`
-
-  border-radius: 50%;
-  // position: absolute;
-  // top: ${(p) => (p.isMobile ? 50 : 70)}%;
-  // left: 50%;
-  // transform: translate(-50%, -${(p) => (p.isMobile ? 50 : 70)}%);
-  border: 2px solid ${(p) => p.borderColor};
-}`;
-
 const CardFeedUser = (props) => {
-  const { href, name, imageUrl, infos, isMobile, theme, updatedAt } = props;
+  const {
+    href,
+    name,
+    imageUrl,
+    infos,
+    isMobile,
+    theme,
+    updatedAt,
+    isAnimated = false,
+    withTrophy = false,
+  } = props;
 
   const router = useRouter();
 
@@ -146,15 +146,29 @@ const CardFeedUser = (props) => {
         </div>
       </UserContainer>
       <InfosContainer>
-        {infos.map((info) => {
-          const { amount, title } = info;
+        {infos.map((info, index) => {
+          const { amount, title, isBold = true } = info;
 
           return (
-            <InfoContainer key={title}>
-              <Text textColor={theme.text} fontSize={isMobile ? 18 : 16} isBold>
-                {amount}
-              </Text>
-              <Text isBold textColor={theme.text} fontSize={12}>
+            <InfoContainer key={index}>
+              {isAnimated ? (
+                <div style={{ display: 'flex', marginRight: 8 }}>
+                  {index === 0 && withTrophy ? <span style={{ marginRight: 4 }}> 🏆</span> : null}
+                  <FlipNumbers
+                    duration={1}
+                    height={16}
+                    width={10}
+                    play
+                    numbers={amount.toString()}
+                  />
+                </div>
+              ) : (
+                <Text textColor={theme.text} fontSize={isMobile ? 18 : 16} isBold={isBold}>
+                  {amount}
+                </Text>
+              )}
+
+              <Text isBold={isBold} textColor={theme.text} fontSize={12}>
                 {title}
               </Text>
             </InfoContainer>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { appWithTranslation } from 'next-i18next';
 import { SessionProvider } from 'next-auth/react';
-import { lightTheme, darkTheme, GlobalStyles } from 'styles/theme';
+import { GlobalStyles } from 'styles/theme';
 import { ThemeProvider } from 'styled-components';
 import { usePanelbear } from '@panelbear/panelbear-nextjs';
 import moment from 'moment';
@@ -23,7 +23,6 @@ const ThingsYouWatchApp = ({ Component, pageProps: { session, ...pageProps } }) 
     themeLocalStorage = localStorage.getItem('theme', theme);
   }
 
-  // const [theme, setTheme] = useState('light');
   const [theme, setTheme] = useState(themeLocalStorage || 'light');
 
   const toggleTheme = () => {

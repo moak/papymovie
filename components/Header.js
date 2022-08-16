@@ -248,12 +248,7 @@ const Header = (props) => {
                       style={{
                         fontWeight: router.locale === language.lang ? 700 : 500,
                         cursor: 'pointer',
-                        color:
-                          isTransparent && router.pathname === '/'
-                            ? theme.white
-                            : router.locale === language.lang
-                            ? theme.text
-                            : theme.textLight,
+                        color: router.locale === language.lang ? theme.text : theme.textLight,
                         marginRight: index + 1 === languages.length ? 20 : 0,
                       }}
                     >

@@ -23,6 +23,14 @@ const Text = styled.div`
   cursor: ${(p) => p.cursor || 'auto'};
 
   ${(p) =>
+    p.isBlurred
+      ? `
+        color: transparent;
+        text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        `
+      : null};
+
+  ${(p) =>
     p.dotdotdot &&
     `
       text-overflow: ellipsis;

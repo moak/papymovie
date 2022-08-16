@@ -348,8 +348,6 @@ const View = (props) => {
     return null;
   }
 
-  console.log('vote_average', vote_average);
-  console.log('typeof vote_average', typeof vote_average);
   return (
     <Page
       title={title || name}

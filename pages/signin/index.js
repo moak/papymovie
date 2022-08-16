@@ -14,7 +14,6 @@ import PageContainer from 'components/PageContainer';
 import useIsMobile from 'hooks/useIsMobile';
 
 const SignIn = (props) => {
-  console.log('props', props);
   const { providers, toggleTheme, theme } = props;
 
   const { t } = useTranslation('common');
